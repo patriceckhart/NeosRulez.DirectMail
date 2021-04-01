@@ -1,0 +1,28 @@
+prototype(NeosRulez.DirectMail:Document.AbstractPage) < prototype(Neos.Neos:Page) {
+    head {
+        NeosRulezDirectMailMetadata = Neos.Fusion:Component {
+            renderer = afx`
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            `
+        }
+        NeosRulezDirectMailCss = Neos.Fusion:Tag {
+            @position = 'end'
+            tagName = 'link'
+            attributes {
+                media = 'all'
+                rel = 'stylesheet'
+                href = Neos.Fusion:ResourceUri {
+                    path = 'resource://NeosRulez.DirectMail/Public/Styles/email.css'
+                }
+            }
+        }
+    }
+    bodyTag {
+        attributes.style = 'margin: 0; padding: 0;'
+    }
+    body = NeosRulez.DirectMail:Component.DefaultLayout {
+        content = ''
+        @process.replaceQuotationMarks1 = ${String.replace(value, '„', '"')}
+        @process.replaceQuotationMarks2 = ${String.replace(value, '“', '"')}
+    }
+}

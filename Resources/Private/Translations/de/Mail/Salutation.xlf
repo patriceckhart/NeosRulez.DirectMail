@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="salutation.1" xml:space="preserve">
+				<source>Sehr geehrter Herr</source>
+			</trans-unit>
+            <trans-unit id="salutation.2" xml:space="preserve">
+				<source>Sehr geehrte Frau</source>
+			</trans-unit>
+            <trans-unit id="salutation.3" xml:space="preserve">
+				<source>Hallo</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

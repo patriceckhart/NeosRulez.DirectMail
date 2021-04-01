@@ -1,0 +1,3 @@
+prototype(NeosRulez.DirectMail:Class.RecipientList) {
+    @class = 'NeosRulez\\DirectMail\\Fusion\\RecipientListFusion'
+}

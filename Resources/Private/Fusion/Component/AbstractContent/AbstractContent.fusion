@@ -1,0 +1,27 @@
+prototype(NeosRulez.DirectMail:Component.AbstractContent) < prototype(Neos.Fusion:Component) {
+    nodetype = ${String.replace(String.replace(String.toLowerCase(node.nodetype), '.', '-'), ':', '-')}
+
+    marginClass = ${(node.properties.mt ? ' ' + node.properties.mt : '') + (node.properties.mb ? ' ' + node.properties.mb : '') + (node.properties.ml ? ' ' + node.properties.ml : '') + (node.properties.mr ? ' ' + node.properties.mr : '')}
+    paddingClass = ${(node.properties.pt ? ' ' + node.properties.pt : '') + (node.properties.pb ? ' ' + node.properties.pb : '') + (node.properties.pl ? ' ' + node.properties.pl : '') + (node.properties.pr ? ' ' + node.properties.pr : '')}
+    marginNegativeClass = ${(node.properties.mtn ? ' ' + node.properties.mtn : '') + (node.properties.mbn ? ' ' + node.properties.mbn : '') + (node.properties.mln ? ' ' + node.properties.mln : '') + (node.properties.mrn ? ' ' + node.properties.mrn : '')}
+    valignmentClass = ${node.properties.valignment ? ' ' + node.properties.valignment : ''}
+
+    container = ${node.properties.container}
+    containerType = ${q(node).parentsUntil('[instanceof Neos.Neos:Document]').count() == 1 ? this.container : false}
+
+    textColor = ${node.properties.textColor}
+
+    fontFamily = ${node.properties.fontFamily}
+    font = ${this.fontFamily == 'impact' ? "Impact, Haettenschweiler, 'Franklin Gothic Bold', 'Arial Black', sans-serif" : this.fontFamily == 'arial' ? "Arial" : this.fontFamily == 'verdana' ? "Verdana" : this.fontFamily == 'times' ? "'Times New Roman', Times, serif" : this.fontFamily == 'cambria' ? "Cambria, 'Hoefler Text', 'Liberation Serif', Times, 'Times New Roman', serif" : this.fontFamily == 'constantia' ? "Constantia, 'Lucida Bright', 'DejaVu Serif', Georgia, serif" : this.fontFamily == 'baskerville' ? "Baskerville, 'Palatino Linotype', Palatino, 'Century Schoolbook L', 'Times New Roman', serif" : this.fontFamily == 'gillsans' ? "'Gill Sans', 'Gill Sans MT', 'Myriad Pro', 'DejaVu Sans Condensed', Helvetica, Arial, sans-serif" : this.fontFamily == 'gotham' ? "Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif" : this.fontFamily == 'lucidagrande' ? "'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" : this.fontFamily == 'segoe' ? "Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, sans-serif" : this.fontFamily == 'consolas' ? "Consolas, 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', Monaco, 'Courier New', monospace" : "Arial"}
+
+    class = ${'neosrulez-directmail-content' + (this.nodetype ? ' ' + this.nodetype : false) + (this.marginClass ? this.marginClass : false) + (this.marginNegativeClass ? this.marginNegativeClass : false) + (this.paddingClass ? this.paddingClass : false) + (this.container ? ' ' + this.containerType : false)}
+    styleAttrbiute = ${(this.textColor ? 'color:' + this.textColor + ';' : false) + (this.font ? 'font-family:' + this.font : false)}
+
+    id = ${'node__' + node.identifier}
+
+    renderer = afx`
+        <div id={props.id} class={props.class} style={props.styleAttrbiute} >
+            {props.content}
+        </div>
+    `
+}

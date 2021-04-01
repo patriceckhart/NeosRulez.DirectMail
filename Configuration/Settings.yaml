@@ -1,0 +1,73 @@
+Neos:
+  Flow:
+    mvc:
+      routes:
+        'NeosRulez.DirectMail': true
+  Neos:
+    fusion:
+      autoInclude:
+        NeosRulez.DirectMail: true
+    userInterface:
+      translation:
+        autoInclude:
+          NeosRulez.DirectMail:
+            - Main
+            - 'NodeTypes/*'
+    nodeTypes:
+      groups:
+        neosRulezDirectMail:
+          position: 'end'
+          label: NeosRulez.DirectMail:Main:group.content
+        neosRulezDirectMailForm:
+          position: 'after neosRulezDirectMail'
+          label: NeosRulez.DirectMail:Main:group.form
+    modules:
+      directMail:
+        label: 'DirectMail'
+        controller: '\Neos\Neos\Controller\Module\ManagementController'
+        description: 'DirectMail'
+        icon: 'far fa-paper-plane'
+        resource: 'Neos_Neos_Backend_Module_Management'
+        submodules:
+          recipient:
+            label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+            controller: '\NeosRulez\DirectMail\Controller\RecipientController'
+            description: NeosRulez.DirectMail:Integration.Controller.Recipient:description
+            icon: 'fas fa-user-friends'
+            actions:
+              index:
+                label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+                title: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+          recipientlist:
+            label: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
+            controller: '\NeosRulez\DirectMail\Controller\RecipientListController'
+            description: NeosRulez.DirectMail:Integration.Controller.RecipientList:description
+            icon: 'fas fa-envelope-open-text'
+            actions:
+              index:
+                label: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
+                title: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
+          queue:
+            label: NeosRulez.DirectMail:Integration.Controller.Queue:label
+            controller: '\NeosRulez\DirectMail\Controller\QueueController'
+            description: NeosRulez.DirectMail:Integration.Controller.Queue:description
+            icon: 'far fa-clock'
+            actions:
+              index:
+                label: NeosRulez.DirectMail:Integration.Controller.Queue:label
+                title: NeosRulez.DirectMail:Integration.Controller.Queue:label
+          import:
+            label: NeosRulez.DirectMail:Integration.Controller.Import:label
+            controller: '\NeosRulez\DirectMail\Controller\ImportController'
+            description: NeosRulez.DirectMail:Integration.Controller.Import:description
+            icon: 'fas fa-file-csv'
+            actions:
+              index:
+                label: NeosRulez.DirectMail:Integration.Controller.Import:label
+                title: NeosRulez.DirectMail:Integration.Controller.Import:label
+NeosRulez:
+  DirectMail:
+    senderMail: 'postmaster@foo.bar'
+    senderName: 'Postmaster'
+    startDispatchFromNeosBackend: false
+    baseUri: 'http://foo.bar'

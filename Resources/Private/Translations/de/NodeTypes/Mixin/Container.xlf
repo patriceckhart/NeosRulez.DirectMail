@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="groups.container" xml:space="preserve">
+				<source>Breite des Inhaltselements</source>
+			</trans-unit>
+            <trans-unit id="properties.container" xml:space="preserve">
+				<source>Breite des Inhaltselements</source>
+			</trans-unit>
+            <trans-unit id="properties.container.selectBoxEditor.values.container" xml:space="preserve">
+                <source>Mit Abstand zum Rand</source>
+            </trans-unit>
+            <trans-unit id="properties.container.selectBoxEditor.values.container-fluid" xml:space="preserve">
+                <source>Volle Breite</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

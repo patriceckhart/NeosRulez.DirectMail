@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="ui.label" xml:space="preserve">
+				<source>Newsletter</source>
+			</trans-unit>
+            <trans-unit id="groups.document" xml:space="preserve">
+				<source>Newsletter</source>
+			</trans-unit>
+            <trans-unit id="groups.googleAnalyticsCampaign" xml:space="preserve">
+				<source>Google Analytics</source>
+			</trans-unit>
+            <trans-unit id="properties.googleAnalyticsCampaign" xml:space="preserve">
+				<source>Google Analytics Kampagne</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

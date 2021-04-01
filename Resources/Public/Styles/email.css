@@ -1,0 +1,64 @@
+.body-table { font-family: Arial; font-size: 14px; line-height:20px; margin:0; padding:0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; box-sizing: border-box; }
+.main-table { box-sizing: border-box; border-collapse: collapse; background:#FFF; width: 580px; max-width: 580px; }
+.content-wrapper { box-sizing: border-box; display: block; margin: 0 auto; max-width: 580px; }
+.content { box-sizing: border-box; display: block; margin: 0 auto; max-width: 580px; background:#FFFFFF; }
+.neosrulez-directmail-content { display:block; }
+.two-column, .three-column, .four-column { width:100%; display:table; }
+.column { display:table-cell; }
+.two-column .column { width:50%; max-width: 50%; }
+.three-column .column { width:33%; max-width:33%; }
+.four-column .column { width:25%; max-width:25%; }
+.column img { width:100%; height:auto;}
+
+.container { width:100%; box-sizing: border-box; padding-left:10px; padding-right:10px; }
+.container-fluid { width:100%; box-sizing: border-box; }
+img { display:block; width:100%; height:auto; }
+.column-table { width:580px; max-width: 580px; }
+
+.mt-1 { margin-top: 5px; }
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 20px; }
+.mt-4 { margin-top: 30px; }
+.mt-5 { margin-top: 40px; }
+
+.mb-1 { margin-bottom: 5px; }
+.mb-2 { margin-bottom: 10px; }
+.mb-3 { margin-bottom: 20px; }
+.mb-4 { margin-bottom: 30px; }
+.mb-5 { margin-bottom: 40px; }
+
+.ms-1 { margin-left: 5px; }
+.ms-2 { margin-left: 10px; }
+.ms-3 { margin-left: 20px; }
+.ms-4 { margin-left: 30px; }
+.ms-5 { margin-left: 40px; }
+
+.me-1 { margin-right: 5px; }
+.me-2 { margin-right: 10px; }
+.me-3 { margin-right: 20px; }
+.me-4 { margin-right: 30px; }
+.me-5 { margin-right: 40px; }
+
+.pt-1 { padding-top: 5px; }
+.pt-2 { padding-top: 10px; }
+.pt-3 { padding-top: 20px; }
+.pt-4 { padding-top: 30px; }
+.pt-5 { padding-top: 40px; }
+
+.pb-1 { padding-bottom: 5px; }
+.pb-2 { padding-bottom: 10px; }
+.pb-3 { padding-bottom: 20px; }
+.pb-4 { padding-bottom: 30px; }
+.pb-5 { padding-bottom: 40px; }
+
+.ps-1 { padding-left: 5px; }
+.ps-2 { padding-left: 10px; }
+.ps-3 { padding-left: 20px; }
+.ps-4 { padding-left: 30px; }
+.ps-5 { padding-left: 40px; }
+
+.pe-1 { padding-right: 5px; }
+.pe-2 { padding-right: 10px; }
+.pe-3 { padding-right: 20px; }
+.pe-4 { padding-right: 30px; }
+.pe-5 { padding-right: 40px; }

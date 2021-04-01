@@ -1,0 +1,22 @@
+'NeosRulez.DirectMail:Mixin.Headline':
+  abstract: true
+  properties:
+    title:
+      type: string
+      defaultValue: '<h1>Headline</h1>'
+      ui:
+        inlineEditable: true
+        inline:
+          editorOptions:
+            placeholder: 'Text'
+            autoparagraph: false
+            formatting:
+              p: false
+              h1: true
+              h2: true
+              h3: true
+              removeFormat: true
+              a: false
+              left: true
+              right: true
+              center: true

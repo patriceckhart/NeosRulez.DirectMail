@@ -1,0 +1,17 @@
+NeosRulez.DirectMail.SubscriptionController.setActive = NeosRulez.DirectMail:Presentation.SubscriptionController.SetActive
+
+prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.SetActive) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.setActive')}
+    `
+}
+
+//include: resource://Neos.Neos/Private/Fusion/Prototypes/Page.fusion
+//
+//NeosRulez.DirectMail.SubscriptionController.setActive = NeosRulez.DirectMail:Presentation.SubscriptionController.SetActive
+//
+//prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.SetActive) < prototype(NeosRulez.DirectMail:Document.AbstractPage) {
+//
+//    body.content = ${I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.setActive')}
+//}

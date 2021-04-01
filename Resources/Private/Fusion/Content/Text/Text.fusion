@@ -1,0 +1,13 @@
+prototype(NeosRulez.DirectMail:Content.Text) < prototype(Neos.Neos:ContentComponent) {
+    additionalClass = ${(node.properties.textColor ? 'text-' + node.properties.textColor : false)}
+
+    fontSize = ${node.properties.fontSize ? 'font-size:' + node.properties.fontSize + 'px; !important' : false}
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent additionalClass={props.additionalClass} >
+            <div style={props.fontSize} >
+                <Neos.Neos:Editable property="text" />
+            </div>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}

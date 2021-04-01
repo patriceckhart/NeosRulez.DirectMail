@@ -1,0 +1,33 @@
+NeosRulez.DirectMail.ImportController.index = NeosRulez.DirectMail:Integration.ImportController.Index
+
+prototype(NeosRulez.DirectMail:Integration.ImportController.Index) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.label')} >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="create" form.target.controller="Import" form.target.package="NeosRulez.DirectMail" form.data.newImport={newImport} >
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.csv')} field.name="newImport[file]" >
+                        <Neos.Fusion.Form:Upload />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newImport[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.recipientlist')} >
+                        <Neos.Fusion.Form:Select attributes.required="required">
+                            <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
+                                <Neos.Fusion.Form:Select.Option option.value={recipientList} >{recipientList.name}</Neos.Fusion.Form:Select.Option>
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion.Form:Select>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
+                            {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.button.startImport')}
+                        </Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

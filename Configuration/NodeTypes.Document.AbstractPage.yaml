@@ -1,0 +1,28 @@
+'NeosRulez.DirectMail:Document.AbstractPage':
+  abstract: true
+  superTypes:
+    'Neos.Neos:Document': true
+    'Neos.Seo:TitleTagMixin': false
+    'Neos.Seo:SeoMetaTagsMixin': false
+    'Neos.Seo:TwitterCardMixin': false
+    'Neos.Seo:CanonicalLinkMixin': false
+    'Neos.Seo:OpenGraphMixin': false
+    'Neos.Seo:XmlSitemapMixin': false
+    'Neos.Neos:Timable': false
+    'NeosRulez.DirectMail:Mixin.Color': true
+  childNodes:
+    main:
+      type: 'Neos.Neos:ContentCollection'
+      constraints:
+        nodeTypes:
+          '*': false
+          'NeosRulez.DirectMail:Component.AbstractContent': true
+          'NeosRulez.DirectMail:Content.Form': false
+  constraints:
+    nodeTypes:
+      '*': false
+  properties:
+    _hiddenInIndex:
+      ui: ~
+    textColor:
+      ui: ~

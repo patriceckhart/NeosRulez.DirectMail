@@ -1,0 +1,55 @@
+NeosRulez.DirectMail.RecipientController.new = NeosRulez.DirectMail:Integration.RecipientController.New
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.New) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.new')} >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="create" form.target.controller="Recipient" form.target.package="NeosRulez.DirectMail" form.data.newRecipient={newRecipient} >
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newRecipient[gender]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.gender')} >
+                        <Neos.Fusion.Form:Select>
+                            <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion.Form:Select.Option option.value="1" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.input.option.male')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion.Form:Select.Option option.value="2" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.input.option.female')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion.Form:Select.Option option.value="3" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.input.option.divers')}</Neos.Fusion.Form:Select.Option>
+                        </Neos.Fusion.Form:Select>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.customSalutation')} field.name="newRecipient[customsalutation]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.customSalutation')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.firstname')} field.name="newRecipient[firstname]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.firstname')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.lastname')} field.name="newRecipient[lastname]">
+                        <Neos.Fusion.Form:Input attributes.placeholder="Lastname" />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')} field.name="newRecipient[email]">
+                        <Neos.Fusion.Form:Input attributes.placeholder="E-Mail" />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newRecipient[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.recipientlist')} field.multiple>
+                        <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
+                            <div style="display:block">
+                                <Neos.Fusion.Form:Checkbox field.value={recipientList}>
+                                    {recipientList.name}
+                                </Neos.Fusion.Form:Checkbox>
+                            </div>
+                        </Neos.Fusion:Loop>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
+                            {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.create')}
+                        </Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

@@ -1,0 +1,37 @@
+privilegeTargets:
+  Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
+    'NeosRulez.DirectMail:RecipientControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\RecipientController->.*Action())'
+    'NeosRulez.DirectMail:RecipientListControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\RecipientListController->.*Action())'
+    'NeosRulez.DirectMail:QueueControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\QueueController->.*Action())'
+    'NeosRulez.DirectMail:ImportControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\ImportController->.*Action())'
+    'NeosRulez.DirectMail:SubscriptionControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\SubscriptionController->.*Action())'
+    'NeosRulez.DirectMail:NewsletterControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\NewsletterController->.*Action())'
+roles:
+  'Neos.Flow:Everybody':
+    privileges:
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:SubscriptionControllerActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:NewsletterControllerActions'
+        permission: GRANT
+  'Neos.Neos:AbstractEditor':
+    privileges:
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:RecipientControllerActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:RecipientListControllerActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:QueueControllerActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:ImportControllerActions'
+        permission: GRANT

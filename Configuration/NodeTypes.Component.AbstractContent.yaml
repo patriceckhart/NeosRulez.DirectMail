@@ -1,0 +1,8 @@
+'NeosRulez.DirectMail:Component.AbstractContent':
+  abstract: true
+  superTypes:
+    'Neos.Neos:Content': true
+    'NeosRulez.DirectMail:Mixin.Distance': true
+    'NeosRulez.DirectMail:Mixin.Container': true
+  ui:
+    group: neosRulezDirectMail

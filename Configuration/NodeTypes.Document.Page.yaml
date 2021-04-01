@@ -1,0 +1,25 @@
+'NeosRulez.DirectMail:Document.Page':
+  superTypes:
+    'NeosRulez.DirectMail:Document.AbstractPage': true
+  ui:
+    label: i18n
+    icon: far fa-paper-plane
+    group: neosRulezDirectMail
+    inspector:
+      groups:
+        document:
+          label: NeosRulez.DirectMail:NodeTypes.Document.Page:ui.label
+          icon: far fa-paper-plane
+        googleAnalyticsCampaign:
+          label: Google Analytics
+          icon: fas fa-chart-bar
+          position: end
+  properties:
+    googleAnalyticsCampaign:
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: googleAnalyticsCampaign
+          position: 1

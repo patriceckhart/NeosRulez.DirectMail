@@ -1,0 +1,32 @@
+-
+  name: 'NeosRulez.DirectMail create recipient'
+  uriPattern: 'subscribe'
+  defaults:
+    '@controller': 'Subscription'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'create'
+  appendExceedingArguments: true
+-
+  name: 'NeosRulez.DirectMail set active'
+  uriPattern: 'setactive/{identifier}'
+  defaults:
+    '@controller': 'Subscription'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'setActive'
+  appendExceedingArguments: true
+-
+  name: 'NeosRulez.DirectMail unsubscribe'
+  uriPattern: 'unsubscribe/{identifier}'
+  defaults:
+    '@controller': 'Subscription'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'unsubscribe'
+  appendExceedingArguments: true
+-
+  name: 'NeosRulez.DirectMail render html'
+  uriPattern: 'directmail/{base64Uri}'
+  defaults:
+    '@controller': 'Newsletter'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'index'
+  appendExceedingArguments: true

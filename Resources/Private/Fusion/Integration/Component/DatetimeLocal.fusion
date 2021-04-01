@@ -1,0 +1,35 @@
+prototype(NeosRulez.DirectMail:Form.DatetimeLocal) < prototype(Neos.Fusion.Form:Component.Field) {
+
+    renderer = Neos.Fusion:Component {
+
+        name = ${field.getName()}
+
+        value = ${field.getCurrentValue() || field.getTargetValue()}
+
+        value.@process.formatDatime = Neos.Fusion:Case {
+            isDateTime {
+                condition = ${(Type.getType(value) == 'object') && Type.instance(value , '\DateTime') }
+                renderer = ${Date.format(value, 'Y-m-d\TH:i')}
+            }
+            isInteger {
+                condition = ${(Type.getType(value) == 'integer')}
+                renderer = ${Date.format(Date.create('@' + value), 'Y-m-d\TH:i')}
+            }
+            default {
+                condition = true
+                renderer = ${field.getCurrentValueStringified() || field.getTargetValueStringified()}
+            }
+        }
+
+        attributes = ${props.attributes}
+
+        renderer = afx`
+            <input
+                    type="datetime-local"
+                    name={props.name}
+                    value={props.value}
+                    {...props.attributes}
+            />
+        `
+    }
+}

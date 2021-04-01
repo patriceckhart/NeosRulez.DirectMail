@@ -1,0 +1,35 @@
+prototype(NeosRulez.DirectMail:Document.Page) < prototype(NeosRulez.DirectMail:Document.AbstractPage) {
+    body.content = Neos.Fusion:Component {
+        main = Neos.Neos:ContentCollection {
+            nodePath = 'main'
+        }
+        bgColor = ${documentNode.properties.bgColor}
+        styleAttribute = ${this.bgColor ? 'background-color:' + this.bgColor + ';' : false}
+        renderer = afx`
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="body-table" style={props.styleAttribute} >
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="main-table">
+                            <tr>
+                                <td>
+                                    {props.main}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+<!--            <Neos.Fusion:Tag tagName="table" attributes.border="0" attributes.cellpadding="0" attributes.cellspacing="0" attributes.class="table-body" >-->
+<!--                <Neos.Fusion:Tag tagName="table" attributes.class="main" >-->
+<!--                    <div class="body">-->
+<!--                        <div class="content-wrapper">-->
+<!--                            <div class="content">-->
+<!--                                {props.main}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </Neos.Fusion:Tag>-->
+<!--            </Neos.Fusion:Tag>-->
+        `
+    }
+}

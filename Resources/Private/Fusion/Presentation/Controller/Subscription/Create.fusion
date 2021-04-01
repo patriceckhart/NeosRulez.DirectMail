@@ -1,0 +1,8 @@
+NeosRulez.DirectMail.SubscriptionController.create = NeosRulez.DirectMail:Presentation.SubscriptionController.Create
+
+prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.Create) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.create')}
+    `
+}

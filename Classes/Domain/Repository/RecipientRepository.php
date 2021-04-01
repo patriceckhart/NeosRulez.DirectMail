@@ -1,0 +1,78 @@
+<?php
+namespace NeosRulez\DirectMail\Domain\Repository;
+
+/*
+ * This file is part of the NeosRulez.DirectMail package.
+ */
+
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\Repository;
+
+/**
+ * @Flow\Scope("singleton")
+ */
+class RecipientRepository extends Repository {
+
+    /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @return integer
+     */
+    public function countByRecipientList(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList): int
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->contains('recipientlist', $recipientList)
+            )
+        )->execute();
+        $count = $result ? count($result) : 0;
+        return $count;
+    }
+
+    /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @return integer
+     */
+    public function countActiveByRecipientList(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList): int
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->contains('recipientlist', $recipientList),
+                $query->equals('active', 1)
+            )
+        )->execute();
+        $count = $result ? count($result) : 0;
+        return $count;
+    }
+
+    /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @return void
+     */
+    public function findByRecipientList(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList)
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->contains('recipientlist', $recipientList)
+            )
+        )->execute();
+        return $result;
+    }
+
+    /**
+     * @param string $identifier
+     * @return void
+     */
+    public function findProjectByIdentifier(string $identifier) {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching($query->equals('Persistence_Object_Identifier', $identifier))->execute()->getFirst();
+        return $result;
+    }
+
+}

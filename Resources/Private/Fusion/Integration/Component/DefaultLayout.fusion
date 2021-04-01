@@ -1,0 +1,9 @@
+include: resource://Neos.Fusion/Private/Fusion/Root.fusion
+include: resource://Neos.Fusion.Form/Private/Fusion/Root.fusion
+
+prototype(NeosRulez.DirectMail:Integration.Component.DefaultLayout) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        {props.content}
+    `
+}

@@ -1,0 +1,24 @@
+NeosRulez.DirectMail.RecipientListController.new = NeosRulez.DirectMail:Integration.RecipientListController.New
+
+prototype(NeosRulez.DirectMail:Integration.RecipientListController.New) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title="New recipient list" >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="create" form.target.controller="RecipientList" form.target.package="NeosRulez.DirectMail" form.data.newRecipientList={newRecipientList} >
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} field.name="newRecipientList[name]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
+                            {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.create')}
+                        </Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

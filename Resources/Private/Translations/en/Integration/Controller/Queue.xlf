@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+			<trans-unit id="label" xml:space="preserve">
+				<source>Queue</source>
+			</trans-unit>
+			<trans-unit id="content.noQueues" xml:space="preserve">
+				<source>No queues</source>
+			</trans-unit>
+			<trans-unit id="description" xml:space="preserve">
+				<source>Manage dispatch</source>
+			</trans-unit>
+			<trans-unit id="content.index" xml:space="preserve">
+				<source>Queue</source>
+			</trans-unit>
+            <trans-unit id="content.new" xml:space="preserve">
+				<source>New dispatch</source>
+			</trans-unit>
+            <trans-unit id="content.subject" xml:space="preserve">
+				<source>Subject</source>
+			</trans-unit>
+			<trans-unit id="content.node" xml:space="preserve">
+				<source>Newsletter page</source>
+			</trans-unit>
+			<trans-unit id="content.sendDateTime" xml:space="preserve">
+				<source>Start time</source>
+			</trans-unit>
+			<trans-unit id="content.sent" xml:space="preserve">
+				<source>Sent</source>
+			</trans-unit>
+			<trans-unit id="content.created" xml:space="preserve">
+				<source>Created</source>
+			</trans-unit>
+            <trans-unit id="content.button.create" xml:space="preserve">
+				<source>Create dispatch</source>
+			</trans-unit>
+			<trans-unit id="content.input.option.choose" xml:space="preserve">
+				<source>Please select</source>
+			</trans-unit>
+			<trans-unit id="content.recipientlist" xml:space="preserve">
+				<source>Recipient lists</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

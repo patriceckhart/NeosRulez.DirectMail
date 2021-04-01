@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+			<trans-unit id="label" xml:space="preserve">
+				<source>Recipients</source>
+			</trans-unit>
+			<trans-unit id="description" xml:space="preserve">
+				<source>Manage recipients</source>
+			</trans-unit>
+			<trans-unit id="content.new" xml:space="preserve">
+				<source>New recipient</source>
+			</trans-unit>
+			<trans-unit id="content.edit" xml:space="preserve">
+				<source>Edit recipient</source>
+			</trans-unit>
+			<trans-unit id="content.create" xml:space="preserve">
+				<source>Save recipient</source>
+			</trans-unit>
+			<trans-unit id="content.save" xml:space="preserve">
+				<source>Save changes</source>
+			</trans-unit>
+			<trans-unit id="content.noRecipients" xml:space="preserve">
+				<source>No recipients</source>
+			</trans-unit>
+			<trans-unit id="content.recipientlist" xml:space="preserve">
+				<source>Recipient list</source>
+			</trans-unit>
+			<trans-unit id="content.customSalutation" xml:space="preserve">
+				<source>Individual salutation</source>
+			</trans-unit>
+			<trans-unit id="content.email" xml:space="preserve">
+				<source>Mail address</source>
+			</trans-unit>
+			<trans-unit id="content.gender" xml:space="preserve">
+				<source>Gender</source>
+			</trans-unit>
+			<trans-unit id="content.input.option.male" xml:space="preserve">
+				<source>Male</source>
+			</trans-unit>
+			<trans-unit id="content.input.option.female" xml:space="preserve">
+				<source>Female</source>
+			</trans-unit>
+			<trans-unit id="content.input.option.divers" xml:space="preserve">
+				<source>Divers</source>
+			</trans-unit>
+			<trans-unit id="content.firstname" xml:space="preserve">
+				<source>Firstname</source>
+			</trans-unit>
+			<trans-unit id="content.lastname" xml:space="preserve">
+				<source>Lastname</source>
+			</trans-unit>
+			<trans-unit id="content.created" xml:space="preserve">
+				<source>Created</source>
+			</trans-unit>
+			<trans-unit id="content.active" xml:space="preserve">
+				<source>active</source>
+			</trans-unit>
+			<trans-unit id="content.inactive" xml:space="preserve">
+				<source>inactive</source>
+			</trans-unit>
+			<trans-unit id="content.newRecipient" xml:space="preserve">
+				<source>New recipient</source>
+			</trans-unit>
+			<trans-unit id="content.input.option.choose" xml:space="preserve">
+				<source>Please select</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

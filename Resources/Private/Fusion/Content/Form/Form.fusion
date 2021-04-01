@@ -1,0 +1,7 @@
+prototype(NeosRulez.DirectMail:Content.Form) < prototype(Neos.Neos:ContentComponent) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.Form />
+    `
+}
+

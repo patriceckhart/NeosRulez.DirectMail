@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+			<trans-unit id="label" xml:space="preserve">
+				<source>Import</source>
+			</trans-unit>
+			<trans-unit id="description" xml:space="preserve">
+				<source>Empfänger importieren</source>
+			</trans-unit>
+            <trans-unit id="content.label" xml:space="preserve">
+				<source>Import</source>
+			</trans-unit>
+            <trans-unit id="content.input.csv" xml:space="preserve">
+				<source>.csv-Datei</source>
+			</trans-unit>
+            <trans-unit id="content.input.recipientlist" xml:space="preserve">
+				<source>Empfängerliste</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.choose" xml:space="preserve">
+				<source>Bitte auswählen</source>
+			</trans-unit>
+            <trans-unit id="content.button.startImport" xml:space="preserve">
+				<source>Empfänger importieren</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

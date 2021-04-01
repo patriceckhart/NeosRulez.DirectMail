@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="content.unsubscribe" xml:space="preserve">
+				<source>Sie haben sich erfolgreich vom Newsletter abgemeldet.</source>
+			</trans-unit>
+            <trans-unit id="content.create" xml:space="preserve">
+				<source>Vielen Dank für Ihr Interesse an unserem Newsletter. Sie erhalten in Kürze ein E-Mail zur Bestätigung.</source>
+			</trans-unit>
+            <trans-unit id="content.setActive" xml:space="preserve">
+				<source>Vielen Dank für Ihr Interesse an unserem Newsletter. Wir haben Ihre E-Mail Adresse in unsere Empfängerliste aufgenommen.</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

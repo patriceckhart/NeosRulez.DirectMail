@@ -1,0 +1,135 @@
+'NeosRulez.DirectMail:Mixin.Font':
+  abstract: true
+  ui:
+    inspector:
+      tabs:
+        font:
+          label: i18n
+          position: 11
+          icon: fas fa-font
+      groups:
+        font:
+          label: i18n
+          icon: fas fa-font
+          tab: font
+          position: 100
+  properties:
+    fontFamily:
+      defaultValue: 'arial'
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: font
+          editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
+          editorOptions:
+            values:
+              'arial':
+                label: 'Arial'
+              'verdana':
+                label: 'Verdana'
+              'times':
+                label: 'Times New Roman'
+              'cambria':
+                label: 'Cambria'
+              'constantia':
+                label: 'Constantia'
+              'baskerville':
+                label: 'Baskerville'
+              'gillsans':
+                label: 'Gill Sans'
+              'gotham':
+                label: 'Gotham'
+              'lucidagrande':
+                label: 'Lucida Grande'
+              'segoe':
+                label: 'Segoe'
+              'impact':
+                label: 'Impact'
+              'consolas':
+                label: 'Consolas'
+    fontSize:
+      defaultValue: '14'
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: font
+          position: after fontStyle
+          editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
+          editorOptions:
+            values:
+              '0':
+                label: i18n
+              '8':
+                label: '8 px'
+              '9':
+                label: '9 px'
+              '10':
+                label: '10 px'
+              '11':
+                label: '11 px'
+              '12':
+                label: '12 px'
+              '14':
+                label: '14 px'
+              '16':
+                label: '16 px'
+              '18':
+                label: '18 px'
+              '20':
+                label: '20 px'
+              '22':
+                label: '22 px'
+              '24':
+                label: '24 px'
+              '26':
+                label: '26 px'
+              '28':
+                label: '28 px'
+              '30':
+                label: '30 px'
+              '32':
+                label: '32 px'
+              '34':
+                label: '34 px'
+              '36':
+                label: '36 px'
+              '38':
+                label: '38 px'
+              '40':
+                label: '40 px'
+              '42':
+                label: '42 px'
+              '44':
+                label: '44 px'
+              '46':
+                label: '46 px'
+              '48':
+                label: '48 px'
+              '50':
+                label: '50 px'
+              '52':
+                label: '52 px'
+              '54':
+                label: '54 px'
+              '56':
+                label: '56 px'
+              '58':
+                label: '58 px'
+              '60':
+                label: '60 px'
+              '62':
+                label: '62 px'
+              '64':
+                label: '64 px'
+              '66':
+                label: '66 px'
+              '68':
+                label: '68 px'
+              '70':
+                label: '70 px'
+              '72':
+                label: '72 px'

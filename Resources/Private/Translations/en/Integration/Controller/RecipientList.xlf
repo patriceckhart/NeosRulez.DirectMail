@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+			<trans-unit id="label" xml:space="preserve">
+				<source>Recipient lists</source>
+			</trans-unit>
+			<trans-unit id="description" xml:space="preserve">
+				<source>Manage recipient lists</source>
+			</trans-unit>
+			<trans-unit id="content.new" xml:space="preserve">
+				<source>New recipient lists</source>
+			</trans-unit>
+			<trans-unit id="content.create" xml:space="preserve">
+				<source>Save recipient lists</source>
+			</trans-unit>
+			<trans-unit id="content.noRecipientLists" xml:space="preserve">
+				<source>No recipient lists</source>
+			</trans-unit>
+			<trans-unit id="content.name" xml:space="preserve">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="content.recipients" xml:space="preserve">
+				<source>Recipients</source>
+			</trans-unit>
+			<trans-unit id="content.created" xml:space="preserve">
+				<source>Created</source>
+			</trans-unit>
+			<trans-unit id="content.save" xml:space="preserve">
+				<source>Save changes</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

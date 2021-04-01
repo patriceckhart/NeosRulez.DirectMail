@@ -1,0 +1,21 @@
+{
+  "description": "A plugin to turn Neos CMS into a newsletter tool.",
+  "type": "neos-package",
+  "name": "neosrulez/directmail",
+  "require": {
+    "neos/neos": "*",
+    "neos/swiftmailer": "*",
+    "shel/neos-colorpicker": "^1.3",
+    "pelago/emogrifier": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NeosRulez\\DirectMail\\": "Classes/"
+    }
+  },
+  "extra": {
+    "neos": {
+      "package-key": "NeosRulez.DirectMail"
+    }
+  }
+}

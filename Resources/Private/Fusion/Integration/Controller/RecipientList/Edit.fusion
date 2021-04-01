@@ -1,0 +1,27 @@
+NeosRulez.DirectMail.RecipientListController.edit = NeosRulez.DirectMail:Integration.RecipientListController.Edit
+
+prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < prototype(Neos.Fusion:Component) {
+    inlineStyles = ${'<style>.neos .neos-table { margin-top:80px; }</style>'}
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title="Edit recipient list" >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="update" form.target.controller="RecipientList" form.target.package="NeosRulez.DirectMail" form.data.recipientList={recipientList} >
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} field.name="recipientList[name]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
+                            {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.save')}
+                        </Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+                {props.inlineStyles}
+                <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} noCreation={true} />
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

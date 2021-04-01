@@ -1,0 +1,75 @@
+NeosRulez.DirectMail.RecipientController.index = NeosRulez.DirectMail:Integration.RecipientController.Index
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototype(Neos.Fusion:Component) {
+
+    recipientList = ${this.recipientListRecipients ? this.recipientListRecipients : recipients}
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:label')} >
+            <p @if.render={!props.recipientList} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.noRecipients')}</p>
+            <table @if.render={props.recipientList} class="neos-table">
+                <thead>
+                <tr>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.firstname')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.lastname')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.created')}</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                <Neos.Fusion:Loop items={props.recipientList} itemName="recipient" >
+                    <tr>
+                        <td>
+                            {recipient.email}
+                        </td>
+                        <td>
+                            {recipient.firstname}
+                        </td>
+                        <td>
+                            {recipient.lastname}
+                        </td>
+                        <td>
+                            {Date.format(recipient.created, 'Y-m-d, H:i')}
+                        </td>
+                        <td>
+                            <span @if.render={recipient.active} class="neos-badge" style="background:#00a338;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.active')}</span>
+                            <span @if.render={!recipient.active} class="neos-badge" style="background:#ff460d;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.inactive')}</span>
+                        </td>
+                        <td class="neos-action">
+                            <div class="neos-pull-right">
+                                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-pen'></i>">
+                                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="edit" @children="arguments">
+                                        <Neos.Fusion:DataStructure recipient={recipient} />
+                                    </Neos.Fusion:UriBuilder>
+                                </Neos.Fusion:Tag>
+                                <Neos.Fusion.Form:Form form.target.action="change" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
+                                    <Neos.Fusion.Form:Hidden field.name="recipient" field.value={recipient} />
+                                    <Neos.Fusion.Form:Button attributes.class={'neos-button neos-button-' + (recipient.active ? 'danger' : 'success')} >
+                                        <i @if.render={recipient.active} class="fas fa-ban"></i>
+                                        <i @if.render={!recipient.active} class="far fa-check-circle"></i>
+                                    </Neos.Fusion.Form:Button>
+                                </Neos.Fusion.Form:Form>
+                                <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
+                                    <Neos.Fusion.Form:Hidden field.name="recipient" field.value={recipient} />
+                                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
+                                        <i class="fas fa-trash"></i>
+                                    </Neos.Fusion.Form:Button>
+                                </Neos.Fusion.Form:Form>
+                            </div>
+                        </td>
+                    </tr>
+                </Neos.Fusion:Loop>
+
+                </tbody>
+            </table>
+            <div @if.render={!props.noCreation} class="neos-footer">
+                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" />
+                </Neos.Fusion:Tag>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

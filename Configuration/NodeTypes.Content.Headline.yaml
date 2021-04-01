@@ -1,0 +1,15 @@
+'NeosRulez.DirectMail:Content.Headline':
+  superTypes:
+    'NeosRulez.DirectMail:Component.AbstractContent': true
+    'NeosRulez.DirectMail:Mixin.Headline': true
+    'NeosRulez.DirectMail:Mixin.Color': true
+    'NeosRulez.DirectMail:Mixin.Font': true
+  ui:
+    label: i18n
+    icon: icon-header
+    position: 1
+  properties:
+    bgColor:
+      ui: ~
+    fontSize:
+      defaultValue: '0'

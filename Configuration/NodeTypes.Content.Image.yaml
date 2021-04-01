@@ -1,0 +1,32 @@
+'NeosRulez.DirectMail:Content.Image':
+  superTypes:
+    'NeosRulez.DirectMail:Component.AbstractContent': true
+  ui:
+    label: i18n
+    icon: icon-image
+    position: 3
+    inspector:
+      groups:
+        neosRulezDirectMail:
+          label: i18n
+          icon: icon-image
+  properties:
+    image:
+      type: Neos\Media\Domain\Model\ImageInterface
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: neosRulezDirectMail
+          position: 10
+    link:
+      type: string
+      ui:
+        reloadIfChanged: true
+        label: i18n
+        inspector:
+          group: neosRulezDirectMail
+          position: 20
+          editor: 'Neos.Neos/Inspector/Editors/LinkEditor'
+          editorOptions:
+            assets: true

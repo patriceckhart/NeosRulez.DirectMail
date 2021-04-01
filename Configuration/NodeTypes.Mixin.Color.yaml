@@ -1,0 +1,39 @@
+'NeosRulez.DirectMail:Mixin.Color':
+  abstract: true
+  ui:
+    inspector:
+      groups:
+        color:
+          label: i18n
+          icon: fas fa-paint-roller
+  properties:
+    textColor:
+      type: string
+      defaultValue: ''
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: color
+          position: start
+          editor: 'Shel.Neos.ColorPicker/ColorPickerEditor'
+          editorOptions:
+            mode: 'hex'
+            picker: true
+            fields: true
+            presetColors: [ ]
+    bgColor:
+      type: string
+      defaultValue: 'f6f6f6'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: color
+          position: start
+          editor: 'Shel.Neos.ColorPicker/ColorPickerEditor'
+          editorOptions:
+            mode: 'hex'
+            picker: true
+            fields: true
+            presetColors: [ ]

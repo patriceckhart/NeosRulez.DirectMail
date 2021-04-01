@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="tabs.font" xml:space="preserve">
+				<source>Font</source>
+			</trans-unit>
+            <trans-unit id="groups.font" xml:space="preserve">
+				<source>Font</source>
+			</trans-unit>
+            <trans-unit id="properties.fontFamily" xml:space="preserve">
+				<source>Font family</source>
+			</trans-unit>
+            <trans-unit id="properties.fontSize" xml:space="preserve">
+				<source>Font size</source>
+			</trans-unit>
+            <trans-unit id="properties.fontSize.selectBoxEditor.values.0" xml:space="preserve">
+                <source>System default</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

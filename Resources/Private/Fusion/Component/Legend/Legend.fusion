@@ -1,0 +1,20 @@
+prototype(NeosRulez.DirectMail:Component.Legend) < prototype(Neos.Neos:ContentComponent) {
+
+    salutation = ${'{salutation}'}
+    firstname = ${'{firstname}'}
+    lastname = ${'{lastname}'}
+    unsubscribe = ${'{unsubscribe}'}
+    pageurl = ${'{pageurl}'}
+
+    renderer = afx`
+        <div style="position: fixed; left:0; top:0; margin-left:20px; margin-top:20px; width:180px;">
+            <div style="position: relative;">
+                <div style="display:block;"><span style="display: inline-block;padding: 0.25em;padding-left: 0.5em;padding-right: 0.5em;font-size: 0.8em;background: #ececec;border-radius: 4px;margin-top: 0.5em;margin-bottom:0.5em;">{props.salutation}</span></div>
+                <div style="display:block;"><span style="display: inline-block;padding: 0.25em;padding-left: 0.5em;padding-right: 0.5em;font-size: 0.8em;background: #ececec;border-radius: 4px;margin-top: 0.5em;margin-bottom:0.5em;">{props.firstname}</span></div>
+                <div style="display:block;"><span style="display: inline-block;padding: 0.25em;padding-left: 0.5em;padding-right: 0.5em;font-size: 0.8em;background: #ececec;border-radius: 4px;margin-top: 0.5em;margin-bottom:0.5em;">{props.lastname}</span></div>
+                <div style="display:block;"><span style="display: inline-block;padding: 0.25em;padding-left: 0.5em;padding-right: 0.5em;font-size: 0.8em;background: #ececec;border-radius: 4px;margin-top: 0.5em;margin-bottom:0.5em;">{props.pageurl}</span></div>
+                <div style="display:block;"><span style="display: inline-block;padding: 0.25em;padding-left: 0.5em;padding-right: 0.5em;font-size: 0.8em;background: #ececec;border-radius: 4px;margin-top: 0.5em;margin-bottom:0.5em;">{props.unsubscribe}</span></div>
+            </div>
+        </div>
+    `
+}

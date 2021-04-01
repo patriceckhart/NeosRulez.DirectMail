@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="ui.label" xml:space="preserve">
+				<source>Newsletter Anmeldung (Formular)</source>
+			</trans-unit>
+            <trans-unit id="properties.showSalutation" xml:space="preserve">
+				<source>Anrede anzeigen</source>
+			</trans-unit>
+            <trans-unit id="properties.showRecipientList" xml:space="preserve">
+				<source>Alle Empfängerlisten anzeigen</source>
+			</trans-unit>
+            <trans-unit id="properties.recipientList" xml:space="preserve">
+				<source>Empfängerliste</source>
+			</trans-unit>
+            <trans-unit id="content.salutation" xml:space="preserve">
+				<source>Anrede</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.choose" xml:space="preserve">
+				<source>Bitte auswählen</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.sir" xml:space="preserve">
+				<source>Herr</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.madame" xml:space="preserve">
+				<source>Frau</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.divers" xml:space="preserve">
+				<source>Divers</source>
+			</trans-unit>
+            <trans-unit id="content.firstname" xml:space="preserve">
+				<source>Vorname</source>
+			</trans-unit>
+            <trans-unit id="content.lastname" xml:space="preserve">
+				<source>Nachname</source>
+			</trans-unit>
+            <trans-unit id="content.email" xml:space="preserve">
+				<source>E-Mail Adresse</source>
+			</trans-unit>
+            <trans-unit id="content.recipientList" xml:space="preserve">
+				<source>Empfängerliste</source>
+			</trans-unit>
+            <trans-unit id="content.privacy" xml:space="preserve">
+				<source>Ich akzeptiere die Verarbeitung und Speicherung der oben angegebenen Daten zum Zweck der Bearbeitung gemäß den Datenschutzrichtlinien und das Tracking meiner Aktivität durch den Versender.</source>
+			</trans-unit>
+            <trans-unit id="content.submit" xml:space="preserve">
+				<source>Newsletter abonnieren</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

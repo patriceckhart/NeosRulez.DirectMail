@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="ui.label" xml:space="preserve">
+				<source>Newsletter registration (form)</source>
+			</trans-unit>
+            <trans-unit id="properties.showSalutation" xml:space="preserve">
+				<source>Show salutation</source>
+			</trans-unit>
+            <trans-unit id="properties.showRecipientList" xml:space="preserve">
+				<source>Show all recipient lists</source>
+			</trans-unit>
+            <trans-unit id="properties.recipientList" xml:space="preserve">
+				<source>Recipient list</source>
+			</trans-unit>
+            <trans-unit id="content.salutation" xml:space="preserve">
+				<source>Salutation</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.choose" xml:space="preserve">
+				<source>Please select</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.sir" xml:space="preserve">
+				<source>Sir</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.madame" xml:space="preserve">
+				<source>Mrs</source>
+			</trans-unit>
+            <trans-unit id="content.input.option.divers" xml:space="preserve">
+				<source>Divers</source>
+			</trans-unit>
+            <trans-unit id="content.firstname" xml:space="preserve">
+				<source>Firstname</source>
+			</trans-unit>
+            <trans-unit id="content.lastname" xml:space="preserve">
+				<source>Lastname</source>
+			</trans-unit>
+            <trans-unit id="content.email" xml:space="preserve">
+				<source>Mail address</source>
+			</trans-unit>
+            <trans-unit id="content.recipientList" xml:space="preserve">
+				<source>Recipient list</source>
+			</trans-unit>
+            <trans-unit id="content.privacy" xml:space="preserve">
+				<source>I accept the processing and storage of the above data for the purpose of processing in accordance with the data protection guidelines and the tracking of my activity by the sender.</source>
+			</trans-unit>
+            <trans-unit id="content.submit" xml:space="preserve">
+				<source>Subscribe</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

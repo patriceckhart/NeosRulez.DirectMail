@@ -1,0 +1,44 @@
+'NeosRulez.DirectMail:Content.Form':
+  superTypes:
+    'NeosRulez.DirectMail:Component.AbstractContent': true
+  ui:
+    label: i18n
+    icon: far fa-paper-plane
+    position: 900
+    group: neosRulezDirectMailForm
+    inspector:
+      groups:
+        neosRulezDirectMail:
+          label: NeosRulez.DirectMail:NodeTypes.Content.Form:ui.label
+          icon: far fa-paper-plane
+  properties:
+    showSalutation:
+      type: boolean
+      defaultValue: true
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: neosRulezDirectMail
+          position: 1
+    showRecipientList:
+      type: boolean
+      defaultValue: true
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: neosRulezDirectMail
+          position: 2
+    recipientList:
+      defaultValue: ''
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          hidden: 'ClientEval:node.properties.showRecipientList ? true : false'
+          group: neosRulezDirectMail
+          editor: Neos.Neos/Inspector/Editors/SelectBoxEditor
+          editorOptions:
+            dataSourceIdentifier: neosrulez-directmail-recipientlist

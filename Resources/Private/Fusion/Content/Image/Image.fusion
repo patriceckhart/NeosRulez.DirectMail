@@ -1,0 +1,35 @@
+prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentComponent) {
+    inBackend = ${documentNode.context.inBackend}
+    dummyImage = Neos.Fusion:ResourceUri {
+        path = 'resource://Neos.Neos/Public/Images/dummy-image.svg'
+    }
+    image = ${q(node).property("image") ? q(node).property("image") : false}
+    link = ${q(node).property("link")}
+    link.@process.convertUris = Neos.Neos:ConvertUris {
+        forceConversion = true
+    }
+
+    isTwoColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:TwoColumn]').count() == 1 ? true : false}
+    isThreeColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:ThreeColumn]').count() == 1 ? true : false}
+    isFourColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:FourColumn]').count() == 1 ? true : false}
+
+    width = ${this.isTwoColumn ? 290 : (this.isThreeColumn ? 193 : (this.isFourColumn ? 145 : 580))}
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent>
+            <a @if.render={props.link} href={props.link} target="_blank">
+                <NeosRulez.DirectMail:Content.Image.ImageTag image={props.image} width={props.width} />
+            </a>
+            <NeosRulez.DirectMail:Content.Image.ImageTag @if.render={!props.link} image={props.image} width={props.width} />
+            <div @if.render={!props.image && props.inBackend} >
+                <img src={props.dummyImage} title="Dummy image" alt="Dummy image" class="neos-handle" />
+            </div>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Content.Image.ImageTag) < prototype(Neos.Fusion:Component) {
+    renderer = afx`
+        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} allowUpScaling="true" allowCropping="false" />
+    `
+}

@@ -1,0 +1,20 @@
+//include: resource://Neos.Neos/Private/Fusion/Prototypes/Page.fusion
+
+NeosRulez.DirectMail.SubscriptionController.unsubscribe = NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe
+
+prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.unsubscribe')}
+    `
+}
+
+//prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe) < prototype(NeosRulez.DirectMail:Document.AbstractPage) {
+//
+//    body.content {
+//        main = afx`
+//            {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.unsubscribe')}
+//        `
+//    }
+//}
+

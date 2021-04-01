@@ -1,0 +1,45 @@
+NeosRulez.DirectMail.QueueController.new = NeosRulez.DirectMail:Integration.QueueController.New
+
+prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.new')} >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="create" form.target.controller="Queue" form.target.package="NeosRulez.DirectMail" form.data.newQueue={newQueue} >
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')} field.name="newQueue[name]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newQueue[nodeuri]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')} >
+                        <Neos.Fusion.Form:Select>
+                            <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion:Loop items={nodes} itemName="node">
+                                <Neos.Fusion.Form:Select.Option option.value={node.nodeUri} >{node.title}</Neos.Fusion.Form:Select.Option>
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion.Form:Select>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newQueue[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.recipientlist')} field.multiple>
+                        <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
+                            <div style="display:block">
+                                <Neos.Fusion.Form:Checkbox field.value={recipientList}>
+                                    {recipientList.name}
+                                </Neos.Fusion.Form:Checkbox>
+                            </div>
+                        </Neos.Fusion:Loop>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')} field.name="newQueue[send]">
+                        <NeosRulez.DirectMail:Form.DatetimeLocal attributes.placeholder="Dispatch date" />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >Add dispatch</Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

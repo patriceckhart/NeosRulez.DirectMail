@@ -1,0 +1,80 @@
+prototype(NeosRulez.DirectMail:Content.TwoColumn) < prototype(Neos.Neos:ContentComponent) {
+
+    column0 = Neos.Neos:ContentCollection {
+        nodePath = 'column0'
+    }
+    column1 = Neos.Neos:ContentCollection {
+        nodePath = 'column1'
+    }
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent>
+            <table border="0" cellpadding="0" cellspacing="0" class="column-table">
+                <tbody>
+                    <tr>
+                        <td width="50%">{props.column0}</td>
+                        <td width="50%">{props.column1}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Content.ThreeColumn) < prototype(Neos.Neos:ContentComponent) {
+
+    column0 = Neos.Neos:ContentCollection {
+        nodePath = 'column0'
+    }
+    column1 = Neos.Neos:ContentCollection {
+        nodePath = 'column1'
+    }
+    column2 = Neos.Neos:ContentCollection {
+        nodePath = 'column2'
+    }
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent>
+            <table border="0" cellpadding="0" cellspacing="0" class="column-table">
+                <tbody>
+                <tr>
+                    <td width="33%">{props.column0}</td>
+                    <td width="33%">{props.column1}</td>
+                    <td width="33%">{props.column2}</td>
+                </tr>
+                </tbody>
+            </table>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Content.FourColumn) < prototype(Neos.Neos:ContentComponent) {
+
+    column0 = Neos.Neos:ContentCollection {
+        nodePath = 'column0'
+    }
+    column1 = Neos.Neos:ContentCollection {
+        nodePath = 'column1'
+    }
+    column2 = Neos.Neos:ContentCollection {
+        nodePath = 'column2'
+    }
+    column3 = Neos.Neos:ContentCollection {
+        nodePath = 'column3'
+    }
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent>
+            <table border="0" cellpadding="0" cellspacing="0" class="column-table">
+                <tbody>
+                <tr>
+                    <td width="25%">{props.column0}</td>
+                    <td width="25%">{props.column1}</td>
+                    <td width="25%">{props.column2}</td>
+                    <td width="25%">{props.column3}</td>
+                </tr>
+                </tbody>
+            </table>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}
