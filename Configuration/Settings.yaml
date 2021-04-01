@@ -13,6 +13,9 @@ Neos:
           NeosRulez.DirectMail:
             - Main
             - 'NodeTypes/*'
+            - 'Integration/*'
+            - 'Presentation/*'
+            - 'Mail/*'
     nodeTypes:
       groups:
         neosRulezDirectMail:
