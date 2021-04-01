@@ -150,13 +150,14 @@ class QueueController extends ActionController
     /**
      * @return string
      */
-    public function getNodeUri($node) {
+    public function getNodeUri($node)
+    {
         $url = $this->linkingService->createNodeUri(
             $this->getControllerContext(),
             $node,
             null,
             'html',
-            'false',
+            'true',
             [],
             '',
             false,
