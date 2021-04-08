@@ -58,7 +58,7 @@ class DispatchService {
                                 $isActive = $recipient->getActive();
                                 if($isActive) {
                                     $active = $active + 1;
-                                    $recipientData = ['email' => $recipient->getEmail(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientList' => $this->persistenceManager->getIdentifierByObject($recipientList), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
+                                    $recipientData = ['email' => $recipient->getEmail(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'recipientList' => $this->persistenceManager->getIdentifierByObject($recipientList), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
                                     $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
                                     if($sent) {
                                         $this->updateQueue($queue);
