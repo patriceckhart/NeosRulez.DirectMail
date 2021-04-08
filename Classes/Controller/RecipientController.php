@@ -46,7 +46,7 @@ class RecipientController extends ActionController
      */
     public function newAction()
     {
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
     }
 
     /**
@@ -66,7 +66,7 @@ class RecipientController extends ActionController
      */
     public function editAction($recipient)
     {
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
         $this->view->assign('recipient', $recipient);
     }
 

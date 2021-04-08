@@ -130,7 +130,7 @@ class QueueController extends ActionController
             }
         }
         $this->view->assign('nodes', $result);
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
     }
 
     /**

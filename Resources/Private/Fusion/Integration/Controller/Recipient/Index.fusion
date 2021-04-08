@@ -108,7 +108,6 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
             $('#searchstring').keyup(function() {
                 var filter = $(this).val(), count = 0;
                 var list = $('.neos-table').find('tbody').children('tr');
-                console.log('search');
                 $(list).each(function() {
                     if ($(this).attr('data-tags').search(new RegExp(filter, 'i')) < 0) {
                         $(this).hide()

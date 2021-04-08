@@ -38,13 +38,19 @@ class ImportController extends ActionController
      */
     protected $resourceManager;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\MergeService
+     */
+    protected $mergeService;
+
 
     /**
      * @return void
      */
     public function indexAction()
     {
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
     }
 
     /**
@@ -72,8 +78,27 @@ class ImportController extends ActionController
             $newRecipient->setCustomsalutation($customsalutation);
             $newRecipient->setActive(true);
             $newRecipient->setRecipientlist([$recipientList]);
-            $this->recipientRepository->add($newRecipient);
 
+            $existingRecipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
+            if($existingRecipient) {
+                $existingRecipient->setFirstname($firstname);
+                $existingRecipient->setLastname($lastname);
+                $existingRecipient->setEmail($email);
+                $existingRecipient->setGender((int) $gender);
+                $existingRecipient->setCustomsalutation($customsalutation);
+
+                $recipientLists = $existingRecipient->getRecipientlist();
+                $rawRecipientLists = [];
+                foreach ($recipientLists as $list) {
+                    $rawRecipientLists[] = $list;
+                }
+                $rawRecipientLists[] = $recipientList;
+
+                $existingRecipient->setRecipientlist($rawRecipientLists);
+                $this->recipientRepository->update($existingRecipient);
+            } else {
+                $this->recipientRepository->add($newRecipient);
+            }
         }
 
         $this->redirect('index', 'import');

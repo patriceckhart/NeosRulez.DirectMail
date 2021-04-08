@@ -75,4 +75,26 @@ class RecipientRepository extends Repository {
         return $result;
     }
 
+    /**
+     * @param string $email
+     * @return void
+     */
+    public function findOneRecipientByMail(string $email) {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching($query->equals('email', $email))->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute()->getFirst();
+        return $result;
+    }
+
+    /**
+     * @param string $email
+     * @return void
+     */
+    public function findRecipientsByMail(string $email) {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching($query->equals('email', $email))->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        return $result;
+    }
+
 }

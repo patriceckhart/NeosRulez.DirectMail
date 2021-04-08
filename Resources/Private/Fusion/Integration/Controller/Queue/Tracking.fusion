@@ -4,7 +4,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype
 
     renderer = afx`
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:label')} >
-            <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.noTrackings')}</p>
+            <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:noTrackings')}</p>
             <table @if.render={queues} class="neos-table">
                 <thead>
                 <tr>

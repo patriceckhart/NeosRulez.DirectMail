@@ -32,7 +32,7 @@ class RecipientListController extends ActionController
      */
     public function indexAction()
     {
-        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
         $result = [];
         foreach ($recipientLists as $i => $recipientList) {
             $recipientList->count = $this->recipientRepository->countByRecipientList($recipientList);
