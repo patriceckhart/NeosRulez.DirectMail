@@ -19,8 +19,9 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                     </div>
 
                 </Neos.Fusion.Form:Form>
-                {props.inlineStyles}
-                <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} noCreation={true} />
+                <div style="margin-top:80px;">
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} noCreation={true} />
+                </div>
             </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
     `

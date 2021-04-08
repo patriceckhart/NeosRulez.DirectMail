@@ -30,3 +30,11 @@
     '@package': 'NeosRulez.DirectMail'
     '@action': 'index'
   appendExceedingArguments: true
+-
+  name: 'NeosRulez.DirectMail tracking'
+  uriPattern: 'tracking/{queue}/{recipient}/{action}/{description}'
+  defaults:
+    '@controller': 'Tracking'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'create'
+  appendExceedingArguments: true

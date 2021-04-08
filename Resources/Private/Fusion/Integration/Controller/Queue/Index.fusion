@@ -4,65 +4,63 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
 
     renderer = afx`
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.label')} >
-            <NeosRulez.DirectMail:Integration.Component.DefaultLayout title="Queue" >
-                <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.noQueues')}</p>
-                <table @if.render={queues} class="neos-table">
-                    <thead>
+            <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.noQueues')}</p>
+            <table @if.render={queues} class="neos-table">
+                <thead>
+                <tr>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
+                    <td>&nbsp;</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                <Neos.Fusion:Loop items={queues} itemName="queue" >
                     <tr>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')}</td>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')}</td>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')}</td>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
-                        <td>&nbsp;</td>
+                        <td>
+                            {queue.name}
+                        </td>
+                        <td>
+                            {queue.nodeuri}
+                        </td>
+                        <td>
+                            {Date.format(queue.send, 'Y-m-d, H:i')}
+                        </td>
+                        <td>
+                            <span class="neos-badge" style={'background:' + (queue.sent == queue.total ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.total}</span>
+                        </td>
+                        <td>
+                            {Date.format(queue.created, 'Y-m-d, H:i')}
+                        </td>
+                        <td class="neos-action">
+                            <div @if.render={(queue.sent == queue.total && queue.sent == 0 ? false : true)} class="neos-pull-right" >
+                            <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >
+                                <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
+                                <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
+                                    <i class="fas fa-trash"></i>
+                                </Neos.Fusion.Form:Button>
+                            </Neos.Fusion.Form:Form>
+                            </div>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
+                </Neos.Fusion:Loop>
 
-                    <Neos.Fusion:Loop items={queues} itemName="queue" >
-                        <tr>
-                            <td>
-                                {queue.name}
-                            </td>
-                            <td>
-                                {queue.nodeuri}
-                            </td>
-                            <td>
-                                {Date.format(queue.send, 'Y-m-d, H:i')}
-                            </td>
-                            <td>
-                                <span class="neos-badge" style={'background:' + (queue.sent == queue.total ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.total}</span>
-                            </td>
-                            <td>
-                                {Date.format(queue.created, 'Y-m-d, H:i')}
-                            </td>
-                            <td class="neos-action">
-                                <div @if.render={(queue.sent == queue.total && queue.sent == 0 ? false : true)} class="neos-pull-right" >
-                                    <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >
-                                        <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
-                                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
-                                            <i class="fas fa-trash"></i>
-                                        </Neos.Fusion.Form:Button>
-                                    </Neos.Fusion.Form:Form>
-                                </div>
-                            </td>
-                        </tr>
-                    </Neos.Fusion:Loop>
+                </tbody>
+            </table>
 
-                    </tbody>
-                </table>
+            <!--                Don't forget to set up a cron job: <span class="neos-badge"><code>0 * * * * {flowRootPath}flow queue:process >/dev/null 2>&1</code></span>-->
 
-<!--                Don't forget to set up a cron job: <span class="neos-badge"><code>0 * * * * {flowRootPath}flow queue:process >/dev/null 2>&1</code></span>-->
-
-                <div class="neos-footer">
-                    <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.button.create')} >
-                        <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="new" />
-                    </Neos.Fusion:Tag>
-                    <Neos.Fusion:Tag @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-success" content="<i class='far fa-play-circle'></i>">
-                        <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="start" />
-                    </Neos.Fusion:Tag>
-                </div>
-            </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+            <div class="neos-footer">
+                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.button.create')} >
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="new" />
+                </Neos.Fusion:Tag>
+                <Neos.Fusion:Tag @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-success" content="<i class='far fa-play-circle'></i>">
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="start" />
+                </Neos.Fusion:Tag>
+            </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
     `
 }

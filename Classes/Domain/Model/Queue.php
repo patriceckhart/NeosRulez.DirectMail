@@ -86,7 +86,7 @@ class Queue
     /**
      * @var integer
      */
-    protected $sent = false;
+    protected $sent = 0;
 
     /**
      * @return integer

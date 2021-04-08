@@ -65,6 +65,18 @@
 			<trans-unit id="content.input.option.choose" xml:space="preserve">
 				<source>Please select</source>
 			</trans-unit>
+			<trans-unit id="content.search" xml:space="preserve">
+				<source>Search recipients</source>
+			</trans-unit>
+			<trans-unit id="content.deleteSelected" xml:space="preserve">
+				<source>Delete selected</source>
+			</trans-unit>
+			<trans-unit id="content.deactivateSelected" xml:space="preserve">
+				<source>Deactivate selected</source>
+			</trans-unit>
+			<trans-unit id="content.activateSelected" xml:space="preserve">
+				<source>Activate selected</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

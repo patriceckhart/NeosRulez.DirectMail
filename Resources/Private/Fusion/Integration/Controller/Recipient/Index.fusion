@@ -5,11 +5,16 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
     recipientList = ${this.recipientListRecipients ? this.recipientListRecipients : recipients}
 
     renderer = afx`
+        <style>{"
+            .checkbox .neos-control-group { margin-bottom:0 !important; }
+        "}</style>
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:label')} >
             <p @if.render={!props.recipientList} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.noRecipients')}</p>
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.Search @if.render={props.recipientList} />
             <table @if.render={props.recipientList} class="neos-table">
                 <thead>
                 <tr>
+                    <td>&nbsp;</td>
                     <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')}</td>
                     <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.firstname')}</td>
                     <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.lastname')}</td>
@@ -21,7 +26,12 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                 <tbody>
 
                 <Neos.Fusion:Loop items={props.recipientList} itemName="recipient" >
-                    <tr>
+                    <tr class="tr" data-tags={String.toLowerCase(recipient.email) + ',' + String.toLowerCase(recipient.firstname) + ',' + String.toLowerCase(recipient.lastname)}>
+                        <td class="checkbox">
+                            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'checkbox__' + recipient.identifier} >
+                                <Neos.Fusion.Form:Checkbox attributes.class="select-checkbox" attributes.data-identifier={recipient.identifier} />
+                            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                        </td>
                         <td>
                             {recipient.email}
                         </td>
@@ -48,8 +58,8 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                                 <Neos.Fusion.Form:Form form.target.action="change" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
                                     <Neos.Fusion.Form:Hidden field.name="recipient" field.value={recipient} />
                                     <Neos.Fusion.Form:Button attributes.class={'neos-button neos-button-' + (recipient.active ? 'danger' : 'success')} >
-                                        <i @if.render={recipient.active} class="fas fa-ban"></i>
-                                        <i @if.render={!recipient.active} class="far fa-check-circle"></i>
+                                    <i @if.render={recipient.active} class="fas fa-ban"></i>
+                                    <i @if.render={!recipient.active} class="far fa-check-circle"></i>
                                     </Neos.Fusion.Form:Button>
                                 </Neos.Fusion.Form:Form>
                                 <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
@@ -65,11 +75,79 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
 
                 </tbody>
             </table>
-            <div @if.render={!props.noCreation} class="neos-footer">
-                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
+            <div class="neos-footer">
+
+                <Neos.Fusion:Tag @if.render={!props.noCreation} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" />
                 </Neos.Fusion:Tag>
+
+                <Neos.Fusion.Form:Form attributes.id="activate__selected__form" form.target.action="activateSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
+                    <Neos.Fusion.Form:Hidden attributes.id="activate__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-success" >
+                        <i class="far fa-check-circle"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.activateSelected')} <span class="count-integer"></span>
+                    </Neos.Fusion.Form:Button>
+                </Neos.Fusion.Form:Form>
+
+                <Neos.Fusion.Form:Form attributes.id="deactivate__selected__form" form.target.action="deactivateSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
+                    <Neos.Fusion.Form:Hidden attributes.id="deactivate__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-warning" >
+                        <i class="fas fa-ban"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.deactivateSelected')} <span class="count-integer"></span>
+                    </Neos.Fusion.Form:Button>
+                </Neos.Fusion.Form:Form>
+
+                <Neos.Fusion.Form:Form attributes.id="delete__selected__form" form.target.action="deleteSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
+                    <Neos.Fusion.Form:Hidden attributes.id="delete__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
+                        <i class="fas fa-trash"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.deleteSelected')} <span class="count-integer"></span>
+                    </Neos.Fusion.Form:Button>
+                </Neos.Fusion.Form:Form>
+
             </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+        <script>{"
+            $('#searchstring').keyup(function() {
+                var filter = $(this).val(), count = 0;
+                var list = $('.neos-table').find('tbody').children('tr');
+                console.log('search');
+                $(list).each(function() {
+                    if ($(this).attr('data-tags').search(new RegExp(filter, 'i')) < 0) {
+                        $(this).hide()
+                    } else {
+                        $(this).show();
+                        count++;
+                    }
+                });
+            });
+            $('.select-checkbox').click(function() {
+                identifiers = '';
+                count = 0;
+                $('.select-checkbox:checkbox:checked').each(function(i, el) {
+                    if (i === 0) {
+                        identifiers = $(this).attr('data-identifier');
+                    } else {
+                        identifiers = identifiers + ',' + $(this).attr('data-identifier');
+                    }
+                    count = i + 1;
+                });
+                $('#activate__selected, #deactivate__selected, #delete__selected').val(identifiers);
+                if(identifiers == '') {
+                    $('#activate__selected__form, #deactivate__selected__form, #delete__selected__form').hide();
+                } else {
+                    $('#activate__selected__form, #deactivate__selected__form, #delete__selected__form').css('display', 'inline');
+                }
+                $('.count-integer').text('(' + count + ')');
+            });
+        "}</script>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Search) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <div style="margin-bottom:30px;">
+            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.search')} >
+                <Neos.Fusion.Form:Input attributes.id="searchstring" attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.search')} />
+            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+        </div>
     `
 }

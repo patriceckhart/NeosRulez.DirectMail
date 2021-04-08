@@ -59,6 +59,18 @@ Neos:
               index:
                 label: NeosRulez.DirectMail:Integration.Controller.Queue:label
                 title: NeosRulez.DirectMail:Integration.Controller.Queue:label
+              tracking:
+                label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
+                title: NeosRulez.DirectMail:Integration.Controller.Tracking:description
+          tracking:
+            label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
+            controller: '\NeosRulez\DirectMail\Controller\TrackingController'
+            description: NeosRulez.DirectMail:Integration.Controller.Tracking:description
+            icon: 'fas fa-chart-bar'
+            actions:
+              index:
+                label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
+                title: NeosRulez.DirectMail:Integration.Controller.Tracking:label
           import:
             label: NeosRulez.DirectMail:Integration.Controller.Import:label
             controller: '\NeosRulez\DirectMail\Controller\ImportController'

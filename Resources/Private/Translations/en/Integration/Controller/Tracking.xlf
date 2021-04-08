@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.DirectMail" source-language="en" datatype="plaintext">
+        <body>
+			<trans-unit id="label" xml:space="preserve">
+				<source>Tracking</source>
+			</trans-unit>
+			<trans-unit id="description" xml:space="preserve">
+				<source>Track dispatch</source>
+			</trans-unit>
+			<trans-unit id="noTrackings" xml:space="preserve">
+				<source>No trackings</source>
+			</trans-unit>
+			<trans-unit id="content.recipient" xml:space="preserve">
+				<source>Recipient</source>
+			</trans-unit>
+			<trans-unit id="content.opened" xml:space="preserve">
+				<source>Opened</source>
+			</trans-unit>
+			<trans-unit id="content.openedTotal" xml:space="preserve">
+				<source>Opened total</source>
+			</trans-unit>
+			<trans-unit id="content.openedLast" xml:space="preserve">
+				<source>Opened last</source>
+			</trans-unit>
+			<trans-unit id="content.queue" xml:space="preserve">
+				<source>Dispatch</source>
+			</trans-unit>
+			<trans-unit id="content.sent" xml:space="preserve">
+				<source>Sent</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

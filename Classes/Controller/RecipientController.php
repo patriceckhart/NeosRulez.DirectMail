@@ -32,7 +32,13 @@ class RecipientController extends ActionController
      */
     public function indexAction()
     {
-        $this->view->assign('recipients', $this->recipientRepository->findAll());
+        $recipients = $this->recipientRepository->findAll();
+        if($recipients) {
+            foreach ($recipients as $recipient) {
+                $recipient->identifier = $this->persistenceManager->getIdentifierByObject($recipient);
+            }
+        }
+        $this->view->assign('recipients', $recipients);
     }
 
     /**
@@ -97,6 +103,50 @@ class RecipientController extends ActionController
     {
         $this->recipientRepository->remove($recipient);
         $this->persistenceManager->persistAll();
+        $this->redirect('index', 'recipient');
+    }
+
+    /**
+     * @param array $recipients
+     * @return void
+     */
+    public function activateSelectedAction(array $recipients)
+    {
+        $recipients = explode(',', $recipients['recipients']);
+        foreach ($recipients as $recipient) {
+            $recipientObject = $this->recipientRepository->findRecipientByIdentifier($recipient);
+            $recipientObject->setActive(true);
+            $this->recipientRepository->update($recipientObject);
+        }
+        $this->redirect('index', 'recipient');
+    }
+
+    /**
+     * @param array $recipients
+     * @return void
+     */
+    public function deactivateSelectedAction(array $recipients)
+    {
+        $recipients = explode(',', $recipients['recipients']);
+        foreach ($recipients as $recipient) {
+            $recipientObject = $this->recipientRepository->findRecipientByIdentifier($recipient);
+            $recipientObject->setActive(false);
+            $this->recipientRepository->update($recipientObject);
+        }
+        $this->redirect('index', 'recipient');
+    }
+
+    /**
+     * @param array $recipients
+     * @return void
+     */
+    public function deleteSelectedAction(array $recipients)
+    {
+        $recipients = explode(',', $recipients['recipients']);
+        foreach ($recipients as $recipient) {
+            $recipientObject = $this->recipientRepository->findRecipientByIdentifier($recipient);
+            $this->recipientRepository->remove($recipientObject);
+        }
         $this->redirect('index', 'recipient');
     }
 

@@ -29,4 +29,31 @@ class QueueRepository extends Repository {
         return $result;
     }
 
+    /**
+     * @param string $identifier
+     * @return void
+     */
+    public function findQueueByIdentifier(string $identifier)
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Queue';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching($query->equals('Persistence_Object_Identifier', $identifier))->execute()->getFirst();
+        return $result;
+    }
+
+    /**
+     * @return void
+     */
+    public function findQueuesInProgress()
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Queue';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->greaterThan('sent', 0)
+            )
+        )->execute();
+        return $result;
+    }
+
 }

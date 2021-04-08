@@ -1,0 +1,47 @@
+NeosRulez.DirectMail.QueueController.tracking = NeosRulez.DirectMail:Integration.QueueController.Tracking
+
+prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:label')} >
+            <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.noTrackings')}</p>
+            <table @if.render={queues} class="neos-table">
+                <thead>
+                <tr>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.queue')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.sent')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.opened')}</td>
+                    <td>&nbsp;</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                <Neos.Fusion:Loop items={queues} itemName="queue" >
+                    <tr>
+                        <td>
+                            {queue.name}
+                        </td>
+                        <td>
+                            {queue.sent}
+                        </td>
+                        <td>
+                            {queue.opened}
+                        </td>
+                        <td class="neos-action">
+                            <div class="neos-pull-right" >
+                                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-eye'></i>">
+                                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="indexTracking" @children="arguments">
+                                        <Neos.Fusion:DataStructure queue={queue} />
+                                    </Neos.Fusion:UriBuilder>
+                                </Neos.Fusion:Tag>
+                            </div>
+                        </td>
+                    </tr>
+                </Neos.Fusion:Loop>
+
+                </tbody>
+            </table>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}
+

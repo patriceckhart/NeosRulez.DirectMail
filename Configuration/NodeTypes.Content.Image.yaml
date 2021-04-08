@@ -8,7 +8,7 @@
     inspector:
       groups:
         neosRulezDirectMail:
-          label: i18n
+          label: NeosRulez.DirectMail:NodeTypes.Content.Image:ui.label
           icon: icon-image
   properties:
     image:

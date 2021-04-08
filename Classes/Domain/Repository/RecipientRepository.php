@@ -68,7 +68,7 @@ class RecipientRepository extends Repository {
      * @param string $identifier
      * @return void
      */
-    public function findProjectByIdentifier(string $identifier) {
+    public function findRecipientByIdentifier(string $identifier) {
         $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
         $query = $this->persistenceManager->createQueryForType($class);
         $result = $query->matching($query->equals('Persistence_Object_Identifier', $identifier))->execute()->getFirst();

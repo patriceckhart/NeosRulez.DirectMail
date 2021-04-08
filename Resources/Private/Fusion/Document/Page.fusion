@@ -19,17 +19,6 @@ prototype(NeosRulez.DirectMail:Document.Page) < prototype(NeosRulez.DirectMail:D
                     </td>
                 </tr>
             </table>
-<!--            <Neos.Fusion:Tag tagName="table" attributes.border="0" attributes.cellpadding="0" attributes.cellspacing="0" attributes.class="table-body" >-->
-<!--                <Neos.Fusion:Tag tagName="table" attributes.class="main" >-->
-<!--                    <div class="body">-->
-<!--                        <div class="content-wrapper">-->
-<!--                            <div class="content">-->
-<!--                                {props.main}-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </Neos.Fusion:Tag>-->
-<!--            </Neos.Fusion:Tag>-->
         `
     }
 }

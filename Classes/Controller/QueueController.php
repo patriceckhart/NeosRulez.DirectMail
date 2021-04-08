@@ -36,6 +36,12 @@ class QueueController extends ActionController
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\TrackingRepository
+     */
+    protected $trackingRepository;
+
+    /**
+     * @Flow\Inject
      * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
      */
     protected $contextFactory;
@@ -76,6 +82,35 @@ class QueueController extends ActionController
         }
         $this->view->assign('queues', $result);
         $this->view->assign('flowRootPath', constant('FLOW_PATH_ROOT'));
+    }
+
+    /**
+     * @return void
+     */
+    public function trackingAction()
+    {
+        $queues = $this->queueRepository->findAll();
+        $result = [];
+        foreach ($queues as $queue) {
+            $queue->opened = $this->trackingRepository->countByQueue($queue);
+            $result[] = $queue;
+        }
+        $this->view->assign('queues', $result);
+    }
+
+    /**
+     * @param \NeosRulez\DirectMail\Domain\Model\Queue $queue
+     * @return void
+     */
+    public function indexTrackingAction(\NeosRulez\DirectMail\Domain\Model\Queue $queue)
+    {
+        $trackings = $this->trackingRepository->findByQueue($queue);
+        $result = [];
+        foreach ($trackings as $tracking) {
+            $tracking->opened = $this->trackingRepository->countByQueueAndRecipient($tracking->getQueue(), $tracking->getRecipient());
+            $result[$tracking->getRecipient()->getEmail()] = $tracking;
+        }
+        $this->view->assign('trackings', $result);
     }
 
     /**

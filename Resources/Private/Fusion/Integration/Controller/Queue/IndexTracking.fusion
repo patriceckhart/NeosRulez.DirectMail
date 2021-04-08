@@ -1,0 +1,37 @@
+NeosRulez.DirectMail.QueueController.indexTracking = NeosRulez.DirectMail:Integration.QueueController.IndexTracking
+
+prototype(NeosRulez.DirectMail:Integration.QueueController.IndexTracking) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:label')} >
+            <p @if.render={!trackings} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.noTrackings')}</p>
+            <table @if.render={trackings} class="neos-table">
+                <thead>
+                <tr>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.recipient')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.openedTotal')}</td>
+                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Tracking:content.openedLast')}</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                <Neos.Fusion:Loop items={trackings} itemName="tracking" >
+                    <tr>
+                        <td>
+                            {tracking.recipient.email}
+                        </td>
+                        <td>
+                            {tracking.opened}
+                        </td>
+                        <td>
+                            {Date.format(tracking.created, 'Y-m-d, H:i')}
+                        </td>
+                    </tr>
+                </Neos.Fusion:Loop>
+
+                </tbody>
+            </table>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}
+

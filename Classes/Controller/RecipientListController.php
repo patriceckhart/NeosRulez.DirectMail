@@ -65,7 +65,13 @@ class RecipientListController extends ActionController
      */
     public function editAction($recipientList)
     {
-        $this->view->assign('recipients', $this->recipientRepository->findByRecipientList($recipientList));
+        $recipients = $this->recipientRepository->findByRecipientList($recipientList);
+        if($recipients) {
+            foreach ($recipients as $recipient) {
+                $recipient->identifier = $this->persistenceManager->getIdentifierByObject($recipient);
+            }
+        }
+        $this->view->assign('recipients', $recipients);
         $this->view->assign('recipientList', $recipientList);
     }
 
