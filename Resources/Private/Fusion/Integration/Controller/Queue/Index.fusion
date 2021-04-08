@@ -4,52 +4,145 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
 
     renderer = afx`
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.label')} >
+            <style @if.render={queues && Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend') ? true : false} >{"
+                .lds-roller {
+                    display: inline-block;
+                    position: absolute;
+                    margin-top: 8px !important;
+                    -webkit-transform: scale(0.3); -moz-transform: scale(0.3); -ms-transform: scale(0.3); -o-transform: scale(0.3); transform: scale(0.3);
+                }
+                .lds-roller div {
+                    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                    transform-origin: 40px 40px;
+                }
+                .lds-roller div:after {
+                    content: ' ';
+                    display: block;
+                    position: absolute;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: #fff;
+                    margin: -4px 0 0 -4px;
+                }
+                .lds-roller div:nth-child(1) {
+                    animation-delay: -0.036s;
+                }
+                .lds-roller div:nth-child(1):after {
+                    top: 63px;
+                    left: 63px;
+                }
+                .lds-roller div:nth-child(2) {
+                    animation-delay: -0.072s;
+                }
+                .lds-roller div:nth-child(2):after {
+                    top: 68px;
+                    left: 56px;
+                }
+                .lds-roller div:nth-child(3) {
+                    animation-delay: -0.108s;
+                }
+                .lds-roller div:nth-child(3):after {
+                    top: 71px;
+                    left: 48px;
+                }
+                .lds-roller div:nth-child(4) {
+                    animation-delay: -0.144s;
+                }
+                .lds-roller div:nth-child(4):after {
+                    top: 72px;
+                    left: 40px;
+                }
+                .lds-roller div:nth-child(5) {
+                    animation-delay: -0.18s;
+                }
+                .lds-roller div:nth-child(5):after {
+                    top: 71px;
+                    left: 32px;
+                }
+                .lds-roller div:nth-child(6) {
+                    animation-delay: -0.216s;
+                }
+                .lds-roller div:nth-child(6):after {
+                    top: 68px;
+                    left: 24px;
+                }
+                .lds-roller div:nth-child(7) {
+                    animation-delay: -0.252s;
+                }
+                .lds-roller div:nth-child(7):after {
+                    top: 63px;
+                    left: 17px;
+                }
+                .lds-roller div:nth-child(8) {
+                    animation-delay: -0.288s;
+                }
+                .lds-roller div:nth-child(8):after {
+                    top: 56px;
+                    left: 12px;
+                }
+                @keyframes lds-roller {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            "}</style>
+
             <p @if.render={!queues} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.noQueues')}</p>
-            <table @if.render={queues} class="neos-table">
-                <thead>
-                <tr>
-                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')}</td>
-                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')}</td>
-                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')}</td>
-                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
-                    <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
-                    <td>&nbsp;</td>
-                </tr>
-                </thead>
-                <tbody>
-
-                <Neos.Fusion:Loop items={queues} itemName="queue" >
+            <div @if.render={queues} class="neos-table-wrapper">
+                <table class="neos-table">
+                    <thead>
                     <tr>
-                        <td>
-                            {queue.name}
-                        </td>
-                        <td>
-                            {queue.nodeuri}
-                        </td>
-                        <td>
-                            {Date.format(queue.send, 'Y-m-d, H:i')}
-                        </td>
-                        <td>
-                            <span class="neos-badge" style={'background:' + (queue.sent == queue.total ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.total}</span>
-                        </td>
-                        <td>
-                            {Date.format(queue.created, 'Y-m-d, H:i')}
-                        </td>
-                        <td class="neos-action">
-                            <div @if.render={(queue.sent == queue.total && queue.sent == 0 ? false : true)} class="neos-pull-right" >
-                            <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >
-                                <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
-                                <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
-                                    <i class="fas fa-trash"></i>
-                                </Neos.Fusion.Form:Button>
-                            </Neos.Fusion.Form:Form>
-                            </div>
-                        </td>
+                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')}</td>
+                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')}</td>
+                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')}</td>
+                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
+                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
+                        <td @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} >&nbsp;</td>
+                        <td>&nbsp;</td>
                     </tr>
-                </Neos.Fusion:Loop>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
+                    <Neos.Fusion:Loop items={queues} itemName="queue" >
+                        <tr>
+                            <td>
+                                {queue.name}
+                            </td>
+                            <td>
+                                {queue.nodeuri}
+                            </td>
+                            <td>
+                                {Date.format(queue.send, 'Y-m-d, H:i')}
+                            </td>
+                            <td>
+                                <span class="neos-badge" style={'background:' + (queue.sent == queue.total ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.total}</span>
+                            </td>
+                            <td>
+                                {Date.format(queue.created, 'Y-m-d, H:i')}
+                            </td>
+                            <td @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} >
+                                {queue.isSending ? '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>' : (queue.sent == queue.total ? I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent') : '')}
+                            </td>
+                            <td class="neos-action">
+                                <div @if.render={(queue.sent == queue.total && queue.sent == 0 ? false : true)} class="neos-pull-right" >
+                                    <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >
+                                        <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
+                                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" attributes.style={queue.isSending ? 'opacity:0.5; pointer-events:none;' : false} >
+                                            <i class="fas fa-trash"></i>
+                                        </Neos.Fusion.Form:Button>
+                                    </Neos.Fusion.Form:Form>
+                                </div>
+                            </td>
+                        </tr>
+                    </Neos.Fusion:Loop>
+
+                    </tbody>
+                </table>
+            </div>
 
             <!--                Don't forget to set up a cron job: <span class="neos-badge"><code>0 * * * * {flowRootPath}flow queue:process >/dev/null 2>&1</code></span>-->
 
@@ -61,6 +154,21 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="start" />
                 </Neos.Fusion:Tag>
             </div>
+
+            <script @if.render={queues && Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend') ? true : false} >{"
+                url = window.location.href;
+                setInterval(function(){
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (data) {
+                            var result = $(data).find('.neos-table');
+                            $('.neos-table-wrapper').html(result);
+                            console.log('reloaded');
+                        }
+                    });
+                }, 5000);
+            "}</script>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
     `
 }

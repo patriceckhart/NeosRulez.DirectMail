@@ -78,6 +78,14 @@ class QueueController extends ActionController
                 $count = $count + $this->recipientRepository->countActiveByRecipientList($recipientList);
             }
             $queue->total = $count;
+            if($queue->getSent() > 0) {
+                $queue->isSending = true;
+                if($queue->getSent() == $count) {
+                    $queue->isSending = false;
+                }
+            } else {
+                $queue->isSending = false;
+            }
             $result[] = $queue;
         }
         $this->view->assign('queues', $result);
