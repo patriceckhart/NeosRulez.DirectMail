@@ -28,7 +28,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype
                             {queue.opened}
                         </td>
                         <td class="neos-action">
-                            <div class="neos-pull-right" >
+                            <div @if.render={queue.opened == 0 ? false : true} class="neos-pull-right" >
                                 <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-eye'></i>">
                                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="indexTracking" @children="arguments">
                                         <Neos.Fusion:DataStructure queue={queue} />
