@@ -32,7 +32,7 @@ class RecipientController extends ActionController
      */
     public function indexAction()
     {
-        $recipients = $this->recipientRepository->findAll();
+        $recipients = $this->recipientRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         if($recipients) {
             foreach ($recipients as $recipient) {
                 $recipient->identifier = $this->persistenceManager->getIdentifierByObject($recipient);

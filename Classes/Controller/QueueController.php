@@ -69,7 +69,7 @@ class QueueController extends ActionController
      */
     public function indexAction()
     {
-        $queues = $this->queueRepository->findAll();
+        $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $result = [];
         foreach ($queues as $queue) {
             $recipientLists = $queue->getRecipientlist();
@@ -89,7 +89,7 @@ class QueueController extends ActionController
      */
     public function trackingAction()
     {
-        $queues = $this->queueRepository->findAll();
+        $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $result = [];
         foreach ($queues as $queue) {
             $queue->opened = $this->trackingRepository->countByQueue($queue);
