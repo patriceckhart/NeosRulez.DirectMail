@@ -18,6 +18,19 @@ class NewsletterController extends ActionController
     protected $cssToInlineService;
 
     /**
+     * @var array
+     */
+    protected $settings;
+
+    /**
+     * @param array $settings
+     * @return void
+     */
+    public function injectSettings(array $settings) {
+        $this->settings = $settings;
+    }
+
+    /**
      * @param string $base64Uri
      * @return string
      */
@@ -26,7 +39,7 @@ class NewsletterController extends ActionController
         $uri = base64_decode($base64Uri);
         $html = file_get_contents($uri);
         $cssToInlineView = $this->cssToInlineService->execute($html);
-        $view = '<meta name="viewport" content="width=device-width, initial-scale=1.0" /><body style="margin:0;padding:0;"></body>' . $cssToInlineView . '<img src="http://dev.newsletter.dockyard.local/tracking/{queue}/{recipient}/opened/0" style="width:1px;height:1px" />';
+        $view = '<meta name="viewport" content="width=device-width, initial-scale=1.0" /><body style="margin:0;padding:0;"></body>' . $cssToInlineView . '<img src="' . $this->settings['baseUri'] . '/tracking/{queue}/{recipient}/opened/0" style="width:1px;height:1px" />';
         return $view;
     }
 
