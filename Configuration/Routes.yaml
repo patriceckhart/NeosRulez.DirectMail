@@ -16,7 +16,7 @@
   appendExceedingArguments: true
 -
   name: 'NeosRulez.DirectMail unsubscribe'
-  uriPattern: 'unsubscribe/{identifier}'
+  uriPattern: 'unsubscribe/{identifier}/{recipientList}'
   defaults:
     '@controller': 'Subscription'
     '@package': 'NeosRulez.DirectMail'

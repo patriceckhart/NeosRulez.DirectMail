@@ -58,12 +58,21 @@ class SubscriptionController extends ActionController
 
     /**
      * @param string $identifier
+     * @param string $recipientList
      * @return void
      */
-    public function unsubscribeAction(string $identifier)
+    public function unsubscribeAction(string $identifier, string $recipientList)
     {
         $recipient = $this->recipientRepository->findByIdentifier($identifier);
-        $recipient->setActive(false);
+        $recipientLists = $recipient->getRecipientList();
+        $newRecipientLists = [];
+        foreach ($recipientLists as $list) {
+            $listIdentifier = $this->persistenceManager->getIdentifierByObject($list);
+            if($listIdentifier != $recipientList) {
+                $newRecipientLists[] = $list;
+            }
+        }
+        $recipient->setRecipientList($newRecipientLists);
         $this->recipientRepository->update($recipient);
         $this->persistenceManager->persistAll();
     }
