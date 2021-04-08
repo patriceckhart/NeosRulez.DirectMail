@@ -55,8 +55,30 @@ class RecipientController extends ActionController
      */
     public function createAction($newRecipient)
     {
-        $newRecipient->setActive(true);
-        $this->recipientRepository->add($newRecipient);
+        $recipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
+        if($recipient) {
+            $recipientLists = $recipient->getRecipientlist();
+            $rawRecipientLists = [];
+            foreach ($recipientLists as $list) {
+                $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($list)] = $list;
+            }
+            foreach ($newRecipient->getRecipientlist() as $newRecipientList) {
+                $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($newRecipientList)] = $newRecipientList;
+            }
+
+            $recipient->setRecipientlist($rawRecipientLists);
+
+            $recipient->setFirstname($newRecipient->getFirstname());
+            $recipient->setLastname($newRecipient->getLastname());
+            $recipient->setGender((int) $newRecipient->getGender());
+            $recipient->setCustomsalutation($newRecipient->getCustomsalutation());
+
+            $recipient->setActive(true);
+            $this->recipientRepository->update($recipient);
+        } else {
+            $newRecipient->setActive(true);
+            $this->recipientRepository->add($newRecipient);
+        }
         $this->redirect('index', 'recipient');
     }
 

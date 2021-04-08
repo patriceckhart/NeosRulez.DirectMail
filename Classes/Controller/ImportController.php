@@ -90,9 +90,9 @@ class ImportController extends ActionController
                 $recipientLists = $existingRecipient->getRecipientlist();
                 $rawRecipientLists = [];
                 foreach ($recipientLists as $list) {
-                    $rawRecipientLists[] = $list;
+                    $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($list)] = $list;
                 }
-                $rawRecipientLists[] = $recipientList;
+                $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($recipientList)] = $recipientList;
 
                 $existingRecipient->setRecipientlist($rawRecipientLists);
                 $this->recipientRepository->update($existingRecipient);

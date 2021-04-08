@@ -16,12 +16,6 @@ class MergeService {
      */
     protected $recipientRepository;
 
-    /**
-     * @Flow\Inject
-     * @var \Neos\Flow\Persistence\PersistenceManagerInterface
-     */
-    protected $persistenceManager;
-
 
     /**
      * @return void
