@@ -178,7 +178,7 @@ class QueueController extends ActionController
      */
     public function startAction()
     {
-        shell_exec(constant('FLOW_PATH_ROOT') . 'flow queue:process');
+        shell_exec(constant('FLOW_PATH_ROOT') . 'flow queue:process > /dev/null 2>/dev/null &');
         $this->redirect('index', 'queue');
     }
 
