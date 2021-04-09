@@ -102,7 +102,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
                         <td @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} >&nbsp;</td>
-                        <td>&nbsp;</td>
+<!--                        <td>&nbsp;</td>-->
                     </tr>
                     </thead>
                     <tbody>
@@ -119,24 +119,24 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                                 {Date.format(queue.send, 'Y-m-d, H:i')}
                             </td>
                             <td>
-                                <span class="neos-badge" style={'background:' + (queue.sent == queue.total ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.total}</span>
+                                <span class="neos-badge" style={'background:' + (queue.sent == queue.tosend ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.tosend}</span>
                             </td>
                             <td>
                                 {Date.format(queue.created, 'Y-m-d, H:i')}
                             </td>
                             <td @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} >
-                                {queue.isSending ? '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>' : (queue.sent == queue.total ? I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent') : '')}
+                                {queue.isSending ? '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>' : (queue.sent == queue.tosend ? I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent') : '')}
                             </td>
-                            <td class="neos-action">
-                                <div @if.render={(queue.sent == queue.total && queue.sent == 0 ? false : true)} class="neos-pull-right" >
-                                    <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >
-                                        <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
-                                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" attributes.style={queue.isSending ? 'opacity:0.5; pointer-events:none;' : false} >
-                                            <i class="fas fa-trash"></i>
-                                        </Neos.Fusion.Form:Button>
-                                    </Neos.Fusion.Form:Form>
-                                </div>
-                            </td>
+<!--                            <td class="neos-action">-->
+<!--                                <div @if.render={(queue.sent == queue.tosend && queue.sent == 0 ? false : true)} class="neos-pull-right" >-->
+<!--                                    <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Queue" form.data.queue={queue} attributes.style="display:inline" >-->
+<!--                                        <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />-->
+<!--                                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" attributes.style={queue.isSending ? 'opacity:0.5; pointer-events:none;' : false} >-->
+<!--                                            <i class="fas fa-trash"></i>-->
+<!--                                        </Neos.Fusion.Form:Button>-->
+<!--                                    </Neos.Fusion.Form:Form>-->
+<!--                                </div>-->
+<!--                            </td>-->
                         </tr>
                     </Neos.Fusion:Loop>
 

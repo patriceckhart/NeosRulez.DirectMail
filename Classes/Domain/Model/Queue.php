@@ -86,6 +86,28 @@ class Queue
     /**
      * @var integer
      */
+    protected $tosend = 0;
+
+    /**
+     * @return integer
+     */
+    public function getTosend()
+    {
+        return $this->tosend;
+    }
+
+    /**
+     * @param integer $tosend
+     * @return void
+     */
+    public function setTosend($tosend)
+    {
+        $this->tosend = $tosend;
+    }
+
+    /**
+     * @var integer
+     */
     protected $sent = 0;
 
     /**

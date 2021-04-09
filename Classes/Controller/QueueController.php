@@ -73,11 +73,7 @@ class QueueController extends ActionController
         $result = [];
         foreach ($queues as $queue) {
             $recipientLists = $queue->getRecipientlist();
-            $count = 0;
-            foreach ($recipientLists as $recipientList) {
-                $count = $count + $this->recipientRepository->countActiveByRecipientList($recipientList);
-            }
-            $queue->total = $count;
+            $count = $queue->getTosend();
             if($queue->getSent() > 0) {
                 $queue->isSending = true;
                 if($queue->getSent() == $count) {
@@ -147,6 +143,12 @@ class QueueController extends ActionController
      */
     public function createAction($newQueue)
     {
+        $recipientLists = $newQueue->getRecipientlist();
+        $count = 0;
+        foreach ($recipientLists as $recipientList) {
+            $count = $count + $this->recipientRepository->countActiveByRecipientList($recipientList);
+        }
+        $newQueue->setTosend($count);
         $this->queueRepository->add($newQueue);
         $this->redirect('index', 'queue');
     }
