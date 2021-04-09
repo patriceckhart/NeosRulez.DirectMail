@@ -38,3 +38,11 @@
     '@package': 'NeosRulez.DirectMail'
     '@action': 'create'
   appendExceedingArguments: true
+-
+  name: 'NeosRulez.DirectMail recipient ajax loading'
+  uriPattern: 'index'
+  defaults:
+    '@controller': 'Recipient'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'index'
+  appendExceedingArguments: true

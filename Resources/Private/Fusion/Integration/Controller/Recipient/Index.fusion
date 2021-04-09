@@ -5,6 +5,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
     recipientList = ${this.recipientListRecipients ? this.recipientListRecipients : recipients}
 
     renderer = afx`
+        <div id="loading__overlay" style="position:fixed;z-index:99999;width:100vw;height:100vh;left:0;top:0;background:rgba(0,0,0,0.8);"><div style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.loadingRecipients')}</div></div>
         <style>{"
             .checkbox .neos-control-group { margin-bottom:0 !important; }
         "}</style>
@@ -75,6 +76,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
 
                 </tbody>
             </table>
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading offset={offset} length={length} count={count} />
             <div class="neos-footer">
 
                 <Neos.Fusion:Tag @if.render={!props.noCreation} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
@@ -105,7 +107,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
             </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
         <script>{"
-            $('#searchstring').keyup(function() {
+            $(document).on('keyup', '#searchstring', function() {
                 var filter = $(this).val(), count = 0;
                 var list = $('.neos-table').find('tbody').children('tr');
                 $(list).each(function() {
@@ -117,7 +119,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                     }
                 });
             });
-            $('.select-checkbox').click(function() {
+            $(document).on('click', '.select-checkbox', function() {
                 identifiers = '';
                 count = 0;
                 $('.select-checkbox:checkbox:checked').each(function(i, el) {
@@ -148,5 +150,44 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Search) < p
                 <Neos.Fusion.Form:Input attributes.id="searchstring" attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.search')} />
             </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
         </div>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <div id="ajax__loading__wrapper">
+            <Neos.Fusion.Form:Form attributes.id="ajax__loading" form.target.action="index" form.target.controller="Recipient" form.data.offset={offset} form.data.length={length} >
+                <Neos.Fusion.Form:Hidden field.name="offset" field.value={props.offset ? props.offset : 0} />
+                <Neos.Fusion.Form:Hidden field.name="length" field.value={props.length ? props.length : 0} />
+                <script>{"
+                    itemcount = " + props.count + ";
+                    length = " + props.length + ";
+                    offset = " + props.offset + ";
+                "}</script>
+            </Neos.Fusion.Form:Form>
+        </div>
+        <script>{"
+            setInterval(function(){
+                if(offset <= itemcount) {
+                    var form = $('#ajax__loading');
+                    var post_url = form.attr('action');
+                    var post_data = form.serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: post_url,
+                        data: post_data,
+                        success: function(data) {
+                            var result = $(data).find('.tr');
+                            var formWrapper = $(data).find('#ajax__loading');
+                            $('tbody').append(result);
+                            $('#ajax__loading__wrapper').html(formWrapper);
+                        }
+                    });
+                } else {
+                    $('#loading__overlay').remove();
+                }
+            }, 1000);
+        "}</script>
     `
 }

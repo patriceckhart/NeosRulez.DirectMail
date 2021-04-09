@@ -1,6 +1,0 @@
-'Neos.Neos:ContentCollection':
-  constraints:
-    nodeTypes:
-      '*': false
-      'NeosRulez.DirectMail:Component.AbstractContent': false
-      'NeosRulez.DirectMail:Content.Form': true

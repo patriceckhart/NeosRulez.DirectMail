@@ -77,6 +77,9 @@
 			<trans-unit id="content.activateSelected" xml:space="preserve">
 				<source>Ausgewählte aktivieren</source>
 			</trans-unit>
+			<trans-unit id="content.loadingRecipients" xml:space="preserve">
+				<source>Lade Empfänger</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
