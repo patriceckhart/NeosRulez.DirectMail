@@ -31,7 +31,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Index) < prot
                             <div class="neos-pull-right">
                                 <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-pen'></i>">
                                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="RecipientList" action="edit" @children="arguments">
-                                        <Neos.Fusion:DataStructure recipientList={recipientList} />
+                                        <Neos.Fusion:DataStructure recipientList={recipientList} offset="0" length="50" itemsPerLoad="50" />
                                     </Neos.Fusion:UriBuilder>
                                 </Neos.Fusion:Tag>
                                 <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="RecipientList" form.data.recipientList={recipientList} attributes.style={'display:inline;' + (recipientList.count != 0 ? ' pointer-events: none; opacity:0.5;' : '')} >

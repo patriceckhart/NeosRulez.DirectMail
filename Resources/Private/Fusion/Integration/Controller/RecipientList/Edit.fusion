@@ -20,7 +20,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
 
                 </Neos.Fusion.Form:Form>
                 <div style="margin-top:80px;">
-                    <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} noCreation={true} />
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} action="edit" />
                 </div>
             </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
