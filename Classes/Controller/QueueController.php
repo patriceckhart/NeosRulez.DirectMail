@@ -72,7 +72,6 @@ class QueueController extends ActionController
         $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $result = [];
         foreach ($queues as $queue) {
-            $recipientLists = $queue->getRecipientlist();
             $count = $queue->getTosend();
             if($queue->getSent() > 0) {
                 $queue->isSending = true;
