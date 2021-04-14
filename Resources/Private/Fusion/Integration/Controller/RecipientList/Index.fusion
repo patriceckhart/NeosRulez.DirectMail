@@ -19,7 +19,11 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Index) < prot
                 <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
                     <tr>
                         <td>
-                            {recipientList.name}
+                            <Neos.Fusion:Tag tagName="a" @children="attributes.href" content={recipientList.name} >
+                                <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="RecipientList" action="edit" @children="arguments">
+                                    <Neos.Fusion:DataStructure recipientList={recipientList} offset="0" length="50" itemsPerLoad="50" />
+                                </Neos.Fusion:UriBuilder>
+                            </Neos.Fusion:Tag>
                         </td>
                         <td>
                             {recipientList.count}

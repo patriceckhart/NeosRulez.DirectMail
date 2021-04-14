@@ -34,7 +34,11 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                             </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
                         </td>
                         <td>
-                            {recipient.email}
+                            <Neos.Fusion:Tag tagName="a" @children="attributes.href" content={recipient.email} >
+                                <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="edit" @children="arguments">
+                                    <Neos.Fusion:DataStructure recipient={recipient} />
+                                </Neos.Fusion:UriBuilder>
+                            </Neos.Fusion:Tag>
                         </td>
                         <td>
                             {recipient.firstname}
