@@ -68,7 +68,7 @@ class RecipientListController extends ActionController
      */
     public function editAction(int $offset = 0, int $length = 50, int $itemsPerLoad = 50, $recipientList)
     {
-        $recipients = $this->recipientRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
+        $recipients = $this->recipientRepository->findByRecipientList($recipientList)->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $combinedRecipients = [];
         if($recipients) {
             foreach ($recipients as $recipient) {
