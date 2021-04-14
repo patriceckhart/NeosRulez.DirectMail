@@ -57,6 +57,19 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                 time = $('#sendTime').val();
                 $('#dispatch__datetime').val(date + 'T' + time);
             });
+            var td = new Date();
+            var tmonth = td.getMonth()+1;
+            var tday = td.getDate();
+            var thours = td.getHours();
+            var tminutes = td.getMinutes();
+            var tdate = td.getFullYear() + '-' +
+                (tmonth<10 ? '0' : '') + tmonth + '-' +
+                (tday<10 ? '0' : '') + tday;
+            var ttime = (thours<10 ? '0' : '') + thours + ':' +
+                (tminutes<10 ? '0' : '') + tminutes;
+            $('#sendDate').val(tdate);
+            $('#sendTime').val(ttime);
+            $('#dispatch__datetime').val(tdate + 'T' + ttime);
         "}</script>
     `
 }
