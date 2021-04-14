@@ -201,7 +201,7 @@ class QueueController extends ActionController
             $node,
             null,
             'html',
-            'true',
+            false,
             [],
             '',
             false,

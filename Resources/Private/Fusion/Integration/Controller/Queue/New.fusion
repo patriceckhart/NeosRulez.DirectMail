@@ -15,7 +15,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                         <Neos.Fusion.Form:Select>
                             <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
                             <Neos.Fusion:Loop items={nodes} itemName="node">
-                                <Neos.Fusion.Form:Select.Option option.value={node.nodeUri} >{node.title}</Neos.Fusion.Form:Select.Option>
+                                <NeosRulez.DirectMail:Integration.QueueController.New.NodeOptionValue node={node} />
                             </Neos.Fusion:Loop>
                         </Neos.Fusion.Form:Select>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
@@ -58,5 +58,12 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                 $('#dispatch__datetime').val(date + 'T' + time);
             });
         "}</script>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Integration.QueueController.New.NodeOptionValue) < prototype(Neos.Fusion:Component) {
+    uri = ${Configuration.setting('NeosRulez.DirectMail.baseUri') + this.node.nodeUri}
+    renderer = afx`
+        <Neos.Fusion.Form:Select.Option option.value={props.uri} >{props.node.title}</Neos.Fusion.Form:Select.Option>
     `
 }
