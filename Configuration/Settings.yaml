@@ -80,9 +80,9 @@ Neos:
               index:
                 label: NeosRulez.DirectMail:Integration.Controller.Import:label
                 title: NeosRulez.DirectMail:Integration.Controller.Import:label
-NeosRulez:
-  DirectMail:
-    senderMail: 'postmaster@foo.bar'
-    senderName: 'Postmaster'
-    startDispatchFromNeosBackend: false
-    baseUri: 'http://foo.bar'
+#NeosRulez:
+#  DirectMail:
+#    senderMail: 'postmaster@foo.bar'
+#    senderName: 'Postmaster'
+#    startDispatchFromNeosBackend: false
+#    baseUri: 'http://foo.bar'
