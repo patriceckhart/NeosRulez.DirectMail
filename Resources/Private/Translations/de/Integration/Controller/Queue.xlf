@@ -23,8 +23,11 @@
 			<trans-unit id="content.node" xml:space="preserve">
 				<source>Newsletter-Seite</source>
 			</trans-unit>
-			<trans-unit id="content.sendDateTime" xml:space="preserve">
-				<source>Start-Zeitpunkt</source>
+			<trans-unit id="content.sendDate" xml:space="preserve">
+				<source>Versand Start-Datum</source>
+			</trans-unit>
+            <trans-unit id="content.sendTime" xml:space="preserve">
+				<source>Versand Start-Zeit</source>
 			</trans-unit>
 			<trans-unit id="content.sent" xml:space="preserve">
 				<source>Versendet</source>

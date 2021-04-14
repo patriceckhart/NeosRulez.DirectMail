@@ -1,5 +1,5 @@
 prototype(NeosRulez.DirectMail:Form.DatetimeLocal) < prototype(Neos.Fusion.Form:Component.Field) {
-
+    @context.isTime = ${this.isTime}
     renderer = Neos.Fusion:Component {
 
         name = ${field.getName()}

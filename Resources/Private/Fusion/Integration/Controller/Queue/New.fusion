@@ -30,8 +30,16 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                         </Neos.Fusion:Loop>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
-                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')} field.name="newQueue[send]">
-                        <NeosRulez.DirectMail:Form.DatetimeLocal attributes.placeholder="Dispatch date" />
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDate')} field.name="sendDate">
+                        <Neos.Fusion.Form:Input attributes.id="sendDate" attributes.type="date" attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDate')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendTime')} field.name="sendTime">
+                        <Neos.Fusion.Form:Input attributes.id="sendTime" attributes.type="time" attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendTime')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newQueue[send]" attributes.style="display:none" >
+                        <NeosRulez.DirectMail:Form.DatetimeLocal attributes.id="dispatch__datetime" attributes.placeholder="Dispatch date" />
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
                     <div class="neos-footer">
@@ -43,5 +51,12 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                 </Neos.Fusion.Form:Form>
             </div>
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+        <script>{"
+            $(document).on('change', '#sendDate, #sendTime', function() {
+                date = $('#sendDate').val();
+                time = $('#sendTime').val();
+                $('#dispatch__datetime').val(date + 'T' + time);
+            });
+        "}</script>
     `
 }
