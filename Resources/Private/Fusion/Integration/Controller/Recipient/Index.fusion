@@ -161,7 +161,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading
 
     renderer = afx`
         <div id="ajax__loading__wrapper">
-            <Neos.Fusion.Form:Form attributes.id="ajax__loading" form.target.action="{props.action == 'edit' : edit : index}" form.target.controller="{props.action == 'edit' : RecipientList : Recipient}" form.data.offset={offset} form.data.length={length} >
+            <Neos.Fusion.Form:Form attributes.id="ajax__loading" form.target.action={props.action == 'edit' : edit : index} form.target.controller="{props.action == 'edit' : RecipientList : Recipient}" form.data.offset={offset} form.data.length={length} >
                 <Neos.Fusion.Form:Hidden field.name="offset" field.value={props.offset ? props.offset : 0} />
                 <Neos.Fusion.Form:Hidden field.name="length" field.value={props.length ? props.length : 0} />
                 <script>{"
