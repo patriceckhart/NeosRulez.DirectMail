@@ -19,7 +19,11 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype
                 <Neos.Fusion:Loop items={queues} itemName="queue" >
                     <tr>
                         <td>
-                            {queue.name}
+                            <Neos.Fusion:Tag tagName="a" @children="attributes.href" content={queue.name} >
+                                <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="indexTracking" @children="arguments">
+                                    <Neos.Fusion:DataStructure queue={queue} />
+                                </Neos.Fusion:UriBuilder>
+                            </Neos.Fusion:Tag>
                         </td>
                         <td>
                             {queue.sent}
