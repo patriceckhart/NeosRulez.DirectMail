@@ -50,7 +50,18 @@ class ImportController extends ActionController
      */
     public function indexAction()
     {
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+        if($this->request->hasArgument('recipientList')) {
+            $this->view->assign('selectedRecipientList', $this->request->getArgument('recipientList'));
+        }
+        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        $result = [];
+        if($recipientLists) {
+            foreach ($recipientLists as $recipientList) {
+                $recipientList->identifier = $this->persistenceManager->getIdentifierByObject($recipientList);
+                $result[] = $recipientList;
+            }
+        }
+        $this->view->assign('recipientLists', $result);
     }
 
     /**

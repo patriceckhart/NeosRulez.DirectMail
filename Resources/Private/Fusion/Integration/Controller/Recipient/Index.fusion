@@ -3,15 +3,17 @@ NeosRulez.DirectMail.RecipientController.index = NeosRulez.DirectMail:Integratio
 prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototype(Neos.Fusion:Component) {
 
     recipientList = ${this.recipientListRecipients ? this.recipientListRecipients : recipients}
+    useAjax = ${Configuration.setting('NeosRulez.DirectMail.useAjax')}
 
     renderer = afx`
-        <div id="loading__overlay" style="position:fixed;z-index:99999;width:100vw;height:100vh;left:0;top:0;background:rgba(0,0,0,0.8);"><div style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.loadingRecipients')}</div></div>
+        <div @if.render={props.useAjax} id="loading__overlay" style="position:fixed;z-index:99999;width:100vw;height:100vh;left:0;top:0;background:rgba(0,0,0,0.8);"><div style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.loadingRecipients')}</div></div>
         <style>{"
             .checkbox .neos-control-group { margin-bottom:0 !important; }
         "}</style>
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:label')} >
             <p @if.render={!props.recipientList} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.noRecipients')}</p>
-            <NeosRulez.DirectMail:Integration.RecipientController.Index.Search @if.render={props.recipientList} />
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxSearch @if.render={props.recipientList && props.useAjax} />
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.Search @if.render={props.recipientList && !props.useAjax} action={action} recipientList={recipientList} />
             <table @if.render={props.recipientList} class="neos-table">
                 <thead>
                 <tr>
@@ -36,7 +38,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                         <td>
                             <Neos.Fusion:Tag tagName="a" @children="attributes.href" content={recipient.email} >
                                 <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="edit" @children="arguments">
-                                    <Neos.Fusion:DataStructure recipient={recipient} />
+                                    <Neos.Fusion:DataStructure recipient={recipient} selectedRecipientList={recipientList ? recipientList : null} />
                                 </Neos.Fusion:UriBuilder>
                             </Neos.Fusion:Tag>
                         </td>
@@ -57,11 +59,12 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                             <div class="neos-pull-right">
                                 <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-pen'></i>">
                                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="edit" @children="arguments">
-                                        <Neos.Fusion:DataStructure recipient={recipient} />
+                                        <Neos.Fusion:DataStructure recipient={recipient} selectedRecipientList={recipientList ? recipientList : null} />
                                     </Neos.Fusion:UriBuilder>
                                 </Neos.Fusion:Tag>
                                 <Neos.Fusion.Form:Form form.target.action="change" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
                                     <Neos.Fusion.Form:Hidden field.name="recipient" field.value={recipient} />
+                                    <Neos.Fusion.Form:Hidden field.name="selectedRecipientList" field.value={recipientList} />
                                     <Neos.Fusion.Form:Button attributes.class={'neos-button neos-button-' + (recipient.active ? 'danger' : 'success')} >
                                     <i @if.render={recipient.active} class="fas fa-ban"></i>
                                     <i @if.render={!recipient.active} class="far fa-check-circle"></i>
@@ -69,6 +72,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                                 </Neos.Fusion.Form:Form>
                                 <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="Recipient" form.data.recipient={recipient} attributes.style="display:inline" >
                                     <Neos.Fusion.Form:Hidden field.name="recipient" field.value={recipient} />
+                                    <Neos.Fusion.Form:Hidden field.name="selectedRecipientList" field.value={recipientList} />
                                     <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
                                         <i class="fas fa-trash"></i>
                                     </Neos.Fusion.Form:Button>
@@ -80,15 +84,19 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
 
                 </tbody>
             </table>
-            <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading offset={offset} length={length} count={count} action={props.action ? props.action : false} />
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination @if.render={!props.useAjax} pages={pages} pagination={pagination} action={action} recipientList={recipientList} />
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading @if.render={props.useAjax} offset={offset} length={length} count={count} action={action} recipientList={recipientList} />
             <div class="neos-footer">
 
                 <Neos.Fusion:Tag @if.render={!props.noCreation} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
-                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" />
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" @children="arguments">
+                        <Neos.Fusion:DataStructure @if.render={recipientList} selectedRecipientList={recipientList} />
+                    </Neos.Fusion:UriBuilder>
                 </Neos.Fusion:Tag>
 
                 <Neos.Fusion.Form:Form attributes.id="activate__selected__form" form.target.action="activateSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
                     <Neos.Fusion.Form:Hidden attributes.id="activate__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Hidden field.name="selectedRecipientList" field.value={recipientList} />
                     <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-success" >
                         <i class="far fa-check-circle"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.activateSelected')} <span class="count-integer"></span>
                     </Neos.Fusion.Form:Button>
@@ -96,6 +104,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
 
                 <Neos.Fusion.Form:Form attributes.id="deactivate__selected__form" form.target.action="deactivateSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
                     <Neos.Fusion.Form:Hidden attributes.id="deactivate__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Hidden field.name="selectedRecipientList" field.value={recipientList} />
                     <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-warning" >
                         <i class="fas fa-ban"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.deactivateSelected')} <span class="count-integer"></span>
                     </Neos.Fusion.Form:Button>
@@ -103,6 +112,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
 
                 <Neos.Fusion.Form:Form attributes.id="delete__selected__form" form.target.action="deleteSelected" form.target.controller="Recipient" form.data.recipients={recipients} attributes.style="display:none;" >
                     <Neos.Fusion.Form:Hidden attributes.id="delete__selected" field.name="recipients[recipients]" field.value="" />
+                    <Neos.Fusion.Form:Hidden field.name="selectedRecipientList" field.value={recipientList} />
                     <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
                         <i class="fas fa-trash"></i> {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.deleteSelected')} <span class="count-integer"></span>
                     </Neos.Fusion.Form:Button>
@@ -146,7 +156,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
     `
 }
 
-prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Search) < prototype(Neos.Fusion:Component) {
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxSearch) < prototype(Neos.Fusion:Component) {
 
     renderer = afx`
         <div style="margin-bottom:30px;">
@@ -157,13 +167,27 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Search) < p
     `
 }
 
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Search) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <div style="margin-bottom:30px;">
+            <Neos.Fusion.Form:Form form.target.action={props.action == 'edit' ? 'edit' : 'index'} form.target.controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} >
+                <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.search')} >
+                    <Neos.Fusion.Form:Input field.name="searchstring" attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.search')} />
+                    <Neos.Fusion.Form:Hidden @if.render={props.action == 'edit' ? true : false} field.name="recipientList" field.value={props.recipientList} />
+                </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+            </Neos.Fusion.Form:Form>
+        </div>
+    `
+}
+
 prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading) < prototype(Neos.Fusion:Component) {
 
     renderer = afx`
         <div id="ajax__loading__wrapper">
-            <Neos.Fusion.Form:Form attributes.id="ajax__loading" form.target.action={props.action == 'edit' : edit : index} form.target.controller="{props.action == 'edit' : RecipientList : Recipient}" form.data.offset={offset} form.data.length={length} >
+            <Neos.Fusion.Form:Form attributes.id="ajax__loading" form.target.action={props.action == 'edit' ? 'edit' : 'index'} form.target.controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} form.data.offset={offset} form.data.length={length} >
                 <Neos.Fusion.Form:Hidden field.name="offset" field.value={props.offset ? props.offset : 0} />
-                <Neos.Fusion.Form:Hidden field.name="length" field.value={props.length ? props.length : 0} />
+                <Neos.Fusion.Form:Hidden field.name="recipientList" field.value={props.recipientList} />
                 <script>{"
                     itemcount = " + props.count + ";
                     length = " + props.length + ";
@@ -193,5 +217,50 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading
                 }
             }, 1000);
         "}</script>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination) < prototype(Neos.Fusion:Component) {
+    renderer = afx`
+        <div @if.render={pagination} class="page-navigation">
+            <ul class="neos-fluid-widget-paginator">
+                <li @if.render={page > 1 ? true : false} class="previous">
+                    <Neos.Fusion:Tag tagName="a" @children="attributes.href" content="vorherige" >
+                        <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} action={props.action == 'edit' ? 'edit' : 'index'} @children="arguments">
+                            <Neos.Fusion:DataStructure page={(page - 1)} offset="0" recipientList={recipientList} />
+                        </Neos.Fusion:UriBuilder>
+                    </Neos.Fusion:Tag>
+                </li>
+                <Neos.Fusion:Loop items={pagination} itemName="pageItem">
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination.Item page={page} pageItem={pageItem} action={props.action} recipientList={recipientList} />
+                </Neos.Fusion:Loop>
+                <li @if.render={page >= pages ? false : true} class="next">
+                    <Neos.Fusion:Tag tagName="a" @children="attributes.href" content="nächste" >
+                        <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} action={props.action == 'edit' ? 'edit' : 'index'} @children="arguments">
+                            <Neos.Fusion:DataStructure page={(page + 1)} offset="0" recipientList={recipientList} />
+                        </Neos.Fusion:UriBuilder>
+                    </Neos.Fusion:Tag>
+                </li>
+            </ul>
+        </div>
+    `
+}
+
+prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination.Item) < prototype(Neos.Fusion:Component) {
+    isPage = ${this.page == this.pageItem ? true : false}
+    className = ${this.isPage ? 'current' : false}
+
+    controller = ${this.action == 'edit' ? 'RecipientList' : 'Recipient'}
+    controllerAction = ${this.action == 'edit' ? 'edit' : 'index'}
+
+    renderer = afx`
+        <li class={props.className} >
+            <Neos.Fusion:Tag @if.render={!props.isPage} tagName="a" @children="attributes.href" content={pageItem} >
+                <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.controller} action={props.controllerAction} @children="arguments">
+                    <Neos.Fusion:DataStructure page={pageItem} offset="0" recipientList={props.recipientList} />
+                </Neos.Fusion:UriBuilder>
+            </Neos.Fusion:Tag>
+            {props.isPage ? pageItem : false}
+        </li>
     `
 }

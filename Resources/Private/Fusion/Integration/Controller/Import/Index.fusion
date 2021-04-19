@@ -13,9 +13,9 @@ prototype(NeosRulez.DirectMail:Integration.ImportController.Index) < prototype(N
 
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newImport[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.recipientlist')} >
                         <Neos.Fusion.Form:Select attributes.required="required">
-                            <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion.Form:Select.Option @if.render={!selectedRecipientList} attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
                             <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
-                                <Neos.Fusion.Form:Select.Option option.value={recipientList} >{recipientList.name}</Neos.Fusion.Form:Select.Option>
+                                <Neos.Fusion.Form:Select.Option option.value={recipientList} attributes.selected={selectedRecipientList ? (selectedRecipientList.__identity == recipientList.identifier ? 'selected' : false) : false} >{recipientList.name}</Neos.Fusion.Form:Select.Option>
                             </Neos.Fusion:Loop>
                         </Neos.Fusion.Form:Select>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>

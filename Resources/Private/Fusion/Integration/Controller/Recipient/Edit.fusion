@@ -5,7 +5,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Edit) < prototype
     renderer = afx`
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.edit')} >
             <div class="neos-content neos-container-fluid">
-                <Neos.Fusion.Form:Form form.target.action="update" form.target.controller="Recipient" form.target.package="NeosRulez.DirectMail" form.data.recipient={recipient} >
+                <Neos.Fusion.Form:Form form.target.action="update" form.target.controller="Recipient" form.target.package="NeosRulez.DirectMail" form.data.recipient={recipient} form.data.selectedRecipientList={selectedRecipientList} >
 
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="recipient[gender]" label="Geschlecht" >
                         <Neos.Fusion.Form:Select>
@@ -42,6 +42,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Edit) < prototype
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
                     <div class="neos-footer">
+                        <Neos.Fusion.Form:Hidden @if.render={selectedRecipientList} field.name="selectedRecipientList[identifier]" field.value={selectedRecipientList} />
                         <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
                             {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.save')}
                         </Neos.Fusion.Form:Button>

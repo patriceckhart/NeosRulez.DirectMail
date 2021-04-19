@@ -16,8 +16,12 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                         <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
                             {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.save')}
                         </Neos.Fusion.Form:Button>
+                        <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={'<i class="fas fa-file-csv" style="margin-right:5px;"></i>' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.importRecipients')} >
+                            <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Import" action="index" @children="arguments">
+                                <Neos.Fusion:DataStructure recipientList={recipientList} />
+                            </Neos.Fusion:UriBuilder>
+                        </Neos.Fusion:Tag>
                     </div>
-
                 </Neos.Fusion.Form:Form>
                 <div style="margin-top:80px;">
                     <NeosRulez.DirectMail:Integration.RecipientController.Index recipientListRecipients={recipients} action="edit" />

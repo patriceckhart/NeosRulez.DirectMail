@@ -17,6 +17,7 @@ composer require neosrulez/directmail
 ```
 NeosRulez:
   DirectMail:
+    useAjax: false
     senderMail: 'postmaster@foo.bar'
     senderName: 'Postmaster'
     startDispatchFromNeosBackend: false

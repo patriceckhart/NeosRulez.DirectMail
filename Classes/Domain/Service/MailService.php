@@ -120,12 +120,19 @@ class MailService {
             $body = str_replace('{lastname}', $recipient['lastname'], $body);
         }
 
-        $unsubscribeUri = $this->settings['baseUri'] . '/unsubscribe/'. $recipient['identifier'] . '/' . $recipient['recipientList'];
+        $unsubscribeUri = '';
+        if(array_key_exists('recipientList', $recipient)) {
+            $unsubscribeUri = $this->settings['baseUri'] . '/unsubscribe/'. $recipient['identifier'] . '/' . $recipient['recipientList'];
+        }
         $body = str_replace('{unsubscribe}', '<a href="' . $unsubscribeUri . '" target="_blank">' . $this->translator->translateById('unsubscribe', [], null, null, $sourceName = 'Mail/Unsubscribe', $packageKey = 'NeosRulez.DirectMail') . '</a>', $body);
         $body = str_replace('{pageurl}', $nodeUri, $body);
         $body = str_replace('{salutation}', $salutation, $body);
-        $body = str_replace('{queue}', $recipient['queueIdentifier'], $body);
-        $body = str_replace('{recipient}', $recipient['recipientIdentifier'], $body);
+        if(array_key_exists('queueIdentifier', $recipient)) {
+            $body = str_replace('{queue}', $recipient['queueIdentifier'], $body);
+        }
+        if(array_key_exists('recipientIdentifier', $recipient)) {
+            $body = str_replace('{recipient}', $recipient['recipientIdentifier'], $body);
+        }
         return $body;
     }
 

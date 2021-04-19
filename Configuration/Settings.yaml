@@ -82,6 +82,7 @@ Neos:
                 title: NeosRulez.DirectMail:Integration.Controller.Import:label
 #NeosRulez:
 #  DirectMail:
+#    useAjax: false
 #    senderMail: 'postmaster@foo.bar'
 #    senderName: 'Postmaster'
 #    startDispatchFromNeosBackend: false

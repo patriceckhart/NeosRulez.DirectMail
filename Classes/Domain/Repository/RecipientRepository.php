@@ -97,4 +97,43 @@ class RecipientRepository extends Repository {
         return $result;
     }
 
+    /**
+     * @param string $searchstring
+     * @return void
+     */
+    public function findBySearchstring(string $searchstring) {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalOr(
+                $query->like('firstname', '%' . $searchstring . '%'),
+                $query->like('lastname', '%' . $searchstring . '%'),
+                $query->like('email', '%' . $searchstring . '%'),
+            )
+        )->execute();
+        return $result;
+    }
+
+    /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @param string $searchstring
+     * @return void
+     */
+    public function findByRecipientListAndSearchstring(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList, string $searchstring)
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->contains('recipientlist', $recipientList),
+                $query->logicalOr(
+                    $query->like('firstname', '%' . $searchstring . '%'),
+                    $query->like('lastname', '%' . $searchstring . '%'),
+                    $query->like('email', '%' . $searchstring . '%'),
+                ),
+            )
+        )->execute();
+        return $result;
+    }
+
 }

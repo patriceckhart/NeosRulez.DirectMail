@@ -60,15 +60,20 @@ class RecipientListController extends ActionController
     }
 
     /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
      * @param integer $offset
      * @param integer $length
      * @param integer $itemsPerLoad
-     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @param integer $page
+     * @param string $searchstring
      * @return void
      */
-    public function editAction(int $offset = 0, int $length = 50, int $itemsPerLoad = 50, $recipientList)
+    public function editAction(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList, int $offset = 0, int $length = 50, int $itemsPerLoad = 50, int $page = 1, string $searchstring = '')
     {
         $recipients = $this->recipientRepository->findByRecipientList($recipientList)->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
+        if($searchstring != '') {
+            $recipients = $this->recipientRepository->findByRecipientListAndSearchstring($recipientList, $searchstring);
+        }
         $combinedRecipients = [];
         if($recipients) {
             foreach ($recipients as $recipient) {
@@ -76,14 +81,27 @@ class RecipientListController extends ActionController
                 $combinedRecipients[] = $recipient;
             }
             $count = count($recipients);
+            $offset = $page > 1 ? (($page - 1) * $itemsPerLoad) : $offset;
             $result = array_slice($combinedRecipients, $offset, $length);
 
             $this->view->assign('offset', ($offset + $itemsPerLoad));
             $this->view->assign('length', $itemsPerLoad);
             $this->view->assign('count', $count);
+
+            $pages = ceil($count / $itemsPerLoad);
+            $pagination = [];
+            if($pages > 1) {
+                for ($i = 1; $i <= $pages; $i++) {
+                    $pagination[] = $i;
+                }
+            }
+            $this->view->assign('pages', $pages);
+            $this->view->assign('pagination', $pagination);
+            $this->view->assign('page', $page);
         }
         $this->view->assign('recipients', $result);
         $this->view->assign('recipientList', $recipientList);
+        $this->view->assign('action', 'edit');
     }
 
     /**

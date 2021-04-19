@@ -29,6 +29,9 @@
 			<trans-unit id="content.save" xml:space="preserve">
 				<source>Änderungen speichern</source>
 			</trans-unit>
+            <trans-unit id="content.importRecipients" xml:space="preserve">
+				<source>Empfänger importieren</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
