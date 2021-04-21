@@ -30,6 +30,6 @@ prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentCompo
 
 prototype(NeosRulez.DirectMail:Content.Image.ImageTag) < prototype(Neos.Fusion:Component) {
     renderer = afx`
-        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} allowUpScaling="true" allowCropping="false" />
+        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} attributes.width={props.width / 2} allowUpScaling="true" allowCropping="false" />
     `
 }
