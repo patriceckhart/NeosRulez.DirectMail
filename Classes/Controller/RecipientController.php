@@ -33,13 +33,18 @@ class RecipientController extends ActionController
      * @param integer $itemsPerLoad
      * @param integer $page
      * @param string $searchstring
+     * @param boolean $filterInactive
      * @return void
      */
-    public function indexAction(int $offset = 0, int $length = 50, int $itemsPerLoad = 50, int $page = 1, string $searchstring = '')
+    public function indexAction(int $offset = 0, int $length = 50, int $itemsPerLoad = 50, int $page = 1, string $searchstring = '', bool $filterInactive = false)
     {
         $recipients = $this->recipientRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         if($searchstring != '') {
             $recipients = $this->recipientRepository->findBySearchstring($searchstring);
+        }
+        if($filterInactive) {
+            $recipients = $this->recipientRepository->findInactiveRecipients();
+            $this->view->assign('hideFilter', true);
         }
         $combinedRecipients = [];
         if($recipients) {

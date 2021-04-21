@@ -12,8 +12,8 @@ prototype(NeosRulez.DirectMail:Content.TwoColumn) < prototype(Neos.Neos:ContentC
             <table border="0" cellpadding="0" cellspacing="0" class="column-table">
                 <tbody>
                     <tr>
-                        <td width="290">{props.column0}</td>
-                        <td width="290">{props.column1}</td>
+                        <td width="290px">{props.column0}</td>
+                        <td width="290px">{props.column1}</td>
                     </tr>
                 </tbody>
             </table>
@@ -38,9 +38,9 @@ prototype(NeosRulez.DirectMail:Content.ThreeColumn) < prototype(Neos.Neos:Conten
             <table border="0" cellpadding="0" cellspacing="0" class="column-table">
                 <tbody>
                 <tr>
-                    <td width="193">{props.column0}</td>
-                    <td width="193">{props.column1}</td>
-                    <td width="194">{props.column2}</td>
+                    <td width="193px">{props.column0}</td>
+                    <td width="193px">{props.column1}</td>
+                    <td width="194px">{props.column2}</td>
                 </tr>
                 </tbody>
             </table>
@@ -68,10 +68,10 @@ prototype(NeosRulez.DirectMail:Content.FourColumn) < prototype(Neos.Neos:Content
             <table border="0" cellpadding="0" cellspacing="0" class="column-table">
                 <tbody>
                 <tr>
-                    <td width="145">{props.column0}</td>
-                    <td width="145">{props.column1}</td>
-                    <td width="145">{props.column2}</td>
-                    <td width="145">{props.column3}</td>
+                    <td width="145px">{props.column0}</td>
+                    <td width="145px">{props.column1}</td>
+                    <td width="145px">{props.column2}</td>
+                    <td width="145px">{props.column3}</td>
                 </tr>
                 </tbody>
             </table>

@@ -80,6 +80,9 @@
 			<trans-unit id="content.loadingRecipients" xml:space="preserve">
 				<source>Lade Empfänger</source>
 			</trans-unit>
+            <trans-unit id="content.filterInactive" xml:space="preserve">
+				<source>Filter nach inaktiven Empfängern</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

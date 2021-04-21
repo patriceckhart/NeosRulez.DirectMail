@@ -115,6 +115,16 @@ class RecipientRepository extends Repository {
     }
 
     /**
+     * @return void
+     */
+    public function findInactiveRecipients() {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching($query->equals('active', 0))->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        return $result;
+    }
+
+    /**
      * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
      * @param string $searchstring
      * @return void

@@ -12,8 +12,21 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
         "}</style>
         <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:label')} >
             <p @if.render={!props.recipientList} >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.noRecipients')}</p>
-            <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxSearch @if.render={props.recipientList && props.useAjax} />
-            <NeosRulez.DirectMail:Integration.RecipientController.Index.Search @if.render={props.recipientList && !props.useAjax} action={action} recipientList={recipientList} />
+
+            <div class="neos-row-fluid neos-module-container">
+                <fieldset class="neos-span5">
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxSearch @if.render={props.recipientList && props.useAjax} />
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index.Search @if.render={props.recipientList && !props.useAjax} action={action} recipientList={recipientList} />
+                </fieldset>
+                <fieldset class="neos-span5 neos-offset2" style="text-align:right;">
+                    <Neos.Fusion:Tag @if.render={hideFilter ? false : true} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" attributes.style="margin-top:25px;" content={'<i class="fas fa-filter"></i> ' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.filterInactive')} >
+                        <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={action == 'edit' ? 'RecipientList' : 'Recipient'} action={action == 'edit' ? 'edit' : 'index'} @children="arguments">
+                            <Neos.Fusion:DataStructure filterInactive={true} recipient={recipient} recipientList={recipientList} selectedRecipientList={recipientList ? recipientList : null} />
+                        </Neos.Fusion:UriBuilder>
+                    </Neos.Fusion:Tag>
+                </fieldset>
+            </div>
+
             <table @if.render={props.recipientList} class="neos-table">
                 <thead>
                 <tr>
