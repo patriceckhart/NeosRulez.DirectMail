@@ -1,6 +1,7 @@
 'NeosRulez.DirectMail:Content.Column':
   superTypes:
     'NeosRulez.DirectMail:Component.AbstractContent': true
+    'NeosRulez.DirectMail:Mixin.Color': true
   abstract: true
   ui:
     icon: icon-columns
@@ -11,6 +12,9 @@
           label: i18n
           position: 10
           icon: icon-columns
+  properties:
+    textColor:
+      ui: ~
 'NeosRulez.DirectMail:Content.TwoColumn':
   superTypes:
     'NeosRulez.DirectMail:Content.Column': true

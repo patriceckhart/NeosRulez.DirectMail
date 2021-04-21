@@ -9,6 +9,8 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
 
+use Neos\Flow\ResourceManagement\ResourceManager;
+
 class ImportController extends ActionController
 {
 
@@ -44,6 +46,12 @@ class ImportController extends ActionController
      */
     protected $mergeService;
 
+    /**
+     * @Flow\Inject
+     * @var \Neos\Media\Domain\Repository\AssetRepository
+     */
+    protected $assetRepository;
+
 
     /**
      * @return void
@@ -74,6 +82,8 @@ class ImportController extends ActionController
 
         $file = $newImport->getFile();
         $fileUri = $this->resourceManager->getPublicPersistentResourceUri($file);
+        $this->importFile($fileUri);
+
         $recipients = file($fileUri);
         $recipientList = $newImport->getRecipientlist();
 
@@ -112,7 +122,20 @@ class ImportController extends ActionController
             }
         }
 
-        $this->redirect('index', 'import');
+        $this->redirect('edit','recipientList',Null,array('recipientList' => $recipientList));
+
+    }
+
+    /**
+     * @param string $filename
+     * @return void
+     */
+    public function importFile($filename)
+    {
+        $resource = $this->resourceManager->importResource($filename);
+        $asset = new \Neos\Media\Domain\Model\Asset($resource);
+        $this->assetRepository->add($asset);
+        return $asset;
     }
 
 }
