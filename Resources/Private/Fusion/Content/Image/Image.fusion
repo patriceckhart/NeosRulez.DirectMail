@@ -9,9 +9,9 @@ prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentCompo
         forceConversion = true
     }
 
-    isTwoColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:TwoColumn]').count() == 1 ? true : false}
-    isThreeColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:ThreeColumn]').count() == 1 ? true : false}
-    isFourColumn = ${q(node).parentsUntil('[instanceof NeosRulez.DirectMail.Content:FourColumn]').count() == 1 ? true : false}
+    isTwoColumn = ${node.parent.parent.nodeType.name == 'NeosRulez.DirectMail:Content.TwoColumn' ? true : false}
+    isThreeColumn = ${node.parent.parent.nodeType.name == 'NeosRulez.DirectMail:Content.ThreeColumn' ? true : false}
+    isFourColumn = ${node.parent.parent.nodeType.name == 'NeosRulez.DirectMail:Content.FourColumn' ? true : false}
 
     width = ${this.isTwoColumn ? 290 : (this.isThreeColumn ? 193 : (this.isFourColumn ? 145 : 580))}
 
@@ -30,6 +30,6 @@ prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentCompo
 
 prototype(NeosRulez.DirectMail:Content.Image.ImageTag) < prototype(Neos.Fusion:Component) {
     renderer = afx`
-        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} attributes.width={props.width / 2} allowUpScaling="true" allowCropping="false" />
+        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} attributes.width={props.width} allowUpScaling="true" allowCropping="false" />
     `
 }

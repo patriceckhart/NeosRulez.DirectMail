@@ -82,7 +82,6 @@ class ImportController extends ActionController
 
         $file = $newImport->getFile();
         $fileUri = $this->resourceManager->getPublicPersistentResourceUri($file);
-        $this->importFile($fileUri);
 
         $recipients = file($fileUri);
         $recipientList = $newImport->getRecipientlist();
@@ -124,18 +123,6 @@ class ImportController extends ActionController
 
         $this->redirect('edit','recipientList',Null,array('recipientList' => $recipientList));
 
-    }
-
-    /**
-     * @param string $filename
-     * @return void
-     */
-    public function importFile($filename)
-    {
-        $resource = $this->resourceManager->importResource($filename);
-        $asset = new \Neos\Media\Domain\Model\Asset($resource);
-        $this->assetRepository->add($asset);
-        return $asset;
     }
 
 }
