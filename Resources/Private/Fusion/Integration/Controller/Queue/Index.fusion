@@ -144,14 +144,15 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                 </table>
             </div>
 
-            <!--                Don't forget to set up a cron job: <span class="neos-badge"><code>0 * * * * {flowRootPath}flow queue:process >/dev/null 2>&1</code></span>-->
-
             <div class="neos-footer">
                 <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.button.create')} >
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="new" />
                 </Neos.Fusion:Tag>
                 <Neos.Fusion:Tag @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-success" content="<i class='far fa-play-circle'></i>">
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="start" />
+                </Neos.Fusion:Tag>
+                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-danger" content={'<i class="fas fa-trash"></i> ' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.flush')}>
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="flush" />
                 </Neos.Fusion:Tag>
             </div>
 

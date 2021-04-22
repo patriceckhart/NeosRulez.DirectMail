@@ -46,6 +46,7 @@ class QueueController extends ActionController
      */
     protected $contextFactory;
 
+
     /**
      * @Flow\Inject
      * @var \Neos\Neos\Service\LinkingService
@@ -178,6 +179,29 @@ class QueueController extends ActionController
     public function deleteAction($queue)
     {
         $this->queueRepository->remove($queue);
+        $this->persistenceManager->persistAll();
+        $this->redirect('index', 'queue');
+    }
+
+    /**
+     * @return void
+     */
+    public function flushAction()
+    {
+        $queues = $this->queueRepository->findAll();
+        foreach ($queues as $queue) {
+            $sent = $queue->getSent();
+            $toSend = $queue->getTosend();
+            if($sent == $toSend || $sent == 0) {
+                $trackings = $this->trackingRepository->findByQueue($queue);
+                if($trackings) {
+                    foreach ($trackings as $tracking) {
+                        $this->trackingRepository->remove($tracking);
+                    }
+                }
+                $this->queueRepository->remove($queue);
+            }
+        }
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'queue');
     }

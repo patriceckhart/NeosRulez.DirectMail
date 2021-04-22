@@ -44,6 +44,9 @@
 			<trans-unit id="content.recipientlist" xml:space="preserve">
 				<source>Recipient lists</source>
 			</trans-unit>
+            <trans-unit id="content.flush" xml:space="preserve">
+				<source>Delete all queues</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

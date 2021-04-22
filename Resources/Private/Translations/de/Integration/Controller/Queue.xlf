@@ -44,6 +44,9 @@
 			<trans-unit id="content.recipientlist" xml:space="preserve">
 				<source>Empfängerlisten</source>
 			</trans-unit>
+            <trans-unit id="content.flush" xml:space="preserve">
+				<source>Alle Warteschlangen löschen</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
