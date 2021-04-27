@@ -2,7 +2,7 @@
   abstract: true
   superTypes:
     'Neos.Neos:Content': true
-    'NeosRulez.DirectMail:Mixin.Distance': true
+    'NeosRulez.DirectMail:Mixin.Distance': false
     'NeosRulez.DirectMail:Mixin.Container': true
   ui:
     group: neosRulezDirectMail
