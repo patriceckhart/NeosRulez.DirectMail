@@ -32,15 +32,15 @@ Neos:
         icon: 'far fa-paper-plane'
         resource: 'Neos_Neos_Backend_Module_Management'
         submodules:
-          recipient:
-            label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
-            controller: '\NeosRulez\DirectMail\Controller\RecipientController'
-            description: NeosRulez.DirectMail:Integration.Controller.Recipient:description
-            icon: 'fas fa-user-friends'
-            actions:
-              index:
-                label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
-                title: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+#          recipient:
+#            label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+#            controller: '\NeosRulez\DirectMail\Controller\RecipientController'
+#            description: NeosRulez.DirectMail:Integration.Controller.Recipient:description
+#            icon: 'fas fa-user-friends'
+#            actions:
+#              index:
+#                label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+#                title: NeosRulez.DirectMail:Integration.Controller.Recipient:label
           recipientlist:
             label: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
             controller: '\NeosRulez\DirectMail\Controller\RecipientListController'
