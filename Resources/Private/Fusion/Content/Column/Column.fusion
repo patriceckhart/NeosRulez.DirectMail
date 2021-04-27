@@ -7,18 +7,35 @@ prototype(NeosRulez.DirectMail:Content.TwoColumn) < prototype(Neos.Neos:ContentC
         nodePath = 'column1'
     }
 
-    bgColorStyleAttribute = ${node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false}
+    bgColorStyleAttribute = ${'text-align:center;font-size:0;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false)}
+
+    padding = ${node.properties.container == 'container' ? '10' : '0'}
+
+    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td style="width:330px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso2 = ${'<!--[if mso]></td><td style="width:330px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso3 = ${'<!--[if mso]></td></tr></table><![endif]-->'}
+
+    styleAttribute = ${'width:100%;min-width:330px;max-width:330px;display:inline-block;vertical-align:middle;'}
+
+    paddingStyleAttribute = ${'padding:' + this.padding + 'px'}
 
     renderer = afx`
         <NeosRulez.DirectMail:Component.AbstractContent>
-            <table border="0" cellpadding="0" cellspacing="0" class="column-table" style={props.bgColorStyleAttribute} >
-                <tbody>
-                    <tr>
-                        <td width="290px">{props.column0}</td>
-                        <td width="290px">{props.column1}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="two-col" style={props.bgColorStyleAttribute} >
+                {props.mso1}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column0}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column1}
+                    </div>
+                </div>
+                {props.mso3}
+            </div>
         </NeosRulez.DirectMail:Component.AbstractContent>
     `
 }
@@ -35,19 +52,41 @@ prototype(NeosRulez.DirectMail:Content.ThreeColumn) < prototype(Neos.Neos:Conten
         nodePath = 'column2'
     }
 
-    bgColorStyleAttribute = ${node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false}
+    bgColorStyleAttribute = ${'text-align:center;font-size:0;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false)}
+
+    padding = ${node.properties.container == 'container' ? '10' : '0'}
+
+    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:center;"><tr><td style="width:220px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso2 = ${'<!--[if mso]></td><td style="width:220px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso3 = ${'<!--[if mso]></td></tr></table><![endif]-->'}
+
+    styleAttribute = ${'width:100%;min-width:220px;max-width:220px;display:inline-block;vertical-align:middle;'}
+
+    paddingStyleAttribute = ${'padding:' + this.padding + 'px'}
 
     renderer = afx`
         <NeosRulez.DirectMail:Component.AbstractContent>
-            <table border="0" cellpadding="0" cellspacing="0" class="column-table" style={props.bgColorStyleAttribute} >
-                <tbody>
-                <tr>
-                    <td width="193px">{props.column0}</td>
-                    <td width="193px">{props.column1}</td>
-                    <td width="194px">{props.column2}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="three-col" style={props.bgColorStyleAttribute} >
+                {props.mso1}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column0}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column1}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column2}
+                    </div>
+                </div>
+                {props.mso3}
+            </div>
         </NeosRulez.DirectMail:Component.AbstractContent>
     `
 }
@@ -67,20 +106,47 @@ prototype(NeosRulez.DirectMail:Content.FourColumn) < prototype(Neos.Neos:Content
         nodePath = 'column3'
     }
 
-    bgColorStyleAttribute = ${node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false}
+    bgColorStyleAttribute = ${'text-align:center;font-size:0;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false)}
+
+    padding = ${node.properties.container == 'container' ? '10' : '0'}
+
+    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:center;"><tr><td style="width:165px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso2 = ${'<!--[if mso]></td><td style="width:165px;padding:' + this.padding + 'px;' + (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : false) + ';" valign="center"><![endif]-->'}
+    mso3 = ${'<!--[if mso]></td></tr></table><![endif]-->'}
+
+    styleAttribute = ${'width:100%;min-width:165px;max-width:165px;display:inline-block;vertical-align:middle;'}
+
+    paddingStyleAttribute = ${'padding:' + this.padding + 'px'}
 
     renderer = afx`
         <NeosRulez.DirectMail:Component.AbstractContent>
-            <table border="0" cellpadding="0" cellspacing="0" class="column-table" style={props.bgColorStyleAttribute} >
-                <tbody>
-                <tr>
-                    <td width="145px">{props.column0}</td>
-                    <td width="145px">{props.column1}</td>
-                    <td width="145px">{props.column2}</td>
-                    <td width="145px">{props.column3}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="four-col" style={props.bgColorStyleAttribute} >
+                {props.mso1}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column0}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column1}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column2}
+                    </div>
+                </div>
+                {props.mso2}
+                <div class="column" style={props.styleAttribute} >
+                    <div style={props.paddingStyleAttribute} >
+                        {props.column3}
+                    </div>
+                </div>
+                {props.mso3}
+            </div>
         </NeosRulez.DirectMail:Component.AbstractContent>
     `
 }

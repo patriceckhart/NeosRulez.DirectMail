@@ -95,9 +95,11 @@ class QueueController extends ActionController
     {
         $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $result = [];
-        foreach ($queues as $queue) {
-            $queue->opened = $this->trackingRepository->countByQueue($queue);
-            $result[] = $queue;
+        if($queues) {
+            foreach ($queues as $queue) {
+                $queue->opened = $this->trackingRepository->countByQueue($queue);
+                $result[] = $queue;
+            }
         }
         $this->view->assign('queues', $result);
     }
@@ -109,11 +111,17 @@ class QueueController extends ActionController
     public function indexTrackingAction(\NeosRulez\DirectMail\Domain\Model\Queue $queue)
     {
         $trackings = $this->trackingRepository->findByQueue($queue);
+        $trackingsMerged = [];
         $result = [];
         foreach ($trackings as $tracking) {
             $tracking->opened = $this->trackingRepository->countByQueueAndRecipient($tracking->getQueue(), $tracking->getRecipient());
-            $result[$tracking->getRecipient()->getEmail()] = $tracking;
+            $trackingsMerged[$tracking->getRecipient()->getEmail()] = $tracking;
         }
+        foreach ($trackingsMerged as $trackingMerged) {
+            $result[] = ['opened' => $trackingMerged->opened, 'tracking' => $trackingMerged];
+        }
+        $sortField = array_column($result, 'opened');
+        array_multisort($sortField, SORT_ASC, $result);
         $this->view->assign('trackings', $result);
     }
 

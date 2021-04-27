@@ -15,6 +15,9 @@
   properties:
     textColor:
       ui: ~
+    container:
+      defaultValue: 'container-fluid'
+      ui: ~
 'NeosRulez.DirectMail:Content.TwoColumn':
   superTypes:
     'NeosRulez.DirectMail:Content.Column': true

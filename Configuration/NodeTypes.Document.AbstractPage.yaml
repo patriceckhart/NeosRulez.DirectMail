@@ -26,3 +26,5 @@
       ui: ~
     textColor:
       ui: ~
+    bgColor:
+      defaultValue: '#f6f6f6'

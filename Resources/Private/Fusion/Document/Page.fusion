@@ -4,21 +4,25 @@ prototype(NeosRulez.DirectMail:Document.Page) < prototype(NeosRulez.DirectMail:D
             nodePath = 'main'
         }
         bgColor = ${documentNode.properties.bgColor}
-        styleAttribute = ${this.bgColor ? 'background-color:' + this.bgColor + ';' : false}
+
+        styleAttribute = ${'-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;' + this.bgColor ? 'background-color:' + this.bgColor + ';' : false}
+        msoStart = ${'<!--[if mso]><table role="presentation" align="center" style="width:660px;" border="0" cellspacing="0" cellpadding="0"><tr><td style="padding:0px 0;background:#ffffff;"><![endif]-->'}
+        msoEnd = ${'<!--[if mso]></td></tr></table><![endif]-->'}
+
         renderer = afx`
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="body-table" style={props.styleAttribute} >
-                <tr>
-                    <td>
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="main-table">
-                            <tr>
-                                <td>
-                                    {props.main}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+            <div role="article" aria-roledescription="email" lang="en" style={props.styleAttribute} >
+                <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style={props.styleAttribute} >
+                    <tr>
+                        <td align="center">
+                            {props.msoStart}
+                            <div class="outer" style="width:96%;max-width:660px;margin:0px auto;background:#ffffff;">
+                                {props.main}
+                            </div>
+                            {props.msoEnd}
+                        </td>
+                    </tr>
+                </table>
+            </div>
         `
     }
 }

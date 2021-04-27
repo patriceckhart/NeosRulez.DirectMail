@@ -1,0 +1,33 @@
+prototype(NeosRulez.DirectMail:Content.Button) < prototype(Neos.Neos:ContentComponent) {
+    inBackend = ${documentNode.context.inBackend}
+    additionalClass = ${(node.properties.textColor ? 'text-' + node.properties.textColor : false)}
+
+    fontSize = ${node.properties.fontSize ? 'font-size:' + node.properties.fontSize + 'px !important;' : false}
+    textColor = ${node.properties.textColor ? 'color:' + node.properties.textColor + ' !important;' : false}
+    bgColor = ${node.properties.bgColor ? 'background-color:' + node.properties.bgColor + ' !important;' : false}
+
+    link = ${q(node).property("link")}
+    link.@process.convertUris = Neos.Neos:ConvertUris {
+        forceConversion = true
+    }
+
+    title = ${node.properties.title}
+
+    mso1 = ${'<!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%;mso-text-raise:10pt">&nbsp;</i><![endif]-->'}
+    mso2 = ${'<!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%">&nbsp;</i><![endif]-->'}
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Component.AbstractContent additionalClass={props.additionalClass} >
+            <a @if.render={props.link && !props.inBackend} href={props.link} target="_blank" class="button" style={'display:inline-block;mso-padding-alt:0;' + props.fontSize + props.textColor + props.bgColor} >
+                {props.mso1}
+                <span style="mso-text-raise:5pt;">
+                    {node.properties.title}
+                </span>
+                {props.mso2}
+            </a>
+            <div @if.render={!props.link || props.inBackend} class="button" style={'display:inline-block;mso-padding-alt:0;' + props.fontSize + props.textColor + props.bgColor} >
+                <Neos.Neos:Editable property="title" />
+            </div>
+        </NeosRulez.DirectMail:Component.AbstractContent>
+    `
+}

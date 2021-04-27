@@ -1,0 +1,35 @@
+'NeosRulez.DirectMail:Content.Button':
+  superTypes:
+    'NeosRulez.DirectMail:Component.AbstractContent': true
+    'NeosRulez.DirectMail:Mixin.Color': true
+    'NeosRulez.DirectMail:Mixin.Font': true
+  ui:
+    label: i18n
+    icon: fas fa-link
+    position: 5
+    inspector:
+      groups:
+        neosRulezDirectMailButton:
+          label: NeosRulez.DirectMail:NodeTypes.Content.Button:ui.label
+          icon: fas fa-link
+  properties:
+    title:
+      type: string
+      defaultValue: 'Button Label'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inlineEditable: true
+    fontSize:
+      defaultValue: '14'
+    link:
+      type: string
+      ui:
+        reloadIfChanged: true
+        label: i18n
+        inspector:
+          group: neosRulezDirectMailButton
+          position: 20
+          editor: 'Neos.Neos/Inspector/Editors/LinkEditor'
+          editorOptions:
+            assets: true

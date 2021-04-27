@@ -18,13 +18,13 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.IndexTracking) < prot
                 <Neos.Fusion:Loop items={trackings} itemName="tracking" >
                     <tr>
                         <td>
-                            {tracking.recipient.email}
+                            {tracking.tracking.recipient.email}
                         </td>
                         <td>
-                            {tracking.opened}
+                            {tracking.tracking.opened}
                         </td>
                         <td>
-                            {Date.format(tracking.created, 'Y-m-d, H:i')}
+                            {Date.format(tracking.tracking.created, 'Y-m-d, H:i')}
                         </td>
                     </tr>
                 </Neos.Fusion:Loop>

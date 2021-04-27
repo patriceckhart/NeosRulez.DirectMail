@@ -24,7 +24,7 @@
             presetColors: [ ]
     bgColor:
       type: string
-      defaultValue: 'f6f6f6'
+      defaultValue: ''
       ui:
         label: i18n
         reloadIfChanged: true

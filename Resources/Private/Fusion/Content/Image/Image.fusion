@@ -13,13 +13,16 @@ prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentCompo
     isThreeColumn = ${node.parent.parent.nodeType.name == 'NeosRulez.DirectMail:Content.ThreeColumn' ? true : false}
     isFourColumn = ${node.parent.parent.nodeType.name == 'NeosRulez.DirectMail:Content.FourColumn' ? true : false}
 
-    width = ${this.isTwoColumn ? 290 : (this.isThreeColumn ? 193 : (this.isFourColumn ? 145 : 580))}
+    padding = ${node.properties.container == 'container' ? 20 : 0}
+
+    width = ${this.isTwoColumn ? (330 - this.padding) : (this.isThreeColumn ? (220 - this.padding) : (this.isFourColumn ? (165 - this.padding) : (660 - this.padding)))}
 
     renderer = afx`
         <NeosRulez.DirectMail:Component.AbstractContent>
-            <a @if.render={props.link} href={props.link} target="_blank">
+            <a @if.render={props.link && !props.inBackend} href={props.link} target="_blank">
                 <NeosRulez.DirectMail:Content.Image.ImageTag image={props.image} width={props.width} />
             </a>
+            <NeosRulez.DirectMail:Content.Image.ImageTag @if.render={props.link && props.inBackend} image={props.image} width={props.width} />
             <NeosRulez.DirectMail:Content.Image.ImageTag @if.render={!props.link} image={props.image} width={props.width} />
             <div @if.render={!props.image && props.inBackend} >
                 <img src={props.dummyImage} title="Dummy image" alt="Dummy image" class="neos-handle" />
@@ -29,7 +32,17 @@ prototype(NeosRulez.DirectMail:Content.Image) < prototype(Neos.Neos:ContentCompo
 }
 
 prototype(NeosRulez.DirectMail:Content.Image.ImageTag) < prototype(Neos.Fusion:Component) {
+    @context.image = ${this.image}
+    @context.width = ${this.width}
+    renderedImage = Neos.Neos:ImageUri {
+        asset = ${image}
+        width = ${width}
+        allowUpScaling = true
+        allowCropping = false
+    }
+    quot = ${image.height / image.width}
+    height = ${String.toInteger(this.quot * width)}
     renderer = afx`
-        <Neos.Neos:ImageTag @if.render={props.image} asset={props.image} attributes.alt="" attributes.title="" width={props.width} attributes.width={props.width} allowUpScaling="true" allowCropping="false" />
+        <img @if.render={props.renderedImage} src={props.renderedImage} width={width} height={props.height} alt="" title="" />
     `
 }

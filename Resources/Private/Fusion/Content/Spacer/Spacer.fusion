@@ -1,0 +1,5 @@
+prototype(NeosRulez.DirectMail:Content.Spacer) < prototype(Neos.Neos:ContentComponent) {
+    renderer = afx`
+        <div class="spacer" style="width:100%;max-width:630px;line-height:10px;height:10px;mso-line-height-rule:exactly;">&nbsp;</div>
+    `
+}

@@ -16,6 +16,18 @@ prototype(NeosRulez.DirectMail:Document.AbstractPage) < prototype(Neos.Neos:Page
                 }
             }
         }
+        NeosRulezDirectMailBackendCss = Neos.Fusion:Tag {
+            @position = 'after NeosRulezDirectMailCss'
+            @process.1 = ${node.context.workspaceName != 'live' ? value : ''}
+            tagName = 'link'
+            attributes {
+                media = 'all'
+                rel = 'stylesheet'
+                href = Neos.Fusion:ResourceUri {
+                    path = 'resource://NeosRulez.DirectMail/Public/Styles/backend.css'
+                }
+            }
+        }
     }
     bodyTag {
         attributes.style = 'margin: 0; padding: 0;'

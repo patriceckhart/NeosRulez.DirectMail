@@ -1,0 +1,6 @@
+.spacer {
+    color: transparent;
+}
+.spacer:hover, .spacer.style__markActiveNodeAsFocused--focusedNode___2G2se {
+    background: repeating-linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 10px, rgba(255,255,255,0) 10px, rgba(255,255,255,0) 20px);
+}

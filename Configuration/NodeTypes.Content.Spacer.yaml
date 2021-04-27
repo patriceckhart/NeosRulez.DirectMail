@@ -1,0 +1,8 @@
+'NeosRulez.DirectMail:Content.Spacer':
+  superTypes:
+    'NeosRulez.DirectMail:Component.AbstractContent': true
+    'NeosRulez.DirectMail:Mixin.Container': false
+  ui:
+    label: i18n
+    icon: fas fa-minus
+    position: end
