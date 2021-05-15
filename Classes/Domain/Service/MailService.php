@@ -49,19 +49,23 @@ class MailService {
      */
     public function execute(string $nodeUri, array $recipient, string $subject):bool
     {
-        $mail = new \Neos\SwiftMailer\Message();
-        $mail
-            ->setFrom([$this->settings['senderMail'] => $this->settings['senderName']])
-            ->setTo([$recipient['email'] => $recipient['firstname'] . ' ' . $recipient['lastname']])
-            ->setSubject($subject);
+        $email = $recipient['email'];
+        $email = str_replace(' ', '', $email);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $mail = new \Neos\SwiftMailer\Message();
+            $mail
+                ->setFrom([$this->settings['senderMail'] => $this->settings['senderName']])
+                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']])
+                ->setSubject($subject);
 
-        $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($nodeUri);
-        $file = file_get_contents($renderUri);
+            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($nodeUri);
+            $file = file_get_contents($renderUri);
 
-        $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
+            $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
 
-        $mail->setBody($body, 'text/html');
-        $mail->send();
+            $mail->setBody($body, 'text/html');
+            $mail->send();
+        }
         return true;
     }
 

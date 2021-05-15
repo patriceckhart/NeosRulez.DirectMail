@@ -90,34 +90,37 @@ class ImportController extends ActionController
 
             list($firstname, $lastname, $email, $gender, $customsalutation) = explode(';', $recipient);
 
-            $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
-            $newRecipient->setFirstname($firstname);
-            $newRecipient->setLastname($lastname);
-            $newRecipient->setEmail($email);
-            $newRecipient->setGender((int) $gender);
-            $newRecipient->setCustomsalutation($customsalutation);
-            $newRecipient->setActive(true);
-            $newRecipient->setRecipientlist([$recipientList]);
+            $email = str_replace(' ', '', $email);
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
+                $newRecipient->setFirstname($firstname);
+                $newRecipient->setLastname($lastname);
+                $newRecipient->setEmail($email);
+                $newRecipient->setGender((int) $gender);
+                $newRecipient->setCustomsalutation($customsalutation);
+                $newRecipient->setActive(true);
+                $newRecipient->setRecipientlist([$recipientList]);
 
-            $existingRecipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
-            if($existingRecipient) {
-                $existingRecipient->setFirstname($firstname);
-                $existingRecipient->setLastname($lastname);
-                $existingRecipient->setEmail($email);
-                $existingRecipient->setGender((int) $gender);
-                $existingRecipient->setCustomsalutation($customsalutation);
+                $existingRecipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
+                if($existingRecipient) {
+                    $existingRecipient->setFirstname($firstname);
+                    $existingRecipient->setLastname($lastname);
+                    $existingRecipient->setEmail($email);
+                    $existingRecipient->setGender((int) $gender);
+                    $existingRecipient->setCustomsalutation($customsalutation);
 
-                $recipientLists = $existingRecipient->getRecipientlist();
-                $rawRecipientLists = [];
-                foreach ($recipientLists as $list) {
-                    $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($list)] = $list;
+                    $recipientLists = $existingRecipient->getRecipientlist();
+                    $rawRecipientLists = [];
+                    foreach ($recipientLists as $list) {
+                        $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($list)] = $list;
+                    }
+                    $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($recipientList)] = $recipientList;
+
+                    $existingRecipient->setRecipientlist($rawRecipientLists);
+                    $this->recipientRepository->update($existingRecipient);
+                } else {
+                    $this->recipientRepository->add($newRecipient);
                 }
-                $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($recipientList)] = $recipientList;
-
-                $existingRecipient->setRecipientlist($rawRecipientLists);
-                $this->recipientRepository->update($existingRecipient);
-            } else {
-                $this->recipientRepository->add($newRecipient);
             }
         }
 

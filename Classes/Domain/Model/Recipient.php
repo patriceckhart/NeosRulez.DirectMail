@@ -27,7 +27,7 @@ class Recipient
     {
         return $this->gender;
     }
-    
+
     /**
      * @param integer $gender
      * @return void
@@ -107,6 +107,7 @@ class Recipient
     /**
      * @var string
      * @Flow\Validate(type="NotEmpty")
+     * @Flow\Validate(type="EmailAddress")
      */
     protected $email;
 
