@@ -41,6 +41,9 @@ Neos:
 #              index:
 #                label: NeosRulez.DirectMail:Integration.Controller.Recipient:label
 #                title: NeosRulez.DirectMail:Integration.Controller.Recipient:label
+#            additionalResources:
+#              javaScripts:
+#                - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
           recipientlist:
             label: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
             controller: '\NeosRulez\DirectMail\Controller\RecipientListController'
@@ -50,6 +53,9 @@ Neos:
               index:
                 label: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
                 title: NeosRulez.DirectMail:Integration.Controller.RecipientList:label
+            additionalResources:
+              javaScripts:
+                - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
           queue:
             label: NeosRulez.DirectMail:Integration.Controller.Queue:label
             controller: '\NeosRulez\DirectMail\Controller\QueueController'
@@ -62,6 +68,9 @@ Neos:
               tracking:
                 label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
                 title: NeosRulez.DirectMail:Integration.Controller.Tracking:description
+            additionalResources:
+              javaScripts:
+                - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
           tracking:
             label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
             controller: '\NeosRulez\DirectMail\Controller\TrackingController'
@@ -71,6 +80,9 @@ Neos:
               index:
                 label: NeosRulez.DirectMail:Integration.Controller.Tracking:label
                 title: NeosRulez.DirectMail:Integration.Controller.Tracking:label
+            additionalResources:
+              javaScripts:
+                - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
           import:
             label: NeosRulez.DirectMail:Integration.Controller.Import:label
             controller: '\NeosRulez\DirectMail\Controller\ImportController'
@@ -80,6 +92,9 @@ Neos:
               index:
                 label: NeosRulez.DirectMail:Integration.Controller.Import:label
                 title: NeosRulez.DirectMail:Integration.Controller.Import:label
+            additionalResources:
+              javaScripts:
+                - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
 #NeosRulez:
 #  DirectMail:
 #    useAjax: false
