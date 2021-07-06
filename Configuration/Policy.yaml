@@ -14,6 +14,8 @@ privilegeTargets:
       matcher: 'method(NeosRulez\DirectMail\Controller\NewsletterController->.*Action())'
     'NeosRulez.DirectMail:TrackingControllerActions':
       matcher: 'method(NeosRulez\DirectMail\Controller\TrackingController->.*Action())'
+    'NeosRulez.DirectMail:ApiControllerActions':
+      matcher: 'method(NeosRulez\DirectMail\Controller\ApiController->.*Action())'
 roles:
   'Neos.Flow:Everybody':
     privileges:
@@ -25,6 +27,9 @@ roles:
         permission: GRANT
       -
         privilegeTarget: 'NeosRulez.DirectMail:TrackingControllerActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.DirectMail:ApiControllerActions'
         permission: GRANT
   'Neos.Neos:AbstractEditor':
     privileges:

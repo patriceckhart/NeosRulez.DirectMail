@@ -12,6 +12,8 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                         <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} />
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
+                    <div style="font-size: 11px; color: grey;">ID: {recipientList.identifier}</div>
+                    
                     <div class="neos-footer">
                         <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
                             {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.save')}

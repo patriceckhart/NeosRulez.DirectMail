@@ -67,6 +67,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                         <td>
                             <span @if.render={recipient.active} class="neos-badge" style="background:#00a338;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.active')}</span>
                             <span @if.render={!recipient.active} class="neos-badge" style="background:#ff460d;">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.inactive')}</span>
+                            <span @if.render={recipient.importedViaApi} class="neos-badge" style="margin-left: 0.5rem; background:#00b5ff;">API</span>
                         </td>
                         <td class="neos-action">
                             <div class="neos-pull-right">

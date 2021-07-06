@@ -21,6 +21,12 @@ class Recipient
     protected $gender;
 
     /**
+     * @ORM\Column(options={"default" : 0}, nullable=true)
+     * @var bool
+     */
+    protected $importedViaApi = false;
+
+    /**
      * @return integer
      */
     public function getGender()
@@ -35,6 +41,23 @@ class Recipient
     public function setGender($gender)
     {
         $this->gender = $gender;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getImportedViaApi()
+    {
+        return $this->importedViaApi;
+    }
+
+    /**
+     * @param bool $importedViaApi
+     * @return void
+     */
+    public function setImportedViaApi($importedViaApi)
+    {
+        $this->importedViaApi = $importedViaApi;
     }
 
     /**

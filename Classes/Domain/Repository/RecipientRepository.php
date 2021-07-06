@@ -49,6 +49,25 @@ class RecipientRepository extends Repository {
     }
 
     /**
+     * @param array $exceptEmailList
+     * @return \Neos\Flow\Persistence\QueryResultInterface
+     */
+    public function findByActiveAndImportedExcept($exceptEmailList = array())
+    {
+        $query = $this->createQuery();
+
+        $constraints = array();
+
+        $constraints[] = $query->equals('active', true);
+        $constraints[] = $query->equals('importedViaApi', true);
+        $constraints[] = $query->logicalNot($query->in('email', $exceptEmailList));
+
+        $query = $query->matching($query->logicalAnd($constraints));
+
+        return $query->execute();
+    }
+
+    /**
      * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
      * @return void
      */

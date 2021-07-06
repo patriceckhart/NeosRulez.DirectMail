@@ -46,3 +46,12 @@
     '@package': 'NeosRulez.DirectMail'
     '@action': 'index'
   appendExceedingArguments: true
+
+-
+  name: 'NeosRulez.DirectMail api'
+  uriPattern: 'directmail/api/import'
+  defaults:
+    '@controller': 'Api'
+    '@package': 'NeosRulez.DirectMail'
+    '@action': 'import'
+  appendExceedingArguments: true
