@@ -79,53 +79,84 @@ class ImportController extends ActionController
     public function createAction($newImport)
     {
         $this->importRepository->add($newImport);
+        $this->persistenceManager->persistAll();
 
         $file = $newImport->getFile();
         $fileUri = $this->resourceManager->getPublicPersistentResourceUri($file);
 
-        $recipients = file($fileUri);
         $recipientList = $newImport->getRecipientlist();
 
-        foreach ($recipients as $recipient) {
-
-            list($firstname, $lastname, $email, $gender, $customsalutation) = explode(';', $recipient);
-
-            $email = str_replace(' ', '', $email);
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
-                $newRecipient->setFirstname($firstname);
-                $newRecipient->setLastname($lastname);
-                $newRecipient->setEmail($email);
-                $newRecipient->setGender((int) $gender);
-                $newRecipient->setCustomsalutation($customsalutation);
-                $newRecipient->setActive(true);
-                $newRecipient->setRecipientlist([$recipientList]);
-
-                $existingRecipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
-                if($existingRecipient) {
-                    $existingRecipient->setFirstname($firstname);
-                    $existingRecipient->setLastname($lastname);
-                    $existingRecipient->setEmail($email);
-                    $existingRecipient->setGender((int) $gender);
-                    $existingRecipient->setCustomsalutation($customsalutation);
-
-                    $recipientLists = $existingRecipient->getRecipientlist();
-                    $rawRecipientLists = [];
-                    foreach ($recipientLists as $list) {
-                        $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($list)] = $list;
-                    }
-                    $rawRecipientLists[$this->persistenceManager->getIdentifierByObject($recipientList)] = $recipientList;
-
-                    $existingRecipient->setRecipientlist($rawRecipientLists);
-                    $this->recipientRepository->update($existingRecipient);
-                } else {
-                    $this->recipientRepository->add($newRecipient);
-                }
+        $csv = $this->parseCsv($fileUri);
+        $keys = [];
+        if(!empty($csv)) {
+            foreach ($csv[0] as $i => $csvData) {
+                $keys[] = $i;
             }
         }
 
-        $this->redirect('edit','recipientList',Null,array('recipientList' => $recipientList));
+        $this->view->assign('keys', $keys);
+        $this->view->assign('fileUri', $fileUri);
+        $this->view->assign('recipientList', $recipientList->getIdentifier());
 
+    }
+
+    /**
+     * @param array $importMapping
+     * @return void
+     */
+    public function importAction(array $importMapping)
+    {
+
+        $csv = $this->parseCsv($importMapping['fileUri']);
+
+//        \Neos\Flow\var_dump($importMapping);
+
+        if(!empty($csv)) {
+            foreach ($csv as $recipientItem) {
+
+                $firstname = array_key_exists('firstname', $importMapping) ? $recipientItem[$importMapping['firstname']] : '';
+                $lastname = array_key_exists('lastname', $importMapping) ? $recipientItem[$importMapping['lastname']] : '';
+                $email = array_key_exists('email', $importMapping) ? $recipientItem[$importMapping['email']] : false;
+                $gender = array_key_exists('gender', $importMapping) ? ($importMapping['gender'] == '' ? 3 : $recipientItem[$importMapping['gender']]) : 3;
+                $customsalutation = array_key_exists('customsalutation', $importMapping) ? $recipientItem[$importMapping['customsalutation']] : '';
+                $recipientList = [$this->recipientListRepository->findByIdentifier($importMapping['recipientList'])];
+
+                if($email) {
+                    $email = str_replace(' ', '', $email);
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
+                        $newRecipient->setFirstname($firstname);
+                        $newRecipient->setLastname($lastname);
+                        $newRecipient->setEmail($email);
+                        $newRecipient->setGender((int) $gender);
+                        $newRecipient->setCustomsalutation($customsalutation);
+                        $newRecipient->setActive(true);
+                        $newRecipient->setRecipientlist($recipientList);
+                        $this->recipientRepository->add($newRecipient);
+                    }
+                }
+
+            }
+        }
+
+        $this->redirect('edit','recipientList',Null,array('recipientList' => $importMapping['recipientList']));
+
+    }
+
+    /**
+     * @param string $file
+     * @return array
+     */
+    public function parseCsv(string $file):array
+    {
+        $filePathProductNamesT = $file;
+        $rows = array_map(function($data) { return str_getcsv($data,";");}, file($filePathProductNamesT));
+        $header = array_shift($rows);
+        foreach($rows as $row) {
+            $row = array_pad($row, count($header), "");
+            $csv[] = array_combine($header, $row);
+        }
+        return $csv;
     }
 
 }

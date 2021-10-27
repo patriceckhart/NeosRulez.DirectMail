@@ -23,7 +23,7 @@ class QueueRepository extends Repository {
         $result = $query->matching(
             $query->logicalAnd(
                 $query->lessThanOrEqual('send', new \DateTime()),
-                $query->equals('sent', 0)
+                $query->equals('done', false)
             )
         )->execute();
         return $result;

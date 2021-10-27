@@ -84,49 +84,27 @@ class Queue
     }
 
     /**
-     * @var integer
+     * @var boolean
      */
-    protected $tosend = 0;
+    protected $done = false;
 
     /**
-     * @return integer
+     * @return boolean
      */
-    public function getTosend()
+    public function getDone()
     {
-        return $this->tosend;
+        return $this->done;
     }
 
     /**
-     * @param integer $tosend
+     * @param boolean $done
      * @return void
      */
-    public function setTosend($tosend)
+    public function setDone($done)
     {
-        $this->tosend = $tosend;
+        $this->done = $done;
     }
 
-    /**
-     * @var integer
-     */
-    protected $sent = 0;
-
-    /**
-     * @return integer
-     */
-    public function getSent()
-    {
-        return $this->sent;
-    }
-
-    /**
-     * @param integer $sent
-     * @return void
-     */
-    public function setSent($sent)
-    {
-        $this->sent = $sent;
-    }
-    
     /**
      * @var Collection<\NeosRulez\DirectMail\Domain\Model\RecipientList>
      * @ORM\ManyToMany

@@ -26,6 +26,12 @@ class RecipientController extends ActionController
      */
     protected $recipientListRepository;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\TrackingRepository
+     */
+    protected $trackingRepository;
+
 
     /**
      * @param integer $offset
@@ -181,6 +187,14 @@ class RecipientController extends ActionController
      */
     public function deleteAction($recipient, \NeosRulez\DirectMail\Domain\Model\RecipientList $selectedRecipientList = null)
     {
+        $trackings = $this->trackingRepository->findByRecipient($recipient);
+        if(!empty($trackings)) {
+            foreach ($trackings as $tracking) {
+                $this->trackingRepository->remove($tracking);
+                $this->persistenceManager->persistAll();
+            }
+        }
+
         $this->recipientRepository->remove($recipient);
         $this->persistenceManager->persistAll();
 

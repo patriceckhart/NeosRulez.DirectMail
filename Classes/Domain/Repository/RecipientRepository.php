@@ -84,6 +84,23 @@ class RecipientRepository extends Repository {
     }
 
     /**
+     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @return void
+     */
+    public function findActiveByRecipientList(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList)
+    {
+        $class = '\NeosRulez\DirectMail\Domain\Model\Recipient';
+        $query = $this->persistenceManager->createQueryForType($class);
+        $result = $query->matching(
+            $query->logicalAnd(
+                $query->contains('recipientlist', $recipientList),
+                $query->equals('active', true)
+            )
+        )->execute();
+        return $result;
+    }
+
+    /**
      * @param string $identifier
      * @return void
      */

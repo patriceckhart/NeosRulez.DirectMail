@@ -176,6 +176,7 @@ class Recipient
     /**
      * @var Collection<\NeosRulez\DirectMail\Domain\Model\RecipientList>
      * @ORM\ManyToMany
+     * @Flow\Validate(type="NotEmpty")
      */
     protected $recipientlist;
 

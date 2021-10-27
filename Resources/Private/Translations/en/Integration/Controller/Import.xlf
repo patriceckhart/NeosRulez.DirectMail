@@ -20,6 +20,9 @@
             <trans-unit id="content.input.option.choose" xml:space="preserve">
 				<source>Please select</source>
 			</trans-unit>
+            <trans-unit id="content.input.option.noValue" xml:space="preserve">
+				<source>No value</source>
+			</trans-unit>
             <trans-unit id="content.button.startImport" xml:space="preserve">
 				<source>Import recipients</source>
 			</trans-unit>

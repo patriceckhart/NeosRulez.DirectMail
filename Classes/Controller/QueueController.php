@@ -42,6 +42,12 @@ class QueueController extends ActionController
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\QueueRecipientRepository
+     */
+    protected $queueRecipientRepository;
+
+    /**
+     * @Flow\Inject
      * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
      */
     protected $contextFactory;
@@ -73,15 +79,21 @@ class QueueController extends ActionController
         $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
         $result = [];
         foreach ($queues as $queue) {
-            $count = $queue->getTosend();
-            if($queue->getSent() > 0) {
-                $queue->isSending = true;
-                if($queue->getSent() == $count) {
-                    $queue->isSending = false;
+            $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
+            $isSending = false;
+            $sent = 0;
+            if(!empty($queueRecipients)) {
+                foreach ($queueRecipients as $queueRecipient) {
+                    if(!$queueRecipient->getSent()) {
+                        $isSending = true;
+                    } else {
+                        $sent = $sent + 1;
+                    }
                 }
-            } else {
-                $queue->isSending = false;
             }
+            $queue->isSending = $isSending;
+            $queue->sent = $sent;
+            $queue->tosend = count($queueRecipients);
             $result[] = $queue;
         }
         $this->view->assign('queues', $result);
@@ -153,11 +165,32 @@ class QueueController extends ActionController
     {
         $recipientLists = $newQueue->getRecipientlist();
         $count = 0;
+        $recipients = [];
         foreach ($recipientLists as $recipientList) {
             $count = $count + $this->recipientRepository->countActiveByRecipientList($recipientList);
+            $recipients[] = [
+                'recipients' => $this->recipientRepository->findActiveByRecipientList($recipientList),
+                'recipientList' => $recipientList
+            ];
         }
-        $newQueue->setTosend($count);
+//        $newQueue->setTosend($count);
         $this->queueRepository->add($newQueue);
+
+        if(!empty($recipients)) {
+            foreach ($recipients as $recipientItems) {
+                if(!empty($recipientItems)) {
+                    $recipientItemsRecipientList = $recipientItems['recipientList'];
+                    foreach ($recipientItems['recipients'] as $recipientItem) {
+                        $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
+                        $queueRecipient->setRecipient($recipientItem);
+                        $queueRecipient->setQueue($newQueue);
+                        $queueRecipient->setRecipientList($recipientItemsRecipientList);
+                        $this->queueRecipientRepository->add($queueRecipient);
+                    }
+                }
+            }
+        }
+
         $this->redirect('index', 'queue');
     }
 
@@ -186,6 +219,18 @@ class QueueController extends ActionController
      */
     public function deleteAction($queue)
     {
+        $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
+        $trackings = $this->trackingRepository->findByQueue($queue);
+        if(!empty($queueRecipients)) {
+            foreach ($queueRecipients as $queueRecipient) {
+                $this->queueRecipientRepository->remove($queueRecipient);
+            }
+        }
+        if(!empty($trackings)) {
+            foreach ($trackings as $tracking) {
+                $this->trackingRepository->remove($tracking);
+            }
+        }
         $this->queueRepository->remove($queue);
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'queue');
