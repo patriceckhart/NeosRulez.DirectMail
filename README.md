@@ -22,6 +22,7 @@ NeosRulez:
     senderName: 'Postmaster'
     startDispatchFromNeosBackend: false
     baseUri: 'http://foo.bar'
+    percentageOfDispatch: true
 ```
 
 ## Author

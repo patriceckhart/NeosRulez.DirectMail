@@ -103,3 +103,4 @@ Neos:
 #    startDispatchFromNeosBackend: false
 #    baseUri: 'http://foo.bar'
 #    apiKey: '12345678' # Use a safe key with random letters and numbers in sufficient length
+#    percentageOfDispatch: true

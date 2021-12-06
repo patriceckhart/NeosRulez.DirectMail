@@ -119,7 +119,8 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                                 {Date.format(queue.send, 'Y-m-d, H:i')}
                             </td>
                             <td>
-                                <span class="neos-badge" style={'background:' + (queue.sent == queue.tosend ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.tosend}</span>
+                                <span @if.render={!Configuration.setting('NeosRulez.DirectMail.percentageOfDispatch')} class="neos-badge" style={'background:' + (queue.sent == queue.tosend ? '#00a338' : '#ff460d')} >{queue.sent}/{queue.tosend}</span>
+                                <span @if.render={Configuration.setting('NeosRulez.DirectMail.percentageOfDispatch')} class="neos-badge" style={'background:' + (queue.sent == queue.tosend ? '#00a338' : '#ff460d')} >{queue.sendPercentage} %</span>
                             </td>
                             <td>
                                 {Date.format(queue.created, 'Y-m-d, H:i')}

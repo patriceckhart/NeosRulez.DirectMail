@@ -94,6 +94,8 @@ class QueueController extends ActionController
             $queue->isSending = $isSending;
             $queue->sent = $sent;
             $queue->tosend = count($queueRecipients);
+            $sendPercentage = count($queueRecipients) !== 0 ? (100 / count($queueRecipients)) * $sent : 0;
+            $queue->sendPercentage = number_format($sendPercentage, 0);
             $result[] = $queue;
         }
         $this->view->assign('queues', $result);
