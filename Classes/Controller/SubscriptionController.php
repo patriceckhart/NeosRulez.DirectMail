@@ -72,7 +72,11 @@ class SubscriptionController extends ActionController
                 $newRecipientLists[] = $list;
             }
         }
-        $recipient->setRecipientList($newRecipientLists);
+        if(!empty($newRecipientLists)) {
+            $recipient->setRecipientList($newRecipientLists);
+        } else {
+            $recipient->setActive(false);
+        }
         $this->recipientRepository->update($recipient);
         $this->persistenceManager->persistAll();
     }
