@@ -32,6 +32,12 @@ class RecipientController extends ActionController
      */
     protected $trackingRepository;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\QueueRecipientRepository
+     */
+    protected $queueRecipientRepository;
+
 
     /**
      * @param integer $offset
@@ -195,6 +201,14 @@ class RecipientController extends ActionController
             }
         }
 
+        $queueRecipients = $this->queueRecipientRepository->findByRecipient($recipient);
+        if(!empty($queueRecipients)) {
+            foreach ($queueRecipients as $queueRecipient) {
+                $this->queueRecipientRepository->remove($queueRecipient);
+                $this->persistenceManager->persistAll();
+            }
+        }
+
         $this->recipientRepository->remove($recipient);
         $this->persistenceManager->persistAll();
 
@@ -254,6 +268,23 @@ class RecipientController extends ActionController
         $recipients = explode(',', $recipients['recipients']);
         foreach ($recipients as $recipient) {
             $recipientObject = $this->recipientRepository->findRecipientByIdentifier($recipient);
+
+            $trackings = $this->trackingRepository->findByRecipient($recipientObject);
+            if(!empty($trackings)) {
+                foreach ($trackings as $tracking) {
+                    $this->trackingRepository->remove($tracking);
+                    $this->persistenceManager->persistAll();
+                }
+            }
+
+            $queueRecipients = $this->queueRecipientRepository->findByRecipient($recipientObject);
+            if(!empty($queueRecipients)) {
+                foreach ($queueRecipients as $queueRecipient) {
+                    $this->queueRecipientRepository->remove($queueRecipient);
+                    $this->persistenceManager->persistAll();
+                }
+            }
+
             $this->recipientRepository->remove($recipientObject);
         }
 
