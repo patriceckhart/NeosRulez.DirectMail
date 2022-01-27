@@ -33,3 +33,22 @@
           editor: 'Neos.Neos/Inspector/Editors/LinkEditor'
           editorOptions:
             assets: true
+    alignment:
+      defaultValue: ''
+      ui:
+        label: Alignment
+        reloadIfChanged: true
+        inspector:
+          group: neosRulezDirectMailButton
+          editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
+          editorOptions:
+            allowEmpty: true
+            values:
+              '':
+                label: ''
+              'left':
+                label: Left
+              'center':
+                label: Center
+              'right':
+                label: Right
