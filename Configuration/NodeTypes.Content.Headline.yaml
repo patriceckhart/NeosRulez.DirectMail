@@ -9,7 +9,7 @@
     icon: icon-header
     position: 1
   properties:
-    bgColor:
-      ui: ~
+#    bgColor:
+#      ui: ~
     fontSize:
       defaultValue: '0'

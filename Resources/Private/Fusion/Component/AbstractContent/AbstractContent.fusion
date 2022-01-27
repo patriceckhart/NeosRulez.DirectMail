@@ -15,7 +15,7 @@ prototype(NeosRulez.DirectMail:Component.AbstractContent) < prototype(Neos.Fusio
     font = ${this.fontFamily == 'impact' ? "Impact, Haettenschweiler, 'Franklin Gothic Bold', 'Arial Black', sans-serif" : this.fontFamily == 'arial' ? "Arial" : this.fontFamily == 'verdana' ? "Verdana" : this.fontFamily == 'times' ? "'Times New Roman', Times, serif" : this.fontFamily == 'cambria' ? "Cambria, 'Hoefler Text', 'Liberation Serif', Times, 'Times New Roman', serif" : this.fontFamily == 'constantia' ? "Constantia, 'Lucida Bright', 'DejaVu Serif', Georgia, serif" : this.fontFamily == 'baskerville' ? "Baskerville, 'Palatino Linotype', Palatino, 'Century Schoolbook L', 'Times New Roman', serif" : this.fontFamily == 'gillsans' ? "'Gill Sans', 'Gill Sans MT', 'Myriad Pro', 'DejaVu Sans Condensed', Helvetica, Arial, sans-serif" : this.fontFamily == 'gotham' ? "Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif" : this.fontFamily == 'lucidagrande' ? "'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" : this.fontFamily == 'segoe' ? "Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, sans-serif" : this.fontFamily == 'consolas' ? "Consolas, 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', Monaco, 'Courier New', monospace" : "Arial"}
 
     class = ${'neosrulez-directmail-content' + (this.nodetype ? ' ' + this.nodetype : false) + (this.marginClass ? this.marginClass : false) + (this.marginNegativeClass ? this.marginNegativeClass : false) + (this.paddingClass ? this.paddingClass : false) + (this.container ? ' ' + this.containerType : false)}
-    styleAttribute = ${(this.textColor ? 'color:' + this.textColor + ';' : false) + (this.font ? 'font-family:' + this.font : false)}
+    styleAttribute = ${(this.textColor ? 'color:' + this.textColor + ';' : false) + (this.font ? 'font-family:' + this.font : false) + ';' + (node.nodeType.name == 'NeosRulez.DirectMail:Content.Headline' || node.nodeType.name == 'NeosRulez.DirectMail:Content.Text' ? (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : '') : '')}
 
     id = ${'node__' + node.identifier}
 
@@ -23,7 +23,9 @@ prototype(NeosRulez.DirectMail:Component.AbstractContent) < prototype(Neos.Fusio
     paddingStyleAttribute = ${'padding:' + this.padding + 'px'}
     isColumn = ${node.nodeType.name == 'NeosRulez.DirectMail:Content.TwoColumn' || node.nodeType.name == 'NeosRulez.DirectMail:Content.ThreeColumn' || node.nodeType.name == 'NeosRulez.DirectMail:Content.FourColumn' ? true : false}
 
-    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:left;"><tr><td style="width:660px;padding:' + this.padding + 'px;" valign="center"><![endif]-->'}
+    bgColorTableAttribute = ${node.nodeType.name == 'NeosRulez.DirectMail:Content.Headline' || node.nodeType.name == 'NeosRulez.DirectMail:Content.Text' ? (node.properties.bgColor ? ('bgcolor="' + node.properties.bgColor) + '" ' : '') : ''}
+
+    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:left;"><tr><td style="width:660px;padding:' + this.padding + 'px;" ' +  this.bgColorTableAttribute + 'valign="center"><![endif]-->'}
     mso2 = ${'<!--[if mso]></td></tr></table><![endif]-->'}
 
     renderer = afx`
