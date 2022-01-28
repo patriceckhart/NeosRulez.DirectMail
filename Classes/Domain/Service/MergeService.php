@@ -123,4 +123,25 @@ class MergeService {
         }
     }
 
+    /**
+     * @param mixed $recipients
+     * @return array
+     */
+    public function uniqueRecipients($recipients):array
+    {
+        $items = [];
+        $result = [];
+        if(!empty($recipients)) {
+            foreach ($recipients as $recipient) {
+                $items[$recipient->getEmail()] = $recipient;
+            }
+            if(!empty($items)) {
+                foreach ($items as $item) {
+                    $result[] = $item;
+                }
+            }
+        }
+        return $result;
+    }
+
 }

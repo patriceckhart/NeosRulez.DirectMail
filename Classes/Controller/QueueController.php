@@ -48,6 +48,12 @@ class QueueController extends ActionController
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\MergeService
+     */
+    protected $mergeService;
+
+    /**
+     * @Flow\Inject
      * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
      */
     protected $contextFactory;
@@ -166,32 +172,29 @@ class QueueController extends ActionController
     public function createAction($newQueue)
     {
         $recipientLists = $newQueue->getRecipientlist();
-        $count = 0;
         $recipients = [];
         foreach ($recipientLists as $recipientList) {
-            $count = $count + $this->recipientRepository->countActiveByRecipientList($recipientList);
-            $recipients[] = [
-                'recipients' => $this->recipientRepository->findActiveByRecipientList($recipientList),
-                'recipientList' => $recipientList
-            ];
-        }
-//        $newQueue->setTosend($count);
-        $this->queueRepository->add($newQueue);
-
-        if(!empty($recipients)) {
-            foreach ($recipients as $recipientItems) {
-                if(!empty($recipientItems)) {
-                    $recipientItemsRecipientList = $recipientItems['recipientList'];
-                    foreach ($recipientItems['recipients'] as $recipientItem) {
-                        $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
-                        $queueRecipient->setRecipient($recipientItem);
-                        $queueRecipient->setQueue($newQueue);
-                        $queueRecipient->setRecipientList($recipientItemsRecipientList);
-                        $this->queueRecipientRepository->add($queueRecipient);
-                    }
+            $recipientListRecipients = $this->recipientRepository->findActiveByRecipientList($recipientList);
+            if(!empty($recipientListRecipients)) {
+                foreach ($recipientListRecipients as $recipientListRecipient) {
+                    $recipients[] = $recipientListRecipient;
                 }
             }
         }
+        $this->queueRepository->add($newQueue);
+
+        $uniqueRecipients = $this->mergeService->uniqueRecipients($recipients);
+
+        if(!empty($uniqueRecipients)) {
+            foreach ($uniqueRecipients as $uniqueRecipient) {
+                $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
+                $queueRecipient->setRecipient($uniqueRecipient);
+                $queueRecipient->setQueue($newQueue);
+                $this->queueRecipientRepository->add($queueRecipient);
+            }
+        }
+
+        $this->persistenceManager->persistAll();
 
         $this->redirect('index', 'queue');
     }

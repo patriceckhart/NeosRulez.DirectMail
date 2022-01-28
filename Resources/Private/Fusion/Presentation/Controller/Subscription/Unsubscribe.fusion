@@ -1,20 +1,35 @@
-//include: resource://Neos.Neos/Private/Fusion/Prototypes/Page.fusion
-
 NeosRulez.DirectMail.SubscriptionController.unsubscribe = NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe
 
 prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe) < prototype(Neos.Fusion:Component) {
 
     renderer = afx`
-        {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.unsubscribe')}
+        <p>{I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.removeFromLists')}</p>
+        <Neos.Fusion.Form:Form attributes.id="neosrulez__directmail__form" form.target.action="unsubscribeRecipient" form.target.controller="Subscription" form.target.package="NeosRulez.DirectMail" >
+            <Neos.Fusion.Form:Hidden field.name="recipient" attributes.value={identifier} />
+            <div class="mb-3">
+                <Neos.Fusion:Loop items={recipient.recipientList} itemKey="recipientListCheckBox">
+                    <div class="form-check">
+                        <Neos.Fusion.Form:Checkbox field.name="recipientLists[]" attributes.class="form-check-input" attributes.value={item.identifier} attributes.id={'recipientListCheckBox' + recipientListCheckBox} attributes.checked={true} />
+                        <label class="form-check-label" for={'recipientListCheckBox' + recipientListCheckBox} >
+                            {item.name}
+                        </label>
+                    </div>
+                </Neos.Fusion:Loop>
+            </div>
+            <div class="mb-3">
+                <Neos.Fusion.Form:Button attributes.class="btn btn-primary">
+                    {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.saveChanges')}
+                </Neos.Fusion.Form:Button>
+            </div>
+        </Neos.Fusion.Form:Form>
     `
 }
 
-//prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.Unsubscribe) < prototype(NeosRulez.DirectMail:Document.AbstractPage) {
-//
-//    body.content {
-//        main = afx`
-//            {I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.unsubscribe')}
-//        `
-//    }
-//}
+NeosRulez.DirectMail.SubscriptionController.unsubscribeRecipient = NeosRulez.DirectMail:Presentation.SubscriptionController.UnsubscribeRecipient
 
+prototype(NeosRulez.DirectMail:Presentation.SubscriptionController.UnsubscribeRecipient) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <p>{I18n.translate('NeosRulez.DirectMail:Presentation.Subscription:content.changesSaved')}</p>
+    `
+}

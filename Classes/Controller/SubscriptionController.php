@@ -22,6 +22,12 @@ class SubscriptionController extends ActionController
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\RecipientListRepository
+     */
+    protected $recipientListRepository;
+
+    /**
+     * @Flow\Inject
      * @var \NeosRulez\DirectMail\Domain\Service\MailService
      */
     protected $mailService;
@@ -58,22 +64,27 @@ class SubscriptionController extends ActionController
 
     /**
      * @param string $identifier
-     * @param string $recipientList
      * @return void
      */
-    public function unsubscribeAction(string $identifier, string $recipientList)
+    public function unsubscribeAction(string $identifier)
     {
         $recipient = $this->recipientRepository->findByIdentifier($identifier);
-        $recipientLists = $recipient->getRecipientList();
-        $newRecipientLists = [];
-        foreach ($recipientLists as $list) {
-            $listIdentifier = $this->persistenceManager->getIdentifierByObject($list);
-            if($listIdentifier != $recipientList) {
-                $newRecipientLists[] = $list;
+        $this->view->assign('recipient', $recipient);
+        $this->view->assign('identifier', $identifier);
+    }
+
+    /**
+     * @return void
+     */
+    public function unsubscribeRecipientAction()
+    {
+        $recipient = $this->recipientRepository->findByIdentifier($this->request->getArgument('recipient'));
+        $lists = [];
+        if(!empty($this->request->getArgument('recipientLists'))) {
+            foreach ($this->request->getArgument('recipientLists') as $recipientList) {
+                $lists[] = $this->recipientListRepository->findByIdentifier($recipientList);
             }
-        }
-        if(!empty($newRecipientLists)) {
-            $recipient->setRecipientList($newRecipientLists);
+            $recipient->setRecipientlist($lists);
         } else {
             $recipient->setActive(false);
         }

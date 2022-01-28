@@ -62,29 +62,6 @@ class QueueRecipient
     }
 
     /**
-     * @var \NeosRulez\DirectMail\Domain\Model\RecipientList
-     * @ORM\ManyToOne(cascade={"persist"})
-     * @ORM\Column(unique=false)
-     */
-    protected $recipientList;
-
-    /**
-     * @return \NeosRulez\DirectMail\Domain\Model\RecipientList
-     */
-    public function getRecipientList()
-    {
-        return $this->recipientList;
-    }
-
-    /**
-     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
-     */
-    public function setRecipientList($recipientList)
-    {
-        $this->recipientList = $recipientList;
-    }
-
-    /**
      * @var boolean
      */
     protected $sent = false;

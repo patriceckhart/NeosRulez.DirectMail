@@ -60,7 +60,7 @@ class DispatchService {
                         $totalRecipients = $totalRecipients + 1;
                         if(!$queueRecipient->getSent()) {
                             $recipient = $queueRecipient->getRecipient();
-                            $recipientData = ['email' => $recipient->getEmail(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'recipientList' => $this->persistenceManager->getIdentifierByObject($queueRecipient->getRecipientList()), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
+                            $recipientData = ['email' => $recipient->getEmail(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
                             $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
                             if ($sent) {
                                 $queueRecipient->setSent(true);
@@ -80,9 +80,8 @@ class DispatchService {
 
                 }
             }
-            $result = 'Total recipient lists: ' . $totalRecipientLists . "\n" . 'Total recipients: ' . $totalRecipients . "\n" . 'Sent mails: ' . $sentMails;
         }
-        return $result;
+        return 'Total recipient lists: ' . $totalRecipientLists . "\n" . 'Total recipients: ' . $totalRecipients . "\n" . 'Sent mails: ' . $sentMails;;
     }
 
 }

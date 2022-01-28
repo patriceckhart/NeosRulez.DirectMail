@@ -11,6 +11,15 @@
             <trans-unit id="content.setActive" xml:space="preserve">
 				<source>Vielen Dank für Ihr Interesse an unserem Newsletter. Wir haben Ihre E-Mail Adresse in unsere Empfängerliste aufgenommen.</source>
 			</trans-unit>
+            <trans-unit id="content.saveChanges" xml:space="preserve">
+				<source>Änderungen übernehmen</source>
+			</trans-unit>
+            <trans-unit id="content.changesSaved" xml:space="preserve">
+				<source>Ihre Änderungen wurden übernommen.</source>
+			</trans-unit>
+            <trans-unit id="content.removeFromLists" xml:space="preserve">
+				<source>Entfernen Sie die Häkchen bei den Listen, von denen Sie sich abmelden möchten.</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

@@ -11,6 +11,15 @@
             <trans-unit id="content.setActive" xml:space="preserve">
 				<source>Many thanks for your interest in our Newsletter. We have added your email address to our recipient list.</source>
 			</trans-unit>
+            <trans-unit id="content.saveChanges" xml:space="preserve">
+				<source>Apply changes</source>
+			</trans-unit>
+            <trans-unit id="content.changesSaved" xml:space="preserve">
+				<source>Your changes have been saved.</source>
+			</trans-unit>
+            <trans-unit id="content.removeFromLists" xml:space="preserve">
+				<source>Untick the lists you want to unsubscribe from.</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
