@@ -120,9 +120,15 @@ class ApiController extends ActionController
         }
         $recipientsToSetInactive = $this->recipientRepository->findByActiveAndImportedExcept($emailAddresses);
         foreach ($recipientsToSetInactive as $recipient) {
-            $recipient->setActive(false);
-            $this->recipientRepository->update($recipient);
-            $deactivatedCount++;
+            if ($recipient->hasRecipientlist($list)) {
+                if ($recipient->getRecipientlist()->count() === 1) {
+                    $recipient->setActive(false);
+                } else {
+                    $recipient->removeRecipientlist($list);
+                }
+                $this->recipientRepository->update($recipient);
+                $deactivatedCount++;
+            }
         }
         return json_encode(array('status' => 'done', 'counts' => array('added' => $addedCount, 'updated' => $updatedCount, 'skipped' => $skippedCount, 'deactivated' => $deactivatedCount)));
     }

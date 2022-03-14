@@ -197,6 +197,24 @@ class Recipient
     }
 
     /**
+     * @param RecipientList $recipientlist
+     * @return bool
+     */
+    public function hasRecipientlist($recipientlist)
+    {
+        return $this->recipientlist->contains($recipientlist);
+    }
+
+    /**
+     * @param RecipientList $recipientlist
+     * @return void
+     */
+    public function removeRecipientlist($recipientlist)
+    {
+        $this->recipientlist->removeElement($recipientlist);
+    }
+
+    /**
      * @var \DateTime
      */
     protected $created;
