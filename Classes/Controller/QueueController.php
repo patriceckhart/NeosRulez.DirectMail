@@ -162,7 +162,13 @@ class QueueController extends ActionController
             }
         }
         $this->view->assign('nodes', $result);
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        if($recipientLists->count() > 0) {
+            foreach ($recipientLists as $recipientList) {
+                $recipientList->recipientCount = count($this->recipientRepository->findByRecipientList($recipientList));
+            }
+        }
+        $this->view->assign('recipientLists', $recipientLists);
     }
 
     /**

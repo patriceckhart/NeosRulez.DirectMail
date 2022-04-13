@@ -24,7 +24,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
                         <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
                             <div style="display:block">
                                 <Neos.Fusion.Form:Checkbox field.value={recipientList}>
-                                    {recipientList.name}
+                                    {recipientList.name} ({recipientList.recipientCount})
                                 </Neos.Fusion.Form:Checkbox>
                             </div>
                         </Neos.Fusion:Loop>
