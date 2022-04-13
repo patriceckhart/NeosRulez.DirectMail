@@ -152,7 +152,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                 <Neos.Fusion:Tag @if.render={Configuration.setting('NeosRulez.DirectMail.startDispatchFromNeosBackend')} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-success" content="<i class='far fa-play-circle'></i>">
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="start" />
                 </Neos.Fusion:Tag>
-                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-danger" content={'<i class="fas fa-trash"></i> ' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.flush')}>
+                <Neos.Fusion:Tag @if.render={queues} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-danger" content={'<i class="fas fa-trash"></i> ' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.flush')}>
                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="flush" />
                 </Neos.Fusion:Tag>
             </div>
