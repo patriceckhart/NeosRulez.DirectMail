@@ -30,7 +30,9 @@ class TrackingRepository extends Repository
         if($result) {
             $uniqueResult = [];
             foreach ($result as $tracking) {
-                $uniqueResult[$tracking->getRecipient()->getEmail()] = $tracking;
+                if($tracking->getRecipient() !== null) {
+                    $uniqueResult[$tracking->getRecipient()->getEmail()] = $tracking;
+                }
             }
         }
         $count = $uniqueResult ? count($uniqueResult) : 0;
