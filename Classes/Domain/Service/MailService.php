@@ -125,7 +125,7 @@ class MailService {
         }
 
         $unsubscribeUri = $this->settings['baseUri'] . '/unsubscribe/'. $recipient['identifier'];
-        \Neos\Flow\var_dump($unsubscribeUri);
+
         $body = str_replace('{unsubscribe}', '<a href="' . $unsubscribeUri . '" target="_blank">' . $this->translator->translateById('unsubscribe', [], null, null, $sourceName = 'Mail/Unsubscribe', $packageKey = 'NeosRulez.DirectMail') . '</a>', $body);
         $body = str_replace('{pageurl}', $nodeUri, $body);
         $body = str_replace('{salutation}', $salutation, $body);
