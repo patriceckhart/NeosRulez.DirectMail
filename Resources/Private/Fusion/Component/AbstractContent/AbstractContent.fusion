@@ -17,7 +17,7 @@ prototype(NeosRulez.DirectMail:Component.AbstractContent) < prototype(Neos.Fusio
     alignment = ${node.properties.alignment}
 
     class = ${'neosrulez-directmail-content' + (this.nodetype ? ' ' + this.nodetype : false) + (this.marginClass ? this.marginClass : false) + (this.marginNegativeClass ? this.marginNegativeClass : false) + (this.paddingClass ? this.paddingClass : false) + (this.container ? ' ' + this.containerType : false)}
-    styleAttribute = ${(this.textColor ? 'color:' + this.textColor + ';' : false) + (this.font ? 'font-family:' + this.font : false) + ';' + (node.nodeType.name == 'NeosRulez.DirectMail:Content.Headline' || node.nodeType.name == 'NeosRulez.DirectMail:Content.Text' ? (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : '') : '') + ';' + (this.alignment ? ('text-align:' + this.alignment) : '')}
+    styleAttribute = ${(this.textColor ? 'color:' + this.textColor + ';' : false) + (this.font ? 'font-family:' + this.font : false) + ';' + (node.nodeType.name == 'NeosRulez.DirectMail:Content.Headline' || node.nodeType.name == 'NeosRulez.DirectMail:Content.Text' ? (node.properties.bgColor ? ('background-color:' + node.properties.bgColor) : 'background-color:transparent') : '') + ';' + (this.alignment ? ('text-align:' + this.alignment) : '')}
 
     id = ${'node__' + node.identifier}
 
@@ -28,7 +28,7 @@ prototype(NeosRulez.DirectMail:Component.AbstractContent) < prototype(Neos.Fusio
     bgColorTableAttribute = ${node.nodeType.name == 'NeosRulez.DirectMail:Content.Headline' || node.nodeType.name == 'NeosRulez.DirectMail:Content.Text' ? (node.properties.bgColor ? ('bgcolor="' + node.properties.bgColor) + '" ' : '') : ''}
     alignmentTableAttribute = ${this.alignment ? 'align="' + this.alignment + '"' : ''}
 
-    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:left;"><tr><td style="width:660px;padding:' + this.padding + 'px;" ' +  this.bgColorTableAttribute + this.alignmentTableAttribute + 'valign="center"><![endif]-->'}
+    mso1 = ${'<!--[if mso]><table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:left;"><tr><td style="width:660px;padding:' + this.padding + 'px; ' + this.styleAttribute + '" '+ this.bgColorTableAttribute + this.alignmentTableAttribute + 'valign="center"><![endif]-->'}
     mso2 = ${'<!--[if mso]></td></tr></table><![endif]-->'}
 
     renderer = afx`
