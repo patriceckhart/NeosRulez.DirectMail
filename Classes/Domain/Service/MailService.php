@@ -3,6 +3,8 @@ namespace NeosRulez\DirectMail\Domain\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
+use Neos\Flow\I18n;
+use Neos\Flow\I18n\Locale;
 
 /**
  *
@@ -27,6 +29,12 @@ class MailService {
      * @var \Neos\Flow\I18n\Translator
      */
     protected $translator;
+
+    /**
+     * @Flow\Inject
+     * @var I18n\Service
+     */
+    protected $localizationService;
 
     /**
      * @var array
@@ -137,14 +145,25 @@ class MailService {
      */
     public function replacePlaceholders(string $body, array $recipient, string $nodeUri):string
     {
+
+        if($recipient['language'] !== null) {
+            if (array_key_exists('language', $this->contentDimensions)) {
+                if (array_key_exists('presets', $this->contentDimensions['language'])) {
+                    $presets = $this->contentDimensions['language']['presets'];
+                    if (array_key_exists($recipient['language'], $presets)) {
+                        $locale = new Locale($recipient['language']);
+                        $this->localizationService->getConfiguration()->setCurrentLocale($locale);
+                    }
+                }
+            }
+        }
+
         $salutation = '';
 
         if($recipient['customsalutation']) {
-            if($recipient['customsalutation']) {
-                $salutation = $recipient['customsalutation'];
-                $body = str_replace('{firstname}', '', $body);
-                $body = str_replace('{lastname}', '', $body);
-            }
+            $salutation = $recipient['customsalutation'];
+            $body = str_replace('{firstname}', '', $body);
+            $body = str_replace('{lastname}', '', $body);
         } else {
             if(array_key_exists('gender', $recipient)) {
                 $salutation = $this->getSalutationFromTranslations($recipient['gender']);
