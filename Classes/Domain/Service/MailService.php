@@ -42,6 +42,12 @@ class MailService {
     }
 
     /**
+     * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
+     * @var array
+     */
+    protected $contentDimensions;
+
+    /**
      * @param string $nodeUri
      * @param array $recipient
      * @param string $subject
@@ -58,7 +64,7 @@ class MailService {
                 ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']])
                 ->setSubject($subject);
 
-            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($nodeUri);
+            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($this->addLanguageToNodeUri($nodeUri, $recipient));
             $file = file_get_contents($renderUri);
 
             $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
@@ -67,6 +73,29 @@ class MailService {
             $mail->send();
         }
         return true;
+    }
+
+    /**
+     * @param string $nodeUri
+     * @param array $recipient
+     * @return string
+     */
+    private function addLanguageToNodeUri(string $nodeUri, array $recipient):string
+    {
+        $uriSegment = false;
+        if($recipient['language'] !== null) {
+            if (array_key_exists('language', $this->contentDimensions)) {
+                if (array_key_exists('presets', $this->contentDimensions['language'])) {
+                    $presets = $this->contentDimensions['language']['presets'];
+                    if (array_key_exists($recipient['language'], $presets)) {
+                        $recipientPreset = $presets[$recipient['language']];
+                        $uriSegment = $recipientPreset['uriSegment'];
+                    }
+                }
+            }
+        }
+        $parsedUri = parse_url($nodeUri);
+        return $parsedUri['scheme'] . '://' . $parsedUri['host'] . ($uriSegment ? '/' . $uriSegment : '') . $parsedUri['path'];
     }
 
     /**

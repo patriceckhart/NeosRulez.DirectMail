@@ -52,6 +52,12 @@ class ImportController extends ActionController
      */
     protected $assetRepository;
 
+    /**
+     * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
+     * @var array
+     */
+    protected $contentDimensions;
+
 
     /**
      * @return void
@@ -98,6 +104,8 @@ class ImportController extends ActionController
         $this->view->assign('fileUri', $fileUri);
         $this->view->assign('recipientList', $recipientList->getIdentifier());
 
+        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
+
     }
 
     /**
@@ -120,6 +128,7 @@ class ImportController extends ActionController
                 $gender = array_key_exists('gender', $importMapping) ? ($importMapping['gender'] == '' ? 3 : $recipientItem[$importMapping['gender']]) : 3;
                 $customsalutation = array_key_exists('customsalutation', $importMapping) ? $recipientItem[$importMapping['customsalutation']] : '';
                 $recipientList = [$this->recipientListRepository->findByIdentifier($importMapping['recipientList'])];
+                $language = array_key_exists('language', $importMapping) ? $recipientItem[$importMapping['language']] : '';
 
                 if($email) {
                     $email = str_replace(' ', '', $email);
@@ -131,6 +140,7 @@ class ImportController extends ActionController
                         $newRecipient->setGender((int) $gender);
                         $newRecipient->setCustomsalutation($customsalutation);
                         $newRecipient->setActive(true);
+                        $newRecipient->setLanguage($language);
                         $newRecipient->setRecipientlist($recipientList);
                         $this->recipientRepository->add($newRecipient);
                     }

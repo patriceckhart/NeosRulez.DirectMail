@@ -38,6 +38,12 @@ class RecipientController extends ActionController
      */
     protected $queueRecipientRepository;
 
+    /**
+     * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
+     * @var array
+     */
+    protected $contentDimensions;
+
 
     /**
      * @param integer $offset
@@ -99,6 +105,8 @@ class RecipientController extends ActionController
             $this->view->assign('selectedRecipientList', $this->persistenceManager->getIdentifierByObject($selectedRecipientList));
         }
         $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+
+        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
     }
 
     /**
@@ -150,6 +158,8 @@ class RecipientController extends ActionController
         }
         $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
         $this->view->assign('recipient', $recipient);
+
+        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
     }
 
     /**

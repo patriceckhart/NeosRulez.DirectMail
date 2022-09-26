@@ -215,6 +215,29 @@ class Recipient
     }
 
     /**
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    protected $language;
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     * @return void
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
      * @var \DateTime
      */
     protected $created;

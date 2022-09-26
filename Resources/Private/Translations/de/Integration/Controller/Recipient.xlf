@@ -83,6 +83,9 @@
             <trans-unit id="content.filterInactive" xml:space="preserve">
 				<source>Filter nach inaktiven Empfängern</source>
 			</trans-unit>
+			<trans-unit id="content.language" xml:space="preserve">
+				<source>Sprache</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

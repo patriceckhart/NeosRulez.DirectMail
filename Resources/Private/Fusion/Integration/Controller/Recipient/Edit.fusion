@@ -31,6 +31,15 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Edit) < prototype
                         <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')} />
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer @if.render={contentDimensions} field.name="recipient[language]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.language')} >
+                        <Neos.Fusion.Form:Select>
+                            <Neos.Fusion.Form:Select.Option @if.render={recipient.language == '' ? true : false} option.value="" attributes.selected={recipient.language == '' ? true : false} >--- {String.toUpperCase(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.noValue'))} ---</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion:Loop items={contentDimensions.presets} itemName="contentDimensionPreset" itemKey="contentDimensionPresetKey" >
+                                <Neos.Fusion.Form:Select.Option option.value={contentDimensionPresetKey} >{contentDimensionPreset.label}</Neos.Fusion.Form:Select.Option>
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion.Form:Select>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="recipient[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.recipientlist')} field.multiple>
                         <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
                             <div style="display:block">

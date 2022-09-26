@@ -50,6 +50,15 @@ prototype(NeosRulez.DirectMail:Integration.ImportController.Create) < prototype(
                         </Neos.Fusion.Form:Select>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="importMapping[language]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.language')} >
+                        <Neos.Fusion.Form:Select>
+                            <Neos.Fusion.Form:Select.Option @if.render={!selectedRecipientList} attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion:Loop items={keys} itemName="key" >
+                                <Neos.Fusion.Form:Select.Option option.value={key}>{key}</Neos.Fusion.Form:Select.Option>
+                            </Neos.Fusion:Loop>
+                        </Neos.Fusion.Form:Select>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="importMapping[email]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')} field.required={true} >
                         <Neos.Fusion.Form:Select>
                             <Neos.Fusion.Form:Select.Option @if.render={!selectedRecipientList} attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
