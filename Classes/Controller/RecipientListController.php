@@ -26,6 +26,12 @@ class RecipientListController extends ActionController
      */
     protected $recipientRepository;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Repository\ImportRepository
+     */
+    protected $importRepository;
+
 
     /**
      * @return void
@@ -125,6 +131,12 @@ class RecipientListController extends ActionController
      */
     public function deleteAction($recipientList)
     {
+        $imports = $this->importRepository->findByRecipientlist($recipientList);
+        if($imports->count() > 0) {
+            foreach ($imports as $import) {
+                $this->importRepository->remove($import);
+            }
+        }
         $this->recipientListRepository->remove($recipientList);
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'recipientList');
