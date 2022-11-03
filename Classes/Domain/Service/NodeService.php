@@ -107,7 +107,7 @@ class NodeService {
         }
 
         return [
-            'nodeUri' => $this->settings['baseUri'] . $this->buildUriPathForNode($node),
+            'nodeUri' => $this->buildUriPathForNode($node),
             'subject' => $node->getProperty('title')
         ];
     }
