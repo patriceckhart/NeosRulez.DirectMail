@@ -58,6 +58,18 @@ class QueueController extends ActionController
      */
     protected $contextFactory;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\NodeService
+     */
+    protected $nodeService;
+
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\EcgService
+     */
+    protected $ecgService;
+
 
     /**
      * @Flow\Inject
@@ -157,7 +169,8 @@ class QueueController extends ActionController
             foreach ($mailings as $mailing) {
                 $result[] = [
                     'nodeUri' => $this->getNodeUri($mailing),
-                    'title' => $mailing->getProperty('title')
+                    'title' => $mailing->getProperty('title'),
+                    'identifier' => $mailing->getIdentifier()
                 ];
             }
         }
@@ -189,14 +202,17 @@ class QueueController extends ActionController
         }
         $this->queueRepository->add($newQueue);
 
-        $uniqueRecipients = $this->mergeService->uniqueRecipients($recipients);
+        $uniqueRecipients = $this->ecgService->compareWithEcgList($this->mergeService->uniqueRecipients($recipients));
 
         if(!empty($uniqueRecipients)) {
             foreach ($uniqueRecipients as $uniqueRecipient) {
                 $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
                 $queueRecipient->setRecipient($uniqueRecipient);
                 $queueRecipient->setQueue($newQueue);
-                $this->queueRecipientRepository->add($queueRecipient);
+                $addToQueue = $this->nodeService->nodeUri($newQueue->getNodeuri(), ['dimensions' => $uniqueRecipient->getDimensions()]);
+                if($addToQueue) {
+                    $this->queueRecipientRepository->add($queueRecipient);
+                }
             }
         }
 
@@ -226,9 +242,10 @@ class QueueController extends ActionController
 
     /**
      * @param \NeosRulez\DirectMail\Domain\Model\Queue $queue
+     * @param bool $redirect
      * @return void
      */
-    public function deleteAction($queue)
+    public function deleteAction($queue, bool $redirect = true)
     {
         $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
         $trackings = $this->trackingRepository->findByQueue($queue);
@@ -244,7 +261,9 @@ class QueueController extends ActionController
         }
         $this->queueRepository->remove($queue);
         $this->persistenceManager->persistAll();
-        $this->redirect('index', 'queue');
+        if($redirect) {
+            $this->redirect('index', 'queue');
+        }
     }
 
     /**
@@ -254,17 +273,7 @@ class QueueController extends ActionController
     {
         $queues = $this->queueRepository->findAll();
         foreach ($queues as $queue) {
-            $sent = $queue->getSent();
-            $toSend = $queue->getTosend();
-            if($sent == $toSend || $sent == 0) {
-                $trackings = $this->trackingRepository->findByQueue($queue);
-                if($trackings) {
-                    foreach ($trackings as $tracking) {
-                        $this->trackingRepository->remove($tracking);
-                    }
-                }
-                $this->queueRepository->remove($queue);
-            }
+            $this->deleteAction($queue, false);
         }
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'queue');
