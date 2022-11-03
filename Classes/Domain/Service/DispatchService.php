@@ -40,7 +40,6 @@ class DispatchService {
      */
     protected $mailService;
 
-
     /**
      * @return string
      */
@@ -50,6 +49,7 @@ class DispatchService {
         $totalRecipients = 0;
         $totalRecipientLists = 0;
         $sentMails = 0;
+        $removed = 0;
         if($queues) {
             foreach ($queues as $queue) {
                 $totalRecipientLists = $totalRecipientLists + count($queue->getRecipientList());
@@ -60,14 +60,18 @@ class DispatchService {
                         $totalRecipients = $totalRecipients + 1;
                         if(!$queueRecipient->getSent()) {
                             $recipient = $queueRecipient->getRecipient();
-                            $recipientData = ['email' => $recipient->getEmail(), 'language' => $recipient->getLanguage(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
+                            $recipientData = ['email' => $recipient->getEmail(), 'dimensions' => $recipient->getDimensions(), 'customFields' => $recipient->getCustomFields(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
                             $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
                             if ($sent) {
                                 $queueRecipient->setSent(true);
                                 $this->queueRecipientRepository->update($queueRecipient);
-                                $this->persistenceManager->persistAll();
                                 $sentMails = $sentMails + 1;
+                            } else {
+                                $this->queueRecipientRepository->remove($queueRecipient);
+                                $removed = $removed + 1;
+                                $totalQueueRecipients = $totalQueueRecipients - 1;
                             }
+                            $this->persistenceManager->persistAll();
                         }
                     }
 
@@ -81,7 +85,7 @@ class DispatchService {
                 }
             }
         }
-        return 'Total recipient lists: ' . $totalRecipientLists . "\n" . 'Total recipients: ' . $totalRecipients . "\n" . 'Sent mails: ' . $sentMails;;
+        return 'Total recipient lists: ' . $totalRecipientLists . "\n" . 'Total recipients: ' . $totalRecipients . "\n" . 'Removed recipients: ' . $removed . "\n" . 'Sent mails: ' . $sentMails;;
     }
 
 }
