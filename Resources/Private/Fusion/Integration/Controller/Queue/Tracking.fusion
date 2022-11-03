@@ -26,7 +26,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype
                             </Neos.Fusion:Tag>
                         </td>
                         <td>
-                            {queue.sent}
+                            {Date.format(queue.send, 'Y-m-d, H:i')}
                         </td>
                         <td>
                             {queue.opened}
