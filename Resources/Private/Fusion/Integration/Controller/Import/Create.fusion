@@ -50,9 +50,10 @@ prototype(NeosRulez.DirectMail:Integration.ImportController.Create) < prototype(
                         </Neos.Fusion.Form:Select>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
-                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="importMapping[language]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.language')} >
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer @if.render={contentDimensions} field.name="importMapping[dimensions]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.dimensions')} >
                         <Neos.Fusion.Form:Select>
                             <Neos.Fusion.Form:Select.Option @if.render={!selectedRecipientList} attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                            <Neos.Fusion.Form:Select.Option option.value="">--- {String.toUpperCase(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.noValue'))} ---</Neos.Fusion.Form:Select.Option>
                             <Neos.Fusion:Loop items={keys} itemName="key" >
                                 <Neos.Fusion.Form:Select.Option option.value={key}>{key}</Neos.Fusion.Form:Select.Option>
                             </Neos.Fusion:Loop>
@@ -67,6 +68,24 @@ prototype(NeosRulez.DirectMail:Integration.ImportController.Create) < prototype(
                             </Neos.Fusion:Loop>
                         </Neos.Fusion.Form:Select>
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion:Fragment @if.render={customFields} >
+
+                        <Neos.Fusion:Loop items={customFields} itemName="customField" itemKey="customFieldKey" >
+
+                            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'importMapping[customFields][' + customFieldKey +']'} label={customField.label} >
+                                <Neos.Fusion.Form:Select>
+                                    <Neos.Fusion.Form:Select.Option @if.render={!selectedRecipientList} attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                                    <Neos.Fusion.Form:Select.Option option.value="">--- {String.toUpperCase(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.noValue'))} ---</Neos.Fusion.Form:Select.Option>
+                                    <Neos.Fusion:Loop items={keys} itemName="key" >
+                                        <Neos.Fusion.Form:Select.Option option.value={key}>{key}</Neos.Fusion.Form:Select.Option>
+                                    </Neos.Fusion:Loop>
+                                </Neos.Fusion.Form:Select>
+                            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                        </Neos.Fusion:Loop>
+
+                    </Neos.Fusion:Fragment>
 
                     <div class="neos-footer">
                         <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
