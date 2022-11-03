@@ -11,7 +11,7 @@ prototype(NeosRulez.DirectMail:Component.Form) < prototype(Neos.Neos:ContentComp
             <Neos.Fusion.Form:Hidden @if.render={!props.showRecipientList} field.name="newRecipient[recipientlist][]" attributes.value={props.recipientList} />
             <div @if.render={props.showSalutation} class="mb-3">
                 <label for="salutation">{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.salutation')}</label>
-                <Neos.Fusion.Form:Select attributes.id="salutation" attributes.class="form-control" field.name="newRecipient[gender]" attributes.required="required" >
+                <Neos.Fusion.Form:Select attributes.id="salutation" attributes.class="form-select" field.name="newRecipient[gender]" attributes.required="required" >
                     <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
                     <Neos.Fusion.Form:Select.Option option.value="1" >{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.input.option.sir')}</Neos.Fusion.Form:Select.Option>
                     <Neos.Fusion.Form:Select.Option option.value="2" >{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.input.option.madame')}</Neos.Fusion.Form:Select.Option>
@@ -32,7 +32,7 @@ prototype(NeosRulez.DirectMail:Component.Form) < prototype(Neos.Neos:ContentComp
             </div>
             <div @if.render={props.showRecipientList} class="mb-3">
                 <label for="email">{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.recipientList')}</label>
-                <Neos.Fusion.Form:Select attributes.id="recipientlist" attributes.class="form-control" field.name="newRecipient[recipientlist]" attributes.required="required" >
+                <Neos.Fusion.Form:Select attributes.id="recipientlist" attributes.class="form-select" field.name="newRecipient[recipientlist]" attributes.required="required" >
                     <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
                     <Neos.Fusion:Loop items={props.recipientLists} itemName="recipientList" >
                         <Neos.Fusion.Form:Select.Option option.value={recipientList} >{recipientList.name}</Neos.Fusion.Form:Select.Option>
@@ -43,7 +43,7 @@ prototype(NeosRulez.DirectMail:Component.Form) < prototype(Neos.Neos:ContentComp
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="privacyCheck" required="required" />
                     <label class="form-check-label" for="privacyCheck">
-                        {I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.privacy')}
+                        {props.dataPrivacyLink ? String.replace(I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.privacy'), '%s', props.dataPrivacyLink) : String.stripTags(I18n.translate('NeosRulez.DirectMail:NodeTypes.Content.Form:content.privacy'))}
                     </label>
                 </div>
             </div>
