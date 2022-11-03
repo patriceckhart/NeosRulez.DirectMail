@@ -216,25 +216,51 @@ class Recipient
 
     /**
      * @ORM\Column(nullable=true)
+     * @ORM\Column(type="text")
+     * @ORM\Column(length=9000)
      * @var string
      */
-    protected $language;
+    protected $dimensions;
 
     /**
-     * @return string
+     * @return array
      */
-    public function getLanguage()
+    public function getDimensions()
     {
-        return $this->language;
+        return json_decode($this->dimensions, true);
     }
 
     /**
-     * @param string $language
+     * @param array $dimensions
      * @return void
      */
-    public function setLanguage($language)
+    public function setDimensions($dimensions)
     {
-        $this->language = $language;
+        $this->dimensions = json_encode($dimensions);
+    }
+
+    /**
+     * @var string
+     * @ORM\Column(type="text")
+     * @ORM\Column(length=9000)
+     */
+    protected $customFields = '';
+
+    /**
+     * @return array
+     */
+    public function getCustomFields()
+    {
+        return json_decode($this->customFields, true);
+    }
+
+    /**
+     * @param array $customFields
+     * @return void
+     */
+    public function setCustomFields($customFields)
+    {
+        $this->customFields = json_encode($customFields);
     }
 
     /**
