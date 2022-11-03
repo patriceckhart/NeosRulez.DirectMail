@@ -31,14 +31,44 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Edit) < prototype
                         <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.email')} />
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
-                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer @if.render={contentDimensions} field.name="recipient[language]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.language')} >
-                        <Neos.Fusion.Form:Select>
-                            <Neos.Fusion.Form:Select.Option @if.render={recipient.language == '' ? true : false} option.value="" attributes.selected={recipient.language == '' ? true : false} >--- {String.toUpperCase(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.input.option.noValue'))} ---</Neos.Fusion.Form:Select.Option>
-                            <Neos.Fusion:Loop items={contentDimensions.presets} itemName="contentDimensionPreset" itemKey="contentDimensionPresetKey" >
-                                <Neos.Fusion.Form:Select.Option option.value={contentDimensionPresetKey} >{contentDimensionPreset.label}</Neos.Fusion.Form:Select.Option>
-                            </Neos.Fusion:Loop>
-                        </Neos.Fusion.Form:Select>
-                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                    <Neos.Fusion:Loop @if.render={contentDimensions} items={contentDimensions} itemName="contentDimension" itemKey="contentDimensionKey" >
+
+                        <Neos.Fusion.Form:Neos.BackendModule.FieldContainer @if.render={contentDimensions} field.name={'dimensions[' + contentDimensionKey + ']'} label={contentDimension.label} >
+                            <Neos.Fusion.Form:Select>
+                                <Neos.Fusion:Loop items={contentDimension.presets} itemName="contentDimensionPreset" itemKey="contentDimensionPresetKey" >
+                                    <Neos.Fusion.Form:Select.Option option.value={contentDimensionPresetKey} attributes.selected={contentDimensionPreset.selected ? true : false} >{contentDimensionPreset.label} [{contentDimensionPresetKey}]</Neos.Fusion.Form:Select.Option>
+                                </Neos.Fusion:Loop>
+                            </Neos.Fusion.Form:Select>
+                        </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    </Neos.Fusion:Loop>
+
+                    <Neos.Fusion:Fragment @if.render={customFields} >
+
+                        <Neos.Fusion:Loop items={customFields} itemName="customField" itemKey="customFieldKey" >
+
+                            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={customField.type != 'boolean' ? customField.label : false} field.name={'customFields[' + customFieldKey + ']'} >
+
+                                <Neos.Fusion.Form:Input @if.render={customField.type == 'string'} attributes.placeholder={customField.label} attributes.value={customFieldsValues[customFieldKey]} />
+
+                                <div @if.render={customField.type == 'boolean'} style="display:block">
+                                    <Neos.Fusion.Form:Checkbox field.value={true} attributes.checked={customFieldsValues[customFieldKey]} >
+                                        {customField.label}
+                                    </Neos.Fusion.Form:Checkbox>
+                                </div>
+
+                                <Neos.Fusion.Form:Select @if.render={customField.type == 'array'} >
+                                    <Neos.Fusion.Form:Select.Option attributes.selected="selected" attributes.disabled="disabled" >{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.input.option.choose')}</Neos.Fusion.Form:Select.Option>
+                                    <Neos.Fusion:Loop items={customField.values} itemName="customFieldItem" itemKey="customFieldItemKey" >
+                                        <Neos.Fusion.Form:Select.Option option.value={customFieldItemKey} attributes.selected={customFieldsValues[customFieldKey] == customFieldItemKey} >{customFieldItem.label}</Neos.Fusion.Form:Select.Option>
+                                    </Neos.Fusion:Loop>
+                                </Neos.Fusion.Form:Select>
+
+                            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                        </Neos.Fusion:Loop>
+
+                    </Neos.Fusion:Fragment>
 
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="recipient[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.recipientlist')} field.multiple>
                         <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
