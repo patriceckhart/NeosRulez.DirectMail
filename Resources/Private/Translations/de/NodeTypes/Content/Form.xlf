@@ -14,6 +14,9 @@
             <trans-unit id="properties.recipientList" xml:space="preserve">
 				<source>Empfängerliste</source>
 			</trans-unit>
+			<trans-unit id="properties.dataPrivacyLink" xml:space="preserve">
+				<source>Link zur Datenschutzerklärung</source>
+			</trans-unit>
             <trans-unit id="content.salutation" xml:space="preserve">
 				<source>Anrede</source>
 			</trans-unit>
@@ -42,7 +45,7 @@
 				<source>Empfängerliste</source>
 			</trans-unit>
             <trans-unit id="content.privacy" xml:space="preserve">
-				<source>Ich akzeptiere die Verarbeitung und Speicherung der oben angegebenen Daten zum Zweck der Bearbeitung gemäß den Datenschutzrichtlinien und das Tracking meiner Aktivität durch den Versender.</source>
+				<source><![CDATA[Ich akzeptiere die Verarbeitung und Speicherung der oben angegebenen Daten zum Zweck der Bearbeitung gemäß den <a href="%s" target="_blank">Datenschutzrichtlinien</a> und das Tracking meiner Aktivität durch den Versender.]]></source>
 			</trans-unit>
             <trans-unit id="content.submit" xml:space="preserve">
 				<source>Newsletter abonnieren</source>

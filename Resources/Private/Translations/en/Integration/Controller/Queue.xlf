@@ -18,10 +18,10 @@
 				<source>New dispatch</source>
 			</trans-unit>
             <trans-unit id="content.subject" xml:space="preserve">
-				<source>Subject</source>
+				<source>Description</source>
 			</trans-unit>
 			<trans-unit id="content.node" xml:space="preserve">
-				<source>Newsletter page</source>
+				<source>Newsletter</source>
 			</trans-unit>
             <trans-unit id="content.sendDate" xml:space="preserve">
 				<source>Dispatch start date</source>

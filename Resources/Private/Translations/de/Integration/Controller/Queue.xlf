@@ -18,10 +18,10 @@
 				<source>Neuer Versand</source>
 			</trans-unit>
             <trans-unit id="content.subject" xml:space="preserve">
-				<source>Betreff</source>
+				<source>Bezeichnung</source>
 			</trans-unit>
 			<trans-unit id="content.node" xml:space="preserve">
-				<source>Newsletter-Seite</source>
+				<source>Newsletter</source>
 			</trans-unit>
 			<trans-unit id="content.sendDate" xml:space="preserve">
 				<source>Versand Start-Datum</source>

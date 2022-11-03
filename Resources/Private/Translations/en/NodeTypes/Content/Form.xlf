@@ -14,6 +14,9 @@
             <trans-unit id="properties.recipientList" xml:space="preserve">
 				<source>Recipient list</source>
 			</trans-unit>
+			<trans-unit id="properties.dataPrivacyLink" xml:space="preserve">
+				<source>Link to privacy policy</source>
+			</trans-unit>
             <trans-unit id="content.salutation" xml:space="preserve">
 				<source>Salutation</source>
 			</trans-unit>
@@ -42,7 +45,7 @@
 				<source>Recipient list</source>
 			</trans-unit>
             <trans-unit id="content.privacy" xml:space="preserve">
-				<source>I accept the processing and storage of the above data for the purpose of processing in accordance with the data protection guidelines and the tracking of my activity by the sender.</source>
+				<source><![CDATA[I accept the processing and storage of the above data for the purpose of processing in accordance with the <a href="%s" target="_blank">data protection guidelines</a> and the tracking of my activity by the sender.]]></source>
 			</trans-unit>
             <trans-unit id="content.submit" xml:space="preserve">
 				<source>Subscribe</source>
