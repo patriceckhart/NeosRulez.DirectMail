@@ -104,7 +104,16 @@ class ImportController extends ActionController
         $this->view->assign('fileUri', $fileUri);
         $this->view->assign('recipientList', $recipientList->getIdentifier());
 
-        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
+        $this->view->assign('contentDimensions', $this->contentDimensions);
+
+        if(array_key_exists('recipient', $this->settings)) {
+            if(array_key_exists('customFields', $this->settings['recipient'])) {
+                $customFields = $this->settings['recipient']['customFields'];
+                if(!empty($customFields)) {
+                    $this->view->assign('customFields', $customFields);
+                }
+            }
+        }
 
     }
 
@@ -128,7 +137,21 @@ class ImportController extends ActionController
                 $gender = array_key_exists('gender', $importMapping) ? ($importMapping['gender'] == '' ? 3 : $recipientItem[$importMapping['gender']]) : 3;
                 $customsalutation = array_key_exists('customsalutation', $importMapping) ? $recipientItem[$importMapping['customsalutation']] : '';
                 $recipientList = [$this->recipientListRepository->findByIdentifier($importMapping['recipientList'])];
-                $language = array_key_exists('language', $importMapping) ? $recipientItem[$importMapping['language']] : '';
+                $dimensions = array_key_exists('dimensions', $importMapping) ? ($importMapping['dimensions'] !== '' ? $recipientItem[$importMapping['dimensions']] : false) : false;
+                $hasCustomFields = array_key_exists('customFields', $importMapping);
+
+                $customFields = [];
+
+                if($hasCustomFields) {
+                    foreach ($importMapping['customFields'] as $customFieldIterator => $customField) {
+                        if(!empty($customFieldIterator)) {
+                            if($customField !== '') {
+                                $customFields[$customFieldIterator] = $recipientItem[$customField];
+                            }
+                        }
+                    }
+                }
+
 
                 if($email) {
                     $email = str_replace(' ', '', $email);
@@ -140,7 +163,12 @@ class ImportController extends ActionController
                         $newRecipient->setGender((int) $gender);
                         $newRecipient->setCustomsalutation($customsalutation);
                         $newRecipient->setActive(true);
-                        $newRecipient->setLanguage($language);
+                        if($dimensions) {
+                            $newRecipient->setDimensions($this->mapDimensions($dimensions));
+                        }
+                        if($hasCustomFields) {
+                            $newRecipient->setCustomFields($customFields);
+                        }
                         $newRecipient->setRecipientlist($recipientList);
                         $this->recipientRepository->add($newRecipient);
                     }
@@ -154,12 +182,32 @@ class ImportController extends ActionController
     }
 
     /**
+     * @param string $dimensions
+     * @return array
+     */
+    private function mapDimensions(string $dimensions):array
+    {
+        $dimensions = explode('_', $dimensions);
+        $i = 0;
+        $contentDimensions = $this->contentDimensions;
+        $result = [];
+        if(!empty($contentDimensions)) {
+            foreach ($contentDimensions as $contentDimensionIterator => $contentDimension) {
+                $result[$contentDimensionIterator] = $dimensions[$i];
+                $i = $i + 1;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @param string $file
      * @return array
      */
     public function parseCsv(string $file):array
     {
         $filePathProductNamesT = $file;
+//        $filePathProductNamesT = str_replace('https://', 'http://', $file);
         $rows = array_map(function($data) { return str_getcsv($data,";");}, file($filePathProductNamesT));
         $header = array_shift($rows);
         foreach($rows as $row) {
