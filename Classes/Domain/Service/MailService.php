@@ -20,6 +20,12 @@ class MailService {
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\NodeService
+     */
+    protected $nodeService;
+
+    /**
+     * @Flow\Inject
      * @var \Neos\Flow\I18n\Service
      */
     protected $i18nService;
@@ -37,6 +43,12 @@ class MailService {
     protected $localizationService;
 
     /**
+     * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
+     * @var array
+     */
+    protected $contentDimensions;
+
+    /**
      * @var array
      */
     protected $settings;
@@ -48,12 +60,6 @@ class MailService {
     public function injectSettings(array $settings) {
         $this->settings = $settings;
     }
-
-    /**
-     * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
-     * @var array
-     */
-    protected $contentDimensions;
 
     /**
      * @param string $nodeUri
@@ -69,41 +75,22 @@ class MailService {
             $mail = new \Neos\SwiftMailer\Message();
             $mail
                 ->setFrom([$this->settings['senderMail'] => $this->settings['senderName']])
-                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']])
-                ->setSubject($subject);
+                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']]);
 
-            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($this->addLanguageToNodeUri($nodeUri, $recipient));
+            $uriForEncode = $this->nodeService->nodeUri($nodeUri, $recipient);
+            if(!$uriForEncode) {
+                return false;
+            }
+            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($uriForEncode['nodeUri']);
             $file = file_get_contents($renderUri);
 
             $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
 
+            $mail->setSubject($uriForEncode['subject']);
             $mail->setBody($body, 'text/html');
             $mail->send();
         }
         return true;
-    }
-
-    /**
-     * @param string $nodeUri
-     * @param array $recipient
-     * @return string
-     */
-    private function addLanguageToNodeUri(string $nodeUri, array $recipient):string
-    {
-        $uriSegment = false;
-        if($recipient['language'] !== null) {
-            if (array_key_exists('language', $this->contentDimensions)) {
-                if (array_key_exists('presets', $this->contentDimensions['language'])) {
-                    $presets = $this->contentDimensions['language']['presets'];
-                    if (array_key_exists($recipient['language'], $presets)) {
-                        $recipientPreset = $presets[$recipient['language']];
-                        $uriSegment = $recipientPreset['uriSegment'];
-                    }
-                }
-            }
-        }
-        $parsedUri = parse_url($nodeUri);
-        return $parsedUri['scheme'] . '://' . $parsedUri['host'] . ($uriSegment ? '/' . $uriSegment : '') . $parsedUri['path'];
     }
 
     /**
@@ -146,14 +133,24 @@ class MailService {
     public function replacePlaceholders(string $body, array $recipient, string $nodeUri):string
     {
 
-        if($recipient['language'] !== null) {
+        if($recipient['dimensions'] !== null) {
             if (array_key_exists('language', $this->contentDimensions)) {
                 if (array_key_exists('presets', $this->contentDimensions['language'])) {
                     $presets = $this->contentDimensions['language']['presets'];
-                    if (array_key_exists($recipient['language'], $presets)) {
-                        $locale = new Locale($recipient['language']);
-                        $this->localizationService->getConfiguration()->setCurrentLocale($locale);
+                    if (array_key_exists('language', $recipient['dimensions'])) {
+                        if (array_key_exists($recipient['dimensions']['language'], $presets)) {
+                            $locale = new Locale($recipient['dimensions']['language']);
+                            $this->localizationService->getConfiguration()->setCurrentLocale($locale);
+                        }
                     }
+                }
+            }
+        }
+
+        if(!empty($recipient['customFields'])) {
+            foreach ($recipient['customFields'] as $customFieldIterator => $customField) {
+                if($customField !== '') {
+                    $body = str_replace('{' . $customFieldIterator . '}', $customField, $body);
                 }
             }
         }
@@ -172,6 +169,9 @@ class MailService {
             $body = str_replace('{lastname}', $recipient['lastname'], $body);
         }
 
+        $body = str_replace('{email}', $recipient['email'], $body);
+        $body = str_replace('%7Bemail%7D', $recipient['email'], $body);
+
         $unsubscribeUri = $this->settings['baseUri'] . '/unsubscribe/'. $recipient['identifier'];
 
         $body = str_replace('{unsubscribe}', '<a href="' . $unsubscribeUri . '" target="_blank">' . $this->translator->translateById('unsubscribe', [], null, null, $sourceName = 'Mail/Unsubscribe', $packageKey = 'NeosRulez.DirectMail') . '</a>', $body);
@@ -183,6 +183,7 @@ class MailService {
         if(array_key_exists('recipientIdentifier', $recipient)) {
             $body = str_replace('{recipient}', $recipient['recipientIdentifier'], $body);
         }
+
         return $body;
     }
 
