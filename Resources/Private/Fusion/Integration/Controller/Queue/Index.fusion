@@ -97,7 +97,6 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                     <thead>
                     <tr>
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.subject')}</td>
-                        <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.node')}</td>
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sendDateTime')}</td>
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.sent')}</td>
                         <td>{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.created')}</td>
@@ -111,9 +110,6 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                         <tr>
                             <td>
                                 {queue.name}
-                            </td>
-                            <td>
-                                {queue.nodeuri}
                             </td>
                             <td>
                                 {Date.format(queue.send, 'Y-m-d, H:i')}
