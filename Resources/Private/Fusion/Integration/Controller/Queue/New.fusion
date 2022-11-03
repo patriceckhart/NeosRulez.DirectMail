@@ -77,6 +77,6 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.New) < prototype(Neos
 prototype(NeosRulez.DirectMail:Integration.QueueController.New.NodeOptionValue) < prototype(Neos.Fusion:Component) {
     uri = ${Configuration.setting('NeosRulez.DirectMail.baseUri') + this.node.nodeUri}
     renderer = afx`
-        <Neos.Fusion.Form:Select.Option option.value={props.uri} >{props.node.title}</Neos.Fusion.Form:Select.Option>
+        <Neos.Fusion.Form:Select.Option option.value={props.node.identifier} >{props.node.title}</Neos.Fusion.Form:Select.Option>
     `
 }
