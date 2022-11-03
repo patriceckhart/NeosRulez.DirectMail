@@ -1,7 +1,11 @@
 prototype(NeosRulez.DirectMail:Content.Form) < prototype(Neos.Neos:ContentComponent) {
 
+    dataPrivacyLink = ${q(node).property('dataPrivacyLink')}
+    dataPrivacyLink.@process.convertUris = Neos.Neos:ConvertUris {
+        forceConversion = true
+    }
+
     renderer = afx`
-        <NeosRulez.DirectMail:Component.Form />
+        <NeosRulez.DirectMail:Component.Form dataPrivacyLink={props.dataPrivacyLink} />
     `
 }
-
