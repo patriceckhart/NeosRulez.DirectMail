@@ -44,6 +44,18 @@ class RecipientController extends ActionController
      */
     protected $contentDimensions;
 
+    /**
+     * @var array
+     */
+    protected $settings;
+
+    /**
+     * @param array $settings
+     * @return void
+     */
+    public function injectSettings(array $settings) {
+        $this->settings = $settings;
+    }
 
     /**
      * @param integer $offset
@@ -106,7 +118,16 @@ class RecipientController extends ActionController
         }
         $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
 
-        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
+        $this->view->assign('contentDimensions', $this->contentDimensions);
+
+        if(array_key_exists('recipient', $this->settings)) {
+            if(array_key_exists('customFields', $this->settings['recipient'])) {
+                $customFields = $this->settings['recipient']['customFields'];
+                if(!empty($customFields)) {
+                    $this->view->assign('customFields', $customFields);
+                }
+            }
+        }
     }
 
     /**
@@ -117,6 +138,17 @@ class RecipientController extends ActionController
     public function createAction(\NeosRulez\DirectMail\Domain\Model\Recipient $newRecipient, string $selectedRecipientList = '')
     {
         $recipient = $this->recipientRepository->findOneRecipientByMail($newRecipient->getEmail());
+
+        $dimensions = false;
+        if($this->request->hasArgument('dimensions')) {
+            $dimensions = $this->request->getArgument('dimensions');
+        }
+
+        $customFields = false;
+        if($this->request->hasArgument('customFields')) {
+            $customFields = $this->request->getArgument('customFields');
+        }
+
         if($recipient) {
             $recipientLists = $recipient->getRecipientlist();
             $rawRecipientLists = [];
@@ -131,13 +163,27 @@ class RecipientController extends ActionController
 
             $recipient->setFirstname($newRecipient->getFirstname());
             $recipient->setLastname($newRecipient->getLastname());
-            $recipient->setGender((int) $newRecipient->getGender());
+            $recipient->setGender((int)$newRecipient->getGender());
             $recipient->setCustomsalutation($newRecipient->getCustomsalutation());
+
+            if ($dimensions) {
+                $recipient->setDimensions($dimensions);
+            }
+
+            if($customFields) {
+                $newRecipient->setCustomFields($customFields);
+            }
 
             $recipient->setActive(true);
             $this->recipientRepository->update($recipient);
         } else {
+            if($customFields) {
+                $newRecipient->setCustomFields($customFields);
+            }
             $newRecipient->setActive(true);
+            if ($dimensions) {
+                $newRecipient->setDimensions($dimensions);
+            }
             $this->recipientRepository->add($newRecipient);
         }
         if($selectedRecipientList != '') {
@@ -157,9 +203,35 @@ class RecipientController extends ActionController
             $this->view->assign('selectedRecipientList', $this->persistenceManager->getIdentifierByObject($selectedRecipientList));
         }
         $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+
         $this->view->assign('recipient', $recipient);
 
-        $this->view->assign('contentDimensions', array_key_exists('language', $this->contentDimensions) ? $this->contentDimensions['language'] : false);
+        $recipientContentDimensions = $recipient->getDimensions();
+        $contentDimensions = [];
+        if(!empty($this->contentDimensions) && $recipientContentDimensions !== null) {
+            foreach ($this->contentDimensions as $contentDimensionIterator => $contentDimension) {
+                if(array_key_exists($contentDimensionIterator, $recipientContentDimensions)) {
+                    foreach ($contentDimension['presets'] as $contentDimensionPresetIterator => $contentDimensionPreset) {
+                        if($recipientContentDimensions[$contentDimensionIterator] == $contentDimensionPresetIterator) {
+                            $contentDimension['presets'][$contentDimensionPresetIterator]['selected'] = true;
+                        }
+                    }
+                }
+                $contentDimensions[$contentDimensionIterator] = $contentDimension;
+            }
+        }
+
+        $this->view->assign('contentDimensions', $contentDimensions);
+
+        if(array_key_exists('recipient', $this->settings)) {
+            if(array_key_exists('customFields', $this->settings['recipient'])) {
+                $customFields = $this->settings['recipient']['customFields'];
+                if(!empty($customFields)) {
+                    $this->view->assign('customFields', $customFields);
+                    $this->view->assign('customFieldsValues', $recipient->getCustomFields());
+                }
+            }
+        }
     }
 
     /**
@@ -169,6 +241,14 @@ class RecipientController extends ActionController
      */
     public function updateAction($recipient, string $selectedRecipientList = '')
     {
+        if($this->request->hasArgument('dimensions')) {
+            $dimensions = $this->request->getArgument('dimensions');
+            $recipient->setDimensions($dimensions);
+        }
+        if($this->request->hasArgument('customFields')) {
+            $customFields = $this->request->getArgument('customFields');
+            $recipient->setCustomFields($customFields);
+        }
         $this->recipientRepository->update($recipient);
         if($selectedRecipientList != '') {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $selectedRecipientList));
@@ -193,7 +273,8 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $this->persistenceManager->getIdentifierByObject($selectedRecipientList)));
         }
-        $this->redirect('index', 'recipient');
+//        $this->redirect('index', 'recipient');
+        $this->redirectToUri($_SERVER['HTTP_REFERER']);
     }
 
     /**
@@ -225,7 +306,8 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $this->persistenceManager->getIdentifierByObject($selectedRecipientList)));
         }
-        $this->redirect('index', 'recipient');
+//        $this->redirect('index', 'recipient');
+        $this->redirectToUri($_SERVER['HTTP_REFERER']);
     }
 
     /**
@@ -245,7 +327,8 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $this->persistenceManager->getIdentifierByObject($selectedRecipientList)));
         }
-        $this->redirect('index', 'recipient');
+//        $this->redirect('index', 'recipient');
+        $this->redirectToUri($_SERVER['HTTP_REFERER']);
     }
 
     /**
@@ -265,7 +348,8 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $this->persistenceManager->getIdentifierByObject($selectedRecipientList)));
         }
-        $this->redirect('index', 'recipient');
+//        $this->redirect('index', 'recipient');
+        $this->redirectToUri($_SERVER['HTTP_REFERER']);
     }
 
     /**
@@ -301,7 +385,8 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->redirect('edit','recipientList',Null,array('recipientList' => $this->persistenceManager->getIdentifierByObject($selectedRecipientList)));
         }
-        $this->redirect('index', 'recipient');
+//        $this->redirect('index', 'recipient');
+        $this->redirectToUri($_SERVER['HTTP_REFERER']);
     }
 
 }
