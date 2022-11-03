@@ -104,3 +104,11 @@ Neos:
 #    baseUri: 'http://foo.bar'
 #    apiKey: '12345678' # Use a safe key with random letters and numbers in sufficient length
 #    percentageOfDispatch: true
+#    language: true
+#    rtrEcgList:
+#      apiKey: 'bc3e81d8-5673-444d-a373-67954417786a' # When creating mailings, you can check whether the recipients are on the ecg list. These recipients will not be added.
+#    recipient:
+#      customFields:
+#        company:
+#          type: string
+#          label: Company
