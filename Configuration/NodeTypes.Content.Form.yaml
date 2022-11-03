@@ -42,3 +42,11 @@
           editor: Neos.Neos/Inspector/Editors/SelectBoxEditor
           editorOptions:
             dataSourceIdentifier: neosrulez-directmail-recipientlist
+    dataPrivacyLink:
+      type: string
+      ui:
+        reloadIfChanged: true
+        label: i18n
+        inspector:
+          group: neosRulezDirectMail
+          editor: Neos.Neos/Inspector/Editors/LinkEditor
