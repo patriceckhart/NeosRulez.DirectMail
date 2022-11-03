@@ -13,7 +13,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                     </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
 
                     <div style="font-size: 11px; color: grey;">ID: {recipientList.identifier}</div>
-                    
+
                     <div class="neos-footer">
                         <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
                             {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.save')}
@@ -21,6 +21,11 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                         <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={'<i class="fas fa-file-csv" style="margin-right:5px;"></i>' + I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.importRecipients')} >
                             <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Import" action="index" @children="arguments">
                                 <Neos.Fusion:DataStructure recipientList={recipientList} />
+                            </Neos.Fusion:UriBuilder>
+                        </Neos.Fusion:Tag>
+                        <Neos.Fusion:Tag @if.render={!props.noCreation} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
+                            <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" @children="arguments">
+                                <Neos.Fusion:DataStructure @if.render={recipientList} selectedRecipientList={recipientList} />
                             </Neos.Fusion:UriBuilder>
                         </Neos.Fusion:Tag>
                     </div>
