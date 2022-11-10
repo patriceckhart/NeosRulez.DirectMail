@@ -36,7 +36,7 @@ class NewsletterController extends ActionController
      */
     public function indexAction($base64Uri)
     {
-        $uri = base64_decode($base64Uri);
+        $uri = $this->settings['baseUri'] . base64_decode($base64Uri);
         $html = file_get_contents($uri);
         $cssToInlineView = $this->cssToInlineService->execute($html);
         $view = '<!DOCTYPE html>
