@@ -1,0 +1,17 @@
+'NeosRulez.DirectMail:Mixin.Attachment':
+  abstract: true
+  ui:
+    inspector:
+      groups:
+        attachment:
+          label: i18n
+          icon: fas fa-file-import
+          position: end
+  properties:
+    attachments:
+      type: array<Neos\Media\Domain\Model\Asset>
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: attachment

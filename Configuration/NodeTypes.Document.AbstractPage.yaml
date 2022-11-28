@@ -10,6 +10,7 @@
     'Neos.Seo:XmlSitemapMixin': false
     'Neos.Neos:Timable': false
     'NeosRulez.DirectMail:Mixin.Color': true
+    'NeosRulez.DirectMail:Mixin.Attachment': true
   childNodes:
     main:
       type: 'Neos.Neos:ContentCollection'

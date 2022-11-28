@@ -18,6 +18,12 @@ class NewsletterController extends ActionController
     protected $cssToInlineService;
 
     /**
+     * @Flow\Inject
+     * @var \NeosRulez\DirectMail\Domain\Service\MailService
+     */
+    protected $mailService;
+
+    /**
      * @var array
      */
     protected $settings;
@@ -37,7 +43,7 @@ class NewsletterController extends ActionController
     public function indexAction(string $base64Uri)
     {
         $uri = base64_decode($base64Uri);
-        $html = $this->getPageContent($uri);
+        $html = $this->mailService->getPageContent($uri);
         $cssToInlineView = $this->cssToInlineService->execute($html);
         $view = '<!DOCTYPE html>
 <html lang="en" xmlns="https://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -68,32 +74,6 @@ class NewsletterController extends ActionController
             '<img src="' . $this->settings['baseUri'] . '/tracking/{queue}/{recipient}/opened/0" width="1" height="1" style="width:1px;height:1px" />
 </body>';
         return $view;
-    }
-
-    /**
-     * @param string $uri
-     * @return string
-     */
-    private function getPageContent(string $uri): string
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $uri,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_SSL_VERIFYHOST => false
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        return $response;
     }
 
 }

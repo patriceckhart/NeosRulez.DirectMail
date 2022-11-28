@@ -81,16 +81,51 @@ class MailService {
             if(!$uriForEncode) {
                 return false;
             }
-            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($uriForEncode['nodeUri']);
-            $file = file_get_contents($renderUri);
+            $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($this->settings['baseUri'] . $uriForEncode['nodeUri']);
+            $file = $this->getPageContent($renderUri);
 
             $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
 
             $mail->setSubject($uriForEncode['subject']);
             $mail->setBody($body, 'text/html');
+
+            if(array_key_exists('attachments', $uriForEncode)) {
+                if(!empty($uriForEncode['attachments'])) {
+                    foreach ($uriForEncode['attachments'] as $attachment) {
+                        $mail->attach(new \Swift_Attachment(file_get_contents($attachment['temporaryLocalCopyFilename']), $attachment['mailFilename'], $attachment['mediaType']));
+                    }
+                }
+            }
+
             $mail->send();
         }
         return true;
+    }
+
+    /**
+     * @param string $uri
+     * @return string
+     */
+    public function getPageContent(string $uri): string
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $uri,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_SSL_VERIFYHOST => false
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return $response;
     }
 
     /**
