@@ -78,8 +78,15 @@ class MailService {
                 ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']]);
 
             $uriForEncode = $this->nodeService->nodeUri($nodeUri, $recipient);
+
             if(!$uriForEncode) {
                 return false;
+            }
+
+            $http = strpos($uriForEncode['nodeUri'], 'https:');
+            $https = strpos($uriForEncode['nodeUri'], 'https:');
+            if($http !== false || $https !== false) {
+                $uriForEncode['nodeUri'] = parse_url($uriForEncode['nodeUri'], PHP_URL_PATH);
             }
             $renderUri = $this->settings['baseUri'] . '/directmail/' . base64_encode($this->settings['baseUri'] . $uriForEncode['nodeUri']);
             $file = $this->getPageContent($renderUri);
