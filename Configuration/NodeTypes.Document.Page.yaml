@@ -1,4 +1,5 @@
 'NeosRulez.DirectMail:Document.Page':
+  label: "${q(node).property('backendTitle') ? q(node).property('backendTitle') : q(node).property('title')}"
   superTypes:
     'NeosRulez.DirectMail:Document.AbstractPage': true
   ui:
@@ -14,7 +15,24 @@
           label: Google Analytics
           icon: fas fa-chart-bar
           position: end
+    creationDialog:
+      elements:
+        title:
+          ui:
+            label: i18n
   properties:
+    title:
+      ui:
+        label: i18n
+    backendTitle:
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        showInCreationDialog: true
+        inspector:
+          group: document
+          position: after title
     googleAnalyticsCampaign:
       type: string
       ui:

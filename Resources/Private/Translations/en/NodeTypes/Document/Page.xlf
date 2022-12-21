@@ -14,6 +14,15 @@
             <trans-unit id="properties.googleAnalyticsCampaign" xml:space="preserve">
 				<source>Google Analytics campaign</source>
 			</trans-unit>
+            <trans-unit id="properties.title" xml:space="preserve">
+				<source>Subject for mail</source>
+			</trans-unit>
+            <trans-unit id="creationDialog.title" xml:space="preserve">
+				<source>Subject for mail</source>
+			</trans-unit>
+            <trans-unit id="properties.backendTitle" xml:space="preserve">
+				<source>Title in backend</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
