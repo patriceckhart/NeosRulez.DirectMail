@@ -6,7 +6,7 @@
 				<source>Bitte bestätigen Sie Ihre Newsletter-Anmeldung</source>
 			</trans-unit>
             <trans-unit id="body" xml:space="preserve">
-				<source>Wir freuen uns, dass Sie sich für den unseren Newsletter interessieren. Um Ihre Anmeldung zu bestätigen, klicken Sie bitte auf "Jetzt bestätigen".</source>
+				<source>Wir freuen uns, dass Sie sich für den Newsletter interessieren. Um Ihre Anmeldung zu bestätigen, klicken Sie bitte auf "Jetzt bestätigen".</source>
 			</trans-unit>
             <trans-unit id="btn" xml:space="preserve">
 				<source>Jetzt bestätigen</source>
