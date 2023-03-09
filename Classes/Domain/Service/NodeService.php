@@ -34,6 +34,8 @@ use Neos\Neos\Controller\CreateContentContextTrait;
 use Neos\Neos\Domain\Model\Domain;
 use Neos\RedirectHandler\Storage\RedirectStorageInterface;
 use Psr\Log\LoggerInterface;
+use Neos\Flow\ResourceManagement\ResourceManager;
+use Neos\Utility\MediaTypes;
 
 /**
  *
@@ -83,6 +85,12 @@ class NodeService {
     protected $bootstrap;
 
     /**
+     * @Flow\Inject
+     * @var ResourceManager
+     */
+    protected $resourceManager;
+
+    /**
      * @param string $nodeUri
      * @param array $recipient
      * @return mixed
@@ -91,7 +99,6 @@ class NodeService {
     {
         $recipientDimensions = $recipient['dimensions'] !== null ? $recipient['dimensions'] : [];
         $dimensions = $this->getDimensions($recipientDimensions);
-
         $context = $this->contextFactory->create([
             'workspaceName' => 'live',
             'dimensions' => $dimensions
@@ -103,10 +110,58 @@ class NodeService {
             return false;
         }
 
+        if(!$this->hasRecipientDimension($node->getDimensions(), $recipientDimensions)) {
+            return false;
+        }
+
+        $attachments = [];
+        if($node->hasProperty('attachments')) {
+            $attachmentAssets = $node->getProperty('attachments');
+            if(!empty($attachmentAssets)) {
+                foreach ($attachmentAssets as $attachmentAsset) {
+
+                    $sourceMediaType = MediaTypes::parseMediaType($attachmentAsset->getMediaType());
+                    $assetFileName = $attachmentAsset->getResource()->getFileName();
+                    $fileExtension = $attachmentAsset->getResource()->getFileExtension();
+                    $temporaryLocalCopyFilename = $attachmentAsset->getResource()->createTemporaryLocalCopy();
+                    $mailFileName = str_replace(':', '', str_replace(' ', '_', $assetFileName));
+
+                    $attachments[] = [
+                        'mediaType' => $sourceMediaType['type'] . '/' . $sourceMediaType['subtype'],
+                        'fileExtensions' => $fileExtension,
+                        'temporaryLocalCopyFilename' => $temporaryLocalCopyFilename,
+                        'mailFilename' => $mailFileName
+                    ];
+                }
+            }
+        }
+
         return [
             'nodeUri' => $this->buildUriPathForNode($node),
-            'subject' => $node->getProperty('title')
+            'subject' => $node->getProperty('title'),
+            'attachments' => $attachments
         ];
+    }
+
+    /**
+     * @param array $nodeDimensions
+     * @param array $recipientDimensions
+     * @return bool
+     */
+    private function hasRecipientDimension(array $nodeDimensions, array $recipientDimensions):bool
+    {
+        if(!empty($recipientDimensions)) {
+            foreach ($nodeDimensions as $nodeDimensionIterator => $nodeDimension) {
+                foreach ($nodeDimension as $nodeDimensionValue) {
+                    if($recipientDimensions[$nodeDimensionIterator] == $nodeDimensionValue) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            return true;
+        }
+        return false;
     }
 
     /**
