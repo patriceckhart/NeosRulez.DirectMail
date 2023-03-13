@@ -146,8 +146,10 @@ class QueueController extends ActionController
         $trackingsMerged = [];
         $result = [];
         foreach ($trackings as $tracking) {
-            $tracking->opened = $this->trackingRepository->countByQueueAndRecipient($tracking->getQueue(), $tracking->getRecipient());
-            $trackingsMerged[$tracking->getRecipient()->getEmail()] = $tracking;
+            if($tracking->getQueue() && $tracking->getRecipient()) {
+                $tracking->opened = $this->trackingRepository->countByQueueAndRecipient($tracking->getQueue(), $tracking->getRecipient());
+                $trackingsMerged[$tracking->getRecipient()->getEmail()] = $tracking;
+            }
         }
         foreach ($trackingsMerged as $trackingMerged) {
             $result[] = ['opened' => $trackingMerged->opened, 'tracking' => $trackingMerged];
