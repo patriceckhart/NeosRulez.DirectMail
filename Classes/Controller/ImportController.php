@@ -135,7 +135,7 @@ class ImportController extends ActionController
                 $lastname = array_key_exists('lastname', $importMapping) ? $recipientItem[$importMapping['lastname']] : '';
                 $email = array_key_exists('email', $importMapping) ? $recipientItem[$importMapping['email']] : false;
                 $gender = array_key_exists('gender', $importMapping) ? ($importMapping['gender'] == '' ? 3 : $recipientItem[$importMapping['gender']]) : 3;
-                $customsalutation = array_key_exists('customsalutation', $importMapping) ? $recipientItem[$importMapping['customsalutation']] : '';
+                $customsalutation = array_key_exists('customSalutation', $importMapping) ? $recipientItem[$importMapping['customSalutation']] : '';
                 $recipientList = [$this->recipientListRepository->findByIdentifier($importMapping['recipientList'])];
                 $dimensions = array_key_exists('dimensions', $importMapping) ? ($importMapping['dimensions'] !== '' ? $recipientItem[$importMapping['dimensions']] : false) : false;
                 $hasCustomFields = array_key_exists('customFields', $importMapping);
