@@ -230,10 +230,10 @@ class MailService {
     }
 
     /**
-     * @param bool $gender
+     * @param int $gender
      * @return string
      */
-    public function getSalutationFromTranslations(bool $gender):string
+    public function getSalutationFromTranslations(int $gender):string
     {
         $salutation = $this->translator->translateById(($gender == 1 ? 'salutation.1' : ($gender == 2 ? 'salutation.2' : ($gender == 3 ? 'salutation.3' : 'salutation.3'))), [], null, null, $sourceName = 'Mail/Salutation', $packageKey = 'NeosRulez.DirectMail');
         return $salutation;
