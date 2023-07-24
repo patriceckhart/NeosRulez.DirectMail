@@ -175,7 +175,7 @@ class MailService {
     public function replacePlaceholders(string $body, array $recipient, string $nodeUri):string
     {
 
-        if($recipient['dimensions'] !== null) {
+        if(array_key_exists('dimensions', $recipient) && $recipient['dimensions'] !== null) {
             if (array_key_exists('language', $this->contentDimensions)) {
                 if (array_key_exists('presets', $this->contentDimensions['language'])) {
                     $presets = $this->contentDimensions['language']['presets'];
@@ -189,7 +189,7 @@ class MailService {
             }
         }
 
-        if(!empty($recipient['customFields'])) {
+        if(array_key_exists('customFields', $recipient) && !empty($recipient['customFields'])) {
             foreach ($recipient['customFields'] as $customFieldIterator => $customField) {
                 if($customField !== '') {
                     $body = str_replace('{' . $customFieldIterator . '}', $customField, $body);
@@ -199,7 +199,7 @@ class MailService {
 
         $salutation = '';
 
-        if($recipient['customsalutation']) {
+        if(array_key_exists('customsalutation', $recipient) && $recipient['customsalutation']) {
             $salutation = $recipient['customsalutation'];
             $body = str_replace('{firstname}', '', $body);
             $body = str_replace('{lastname}', '', $body);
