@@ -75,7 +75,7 @@ class RecipientListController extends ActionController
      * @param boolean $filterInactive
      * @return void
      */
-    public function editAction(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList, int $offset = 0, int $length = 50, int $itemsPerLoad = 50, int $page = 1, string $searchstring = '', bool $filterInactive = false)
+    public function editAction(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList, int $offset = 0, int $length = 3, int $itemsPerLoad = 3, int $page = 1, string $searchstring = '', bool $filterInactive = false)
     {
         $recipients = $this->recipientRepository->findByRecipientList($recipientList)->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING, 'email' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
         if($searchstring != '') {

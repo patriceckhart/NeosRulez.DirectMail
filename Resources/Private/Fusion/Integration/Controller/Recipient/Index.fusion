@@ -27,6 +27,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index) < prototyp
                 </fieldset>
             </div>
 
+            <NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination @if.render={!props.useAjax} pages={pages} pagination={pagination} action={action} recipientList={recipientList} alignTop={true} />
             <table @if.render={props.recipientList} class="neos-table">
                 <thead>
                 <tr>
@@ -235,10 +236,13 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.AjaxLoading
 }
 
 prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination) < prototype(Neos.Fusion:Component) {
+
+    alignTop = false
+
     renderer = afx`
         <div @if.render={pagination} class="page-navigation">
-            <ul class="neos-fluid-widget-paginator">
-                <li @if.render={page > 1 ? true : false} class="previous">
+            <ul class="neos-fluid-widget-paginator" style={props.alignTop ? 'border-top:0;border-bottom:1px solid #3f3f3f' : false} >
+                <li @if.render={page > 1 ? true : false} class="previous" style={props.alignTop ? 'border-bottom:0;border-top:1px solid #3f3f3f' : false} >
                     <Neos.Fusion:Tag tagName="a" @children="attributes.href" content="vorherige" >
                         <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} action={props.action == 'edit' ? 'edit' : 'index'} @children="arguments">
                             <Neos.Fusion:DataStructure page={(page - 1)} offset="0" recipientList={recipientList} />
@@ -246,9 +250,9 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination)
                     </Neos.Fusion:Tag>
                 </li>
                 <Neos.Fusion:Loop items={pagination} itemName="pageItem">
-                    <NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination.Item page={page} pageItem={pageItem} action={props.action} recipientList={recipientList} />
+                    <NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination.Item page={page} pageItem={pageItem} action={props.action} recipientList={recipientList} alignTop={props.alignTop} />
                 </Neos.Fusion:Loop>
-                <li @if.render={page >= pages ? false : true} class="next">
+                <li @if.render={page >= pages ? false : true} class="next" style={props.alignTop ? 'border-bottom:0;border-top:1px solid #3f3f3f' : false} >
                     <Neos.Fusion:Tag tagName="a" @children="attributes.href" content="nächste" >
                         <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.action == 'edit' ? 'RecipientList' : 'Recipient'} action={props.action == 'edit' ? 'edit' : 'index'} @children="arguments">
                             <Neos.Fusion:DataStructure page={(page + 1)} offset="0" recipientList={recipientList} />
@@ -267,8 +271,10 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.Index.Pagination.
     controller = ${this.action == 'edit' ? 'RecipientList' : 'Recipient'}
     controllerAction = ${this.action == 'edit' ? 'edit' : 'index'}
 
+    alignTop = false
+
     renderer = afx`
-        <li class={props.className} >
+        <li class={props.className} style={props.alignTop ? ('border-bottom:0;' + (props.className == 'current' ? 'border-top:1px solid #3f3f3f' : '')) : false} >
             <Neos.Fusion:Tag @if.render={!props.isPage} tagName="a" @children="attributes.href" content={pageItem} >
                 <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller={props.controller} action={props.controllerAction} @children="arguments">
                     <Neos.Fusion:DataStructure page={pageItem} offset="0" recipientList={props.recipientList} />
