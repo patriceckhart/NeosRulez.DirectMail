@@ -172,6 +172,7 @@ class QueueController extends ActionController
                 $result[] = [
                     'nodeUri' => $this->getNodeUri($mailing),
                     'title' => $mailing->getProperty('title'),
+                    'backendTitle' => $mailing->hasProperty('backendTitle') ? $mailing->getProperty('backendTitle') : '',
                     'identifier' => $mailing->getIdentifier()
                 ];
             }
