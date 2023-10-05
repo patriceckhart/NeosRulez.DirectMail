@@ -109,7 +109,14 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
                     <Neos.Fusion:Loop items={queues} itemName="queue" >
                         <tr>
                             <td>
-                                {queue.name}
+                                <span style="margin-right:4px">
+                                    {queue.name}
+                                </span>
+                                <Neos.Fusion:Loop items={queue.recipientlist} >
+                                    <span class="neos-label" title={item.name} data-neos-toggle="tooltip" data-placement="right" data-html="true" style="margin-left:3px">
+                                        {item.name}
+                                    </span>
+                                </Neos.Fusion:Loop>
                             </td>
                             <td>
                                 {Date.format(queue.send, 'Y-m-d, H:i')}
@@ -170,4 +177,3 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Index) < prototype(Ne
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
     `
 }
-

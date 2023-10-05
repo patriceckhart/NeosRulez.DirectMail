@@ -34,4 +34,3 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.IndexTracking) < prot
         </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
     `
 }
-
