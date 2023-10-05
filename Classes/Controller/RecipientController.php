@@ -116,7 +116,7 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->view->assign('selectedRecipientList', $this->persistenceManager->getIdentifierByObject($selectedRecipientList));
         }
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
 
         $this->view->assign('contentDimensions', $this->contentDimensions);
 
@@ -202,7 +202,7 @@ class RecipientController extends ActionController
         if($selectedRecipientList !== null) {
             $this->view->assign('selectedRecipientList', $this->persistenceManager->getIdentifierByObject($selectedRecipientList));
         }
-        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
+        $this->view->assign('recipientLists', $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute());
 
         $this->view->assign('recipient', $recipient);
 

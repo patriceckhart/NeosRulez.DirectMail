@@ -67,7 +67,7 @@ class ImportController extends ActionController
         if($this->request->hasArgument('recipientList')) {
             $this->view->assign('selectedRecipientList', $this->request->getArgument('recipientList'));
         }
-        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
         $result = [];
         if($recipientLists) {
             foreach ($recipientLists as $recipientList) {
