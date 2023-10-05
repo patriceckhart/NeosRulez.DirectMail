@@ -6,4 +6,5 @@ prototype(NeosRulez.DirectMail:Integration.Component.DefaultLayout) < prototype(
     renderer = afx`
         {props.content}
     `
+    @process.debugDump = Neos.Fusion:DebugDump
 }

@@ -74,7 +74,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientController.New) < prototype(
                     <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="newRecipient[recipientlist]" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.recipientlist')} field.multiple >
                         <Neos.Fusion:Loop items={recipientLists} itemName="recipientList" >
                             <div style="display:block">
-                                <Neos.Fusion.Form:Checkbox field.value={recipientList}>
+                                <Neos.Fusion.Form:Checkbox field.value={recipientList} attributes.checked={recipientList.identifier == selectedRecipientList} >
                                     {recipientList.name}
                                 </Neos.Fusion.Form:Checkbox>
                             </div>

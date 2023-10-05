@@ -25,7 +25,7 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Edit) < proto
                         </Neos.Fusion:Tag>
                         <Neos.Fusion:Tag @if.render={!props.noCreation} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Recipient:content.newRecipient')} >
                             <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Recipient" action="new" @children="arguments">
-                                <Neos.Fusion:DataStructure @if.render={recipientList} selectedRecipientList={recipientList} />
+                                <Neos.Fusion:DataStructure @if.render={recipientList} selectedRecipientList={recipientList} attributes={{selectedRecipientList: recipientList}} />
                             </Neos.Fusion:UriBuilder>
                         </Neos.Fusion:Tag>
                     </div>
