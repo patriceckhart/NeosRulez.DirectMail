@@ -1,0 +1,51 @@
+NeosRulez.DirectMail.QueueController.recipientList = NeosRulez.DirectMail:Integration.QueueController.RecipientList
+
+prototype(NeosRulez.DirectMail:Integration.QueueController.RecipientList) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title="New recipient list" >
+            <div class="neos-content neos-container-fluid">
+                <Neos.Fusion.Form:Form form.target.action="createRecipientList" form.target.controller="Queue" form.target.package="NeosRulez.DirectMail" >
+
+                    <Neos.Fusion.Form:Hidden field.name="queue" field.value={queue} />
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.newRecipientListFrom')} field.name="newRecipientList[name]">
+                        <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.name')} />
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name="option" label={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.newRecipientListFromOption')} >
+                        <div style="display:flex;flex-direction:row;gap:20px;margin-top:16px">
+                            <div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+                                <Neos.Fusion.Form:Radio field.value="1" attributes.required={true} >
+                                    {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.newRecipientListFromOption.opened')}
+                                </Neos.Fusion.Form:Radio>
+                                <Neos.Fusion.Form:Radio field.value="2" attributes.required={true} >
+                                    {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.newRecipientListFromOption.notOpened')}
+                                </Neos.Fusion.Form:Radio>
+                                <Neos.Fusion.Form:Radio field.value="3" attributes.required={true} >
+                                    {I18n.translate('NeosRulez.DirectMail:Integration.Controller.Queue:content.newRecipientListFromOption.all')}
+                                </Neos.Fusion.Form:Radio>
+                            </div>
+
+                            <div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+                                <Neos.Fusion.Form:Radio field.value="4" attributes.required={true} >
+                                    Wenn öfter geöffnet als:
+                                </Neos.Fusion.Form:Radio>
+                                <Neos.Fusion.Form:Neos.BackendModule.FieldContainer >
+                                    <Neos.Fusion.Form:Input field.name="count" attributes.value="1" attributes.style="width:60px;height:30px;padding-left:10px;padding-right:10px" />
+                                </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                            </div>
+                        </div>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                    <div class="neos-footer">
+                        <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary" >
+                            {I18n.translate('NeosRulez.DirectMail:Integration.Controller.RecipientList:content.create')}
+                        </Neos.Fusion.Form:Button>
+                    </div>
+
+                </Neos.Fusion.Form:Form>
+            </div>
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

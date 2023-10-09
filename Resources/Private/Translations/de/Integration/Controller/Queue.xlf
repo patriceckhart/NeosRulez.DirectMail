@@ -47,6 +47,21 @@
             <trans-unit id="content.flush" xml:space="preserve">
 				<source>Alle Warteschlangen löschen</source>
 			</trans-unit>
+            <trans-unit id="content.newRecipientListFrom" xml:space="preserve">
+				<source>Neue Empfängerliste aus Empfängern erstellen</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption" xml:space="preserve">
+				<source>Auf Basis welcher Empfänger, soll die Empfängerliste erstellt werden</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.opened" xml:space="preserve">
+				<source>Aus allen geöffneten</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.notOpened" xml:space="preserve">
+				<source>Aus allen nicht geöffneten</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.all" xml:space="preserve">
+				<source>Aus allen</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

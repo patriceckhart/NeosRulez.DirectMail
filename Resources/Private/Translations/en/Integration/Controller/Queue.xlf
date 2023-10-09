@@ -47,6 +47,21 @@
             <trans-unit id="content.flush" xml:space="preserve">
 				<source>Delete all queues</source>
 			</trans-unit>
+            <trans-unit id="content.newRecipientListFrom" xml:space="preserve">
+				<source>Create a new recipient list from recipients</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption" xml:space="preserve">
+				<source>Based on which recipients the recipient list should be created</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.opened" xml:space="preserve">
+				<source>From all open ones</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.notOpened" xml:space="preserve">
+				<source>From all those that are not open</source>
+			</trans-unit>
+            <trans-unit id="content.newRecipientListFromOption.all" xml:space="preserve">
+				<source>From all</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

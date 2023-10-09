@@ -10,6 +10,8 @@ use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
 use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Eel\FlowQuery\Operations;
+use NeosRulez\DirectMail\Domain\Model\Queue;
+use NeosRulez\DirectMail\Domain\Model\RecipientList;
 
 class QueueController extends ActionController
 {
@@ -292,11 +294,74 @@ class QueueController extends ActionController
     }
 
     /**
+     * @param Queue $queue
+     * @return void
+     */
+    public function recipientListAction(Queue $queue): void
+    {
+        $this->view->assign('queue', $queue);
+    }
+
+    /**
+     * @param RecipientList $newRecipientList
+     * @param Queue $queue
+     * @param int $option // 1=opened, 2=notOpened 3=all 4=count
+     * @param int $count
+     * @return void
+     */
+    public function createRecipientListAction(RecipientList $newRecipientList, Queue $queue, int $option, int $count): void
+    {
+
+        $trackings = $this->trackingRepository->findByQueue($queue);
+        $recipientLists = $queue->getRecipientlist();
+        $recipients = [];
+
+        if($option === 3 || $option === 2) {
+            foreach ($recipientLists as $recipientList) {
+                $recipientListRecipients = $this->recipientRepository->findByRecipientList($recipientList);
+                foreach ($recipientListRecipients as $recipientListRecipient) {
+                    $recipients[$recipientListRecipient->getIdentifier()] = $recipientListRecipient;
+                }
+            }
+        }
+
+        foreach ($trackings as $tracking) {
+            if($option === 1 && $tracking->getAction() === 'opened') {
+                $recipients[$tracking->getRecipient()->getIdentifier()] = $tracking->getRecipient();
+            }
+            if($option === 2) {
+                if(array_key_exists($tracking->getRecipient()->getIdentifier(), $recipients)) {
+                    unset($recipients[$tracking->getRecipient()->getIdentifier()]);
+                }
+            }
+            if($option === 4) {
+                if($this->trackingRepository->countByQueueAndRecipient($queue, $tracking->getRecipient()) >= $count) {
+                    $recipients[$tracking->getRecipient()->getIdentifier()] = $tracking->getRecipient();
+                }
+            }
+        }
+
+        $recipients = array_values($recipients);
+
+        $this->recipientListRepository->add($newRecipientList);
+        $this->persistenceManager->persistAll();
+
+        foreach ($recipients as $recipient) {
+            $recipientLists = $recipient->getRecipientlist();
+            $recipientLists->add($newRecipientList);
+            $recipient->setRecipientlist($recipientLists);
+            $this->recipientRepository->update($recipient);
+        }
+
+        $this->redirect('index', 'recipientList');
+    }
+
+    /**
      * @return string
      */
-    public function getNodeUri($node)
+    public function getNodeUri($node): string
     {
-        $url = $this->linkingService->createNodeUri(
+        return $this->linkingService->createNodeUri(
             $this->getControllerContext(),
             $node,
             null,
@@ -307,7 +372,6 @@ class QueueController extends ActionController
             false,
             []
         );
-        return $url;
     }
 
 }

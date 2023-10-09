@@ -8,12 +8,27 @@ namespace NeosRulez\DirectMail\Domain\Model;
 use Neos\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
 
 /**
  * @Flow\Entity
  */
 class Recipient
 {
+
+    /**
+     * @Flow\Inject
+     * @var PersistenceManagerInterface
+     */
+    protected $persistenceManager;
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->persistenceManager->getIdentifierByObject($this);
+    }
 
     /**
      * @var integer

@@ -33,14 +33,21 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.Tracking) < prototype
 
                         </td>
                         <td>
-                            {Date.format(queue.send, 'Y-m-d, H:i')}
+                            <span style="white-space: nowrap">
+                                {Date.format(queue.send, 'Y-m-d, H:i')}
+                            </span>
                         </td>
                         <td>
                             {queue.opened}
                         </td>
                         <td class="neos-action">
-                            <div @if.render={queue.opened == 0 ? false : true} class="neos-pull-right" >
-                                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-eye'></i>">
+                            <div class="neos-pull-right" >
+                                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-retweet'></i>">
+                                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="recipientList" @children="arguments">
+                                        <Neos.Fusion:DataStructure queue={queue} />
+                                    </Neos.Fusion:UriBuilder>
+                                </Neos.Fusion:Tag>
+                                <Neos.Fusion:Tag @if.render={queue.opened == 0 ? false : true} tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content="<i class='fas fa-eye'></i>">
                                     <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="Queue" action="indexTracking" @children="arguments">
                                         <Neos.Fusion:DataStructure queue={queue} />
                                     </Neos.Fusion:UriBuilder>
