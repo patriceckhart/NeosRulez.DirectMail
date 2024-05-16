@@ -100,20 +100,17 @@ class QueueController extends ActionController
         $result = [];
         foreach ($queues as $queue) {
             $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
+            $queueRecipientsNotSent = $this->queueRecipientRepository->findByQueueAndNotSent($queue);
+            $queueRecipientsSent = $this->queueRecipientRepository->findByQueueAndSent($queue);
             $isSending = false;
-            $sent = 0;
-            if(!empty($queueRecipients)) {
-                foreach ($queueRecipients as $queueRecipient) {
-                    if(!$queueRecipient->getSent()) {
-                        $isSending = true;
-                    } else {
-                        $sent = $sent + 1;
-                    }
-                }
+            if($queueRecipientsNotSent->count() > 0) {
+                $isSending = true;
             }
+            $sent = $queueRecipientsSent->count();
+
             $queue->isSending = $isSending;
             $queue->sent = $sent;
-            $queue->tosend = count($queueRecipients);
+            $queue->tosend = $queueRecipients->count();
             $sendPercentage = count($queueRecipients) !== 0 ? (100 / count($queueRecipients)) * $sent : 0;
             $queue->sendPercentage = number_format($sendPercentage, 0);
             $result[] = $queue;
