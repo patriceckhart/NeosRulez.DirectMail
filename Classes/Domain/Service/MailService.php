@@ -83,6 +83,13 @@ class MailService {
                 return false;
             }
 
+            if(array_key_exists('replyTo', $uriForEncode) && $uriForEncode['replyTo']) {
+                if (filter_var($uriForEncode['replyTo'], FILTER_VALIDATE_EMAIL)) {
+                    $replyTo = str_replace(' ', '', $uriForEncode['replyTo']);
+                    $mail->setReplyTo([$replyTo => $replyTo]);
+                }
+            }
+
             $http = strpos($uriForEncode['nodeUri'], 'https:');
             $https = strpos($uriForEncode['nodeUri'], 'https:');
             if($http !== false || $https !== false) {

@@ -135,10 +135,15 @@ class NodeService {
                 }
             }
         }
+        $replyTo = false;
+        if($node->hasProperty('replyTo')) {
+            $replyTo = $node->getProperty('replyTo');
+        }
 
         return [
             'nodeUri' => $this->buildUriPathForNode($node),
             'subject' => $node->getProperty('title'),
+            'replyTo' => $replyTo,
             'attachments' => $attachments
         ];
     }

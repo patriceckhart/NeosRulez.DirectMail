@@ -23,6 +23,9 @@
             <trans-unit id="properties.backendTitle" xml:space="preserve">
 				<source>Titel im Backend</source>
 			</trans-unit>
+            <trans-unit id="properties.replyTo" xml:space="preserve">
+				<source>Antwort E-Mail Adresse</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
