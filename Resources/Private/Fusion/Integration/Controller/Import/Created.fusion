@@ -1,0 +1,42 @@
+NeosRulez.DirectMail.ImportController.import = NeosRulez.DirectMail:Integration.ImportController.Import
+
+prototype(NeosRulez.DirectMail:Integration.ImportController.Import) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.DirectMail:Integration.Component.DefaultLayout title={I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.imported')} >
+            <legend>{String.replace(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.importFinished'), 'placeholder', recipientList.name)}</legend>
+
+            <div class="neos-content neos-container-fluid">
+                <div class="neos-row-fluid neos-module-container">
+                    <fieldset class="neos-span6">
+                        <div class="neos-control-group">
+                            <h2 style="margin-bottom:16px">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.importedRecipients')} ({Array.length(imported)})</h2>
+                            <ul @if.render={imported && Array.length(imported) > 0}>
+                                <Neos.Fusion:Loop items={imported} itemName="recipient">
+                                    <li style="margin-top:5px;margin-bottom:5px">{recipient}</li>
+                                </Neos.Fusion:Loop>
+                            </ul>
+                        </div>
+                    </fieldset>
+                    <fieldset class="neos-span6">
+                        <div class="neos-control-group">
+                            <h2 style="margin-bottom:16px">{I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.notImportedRecipients')} ({Array.length(notImported)})</h2>
+                            <ul @if.render={notImported && Array.length(notImported) > 0}>
+                                <Neos.Fusion:Loop items={notImported} itemName="recipient">
+                                    <li style="margin-top:5px;margin-bottom:5px">{recipient}</li>
+                                </Neos.Fusion:Loop>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="neos-footer">
+                <Neos.Fusion:Tag tagName="a" @children="attributes.href" attributes.class="neos-button neos-button-primary" content={String.replace(I18n.translate('NeosRulez.DirectMail:Integration.Controller.Import:content.button.goToRecipientList'), 'placeholder', recipientList.name)} >
+                    <Neos.Fusion:UriBuilder package="NeosRulez.DirectMail" controller="RecipientList" action="edit" arguments={{recipientList: recipientList}} />
+                </Neos.Fusion:Tag>
+            </div>
+
+        </NeosRulez.DirectMail:Integration.Component.DefaultLayout>
+    `
+}

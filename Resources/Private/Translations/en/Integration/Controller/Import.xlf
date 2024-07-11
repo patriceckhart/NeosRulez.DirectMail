@@ -26,6 +26,21 @@
             <trans-unit id="content.button.startImport" xml:space="preserve">
 				<source>Import recipients</source>
 			</trans-unit>
+            <trans-unit id="content.imported" xml:space="preserve">
+				<source>Recipient imported</source>
+			</trans-unit>
+            <trans-unit id="content.importFinished" xml:space="preserve">
+				<source>Import into placeholder completed</source>
+			</trans-unit>
+            <trans-unit id="content.button.goToRecipientList" xml:space="preserve">
+				<source>Recipient list: placeholder</source>
+			</trans-unit>
+            <trans-unit id="content.importedRecipients" xml:space="preserve">
+				<source>Imported recipients</source>
+			</trans-unit>
+            <trans-unit id="content.notImportedRecipients" xml:space="preserve">
+				<source>Not imported recipients</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
