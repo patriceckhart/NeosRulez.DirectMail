@@ -118,11 +118,22 @@ class ImportController extends ActionController
     }
 
     /**
+     * @return void
+     */
+    public function createdAction()
+    {
+
+    }
+
+    /**
      * @param array $importMapping
      * @return void
      */
     public function importAction(array $importMapping)
     {
+
+        $imported = [];
+        $notImported = [];
 
         $csv = $this->parseCsv($importMapping['fileUri']);
 
@@ -135,7 +146,7 @@ class ImportController extends ActionController
                 $lastname = array_key_exists('lastname', $importMapping) ? $recipientItem[$importMapping['lastname']] : '';
                 $email = array_key_exists('email', $importMapping) ? $recipientItem[$importMapping['email']] : false;
                 $gender = array_key_exists('gender', $importMapping) ? ($importMapping['gender'] == '' ? 3 : $recipientItem[$importMapping['gender']]) : 3;
-                $customsalutation = array_key_exists('customSalutation', $importMapping) ? $recipientItem[$importMapping['customSalutation']] : '';
+                $customsalutation = array_key_exists('customSalutation', $importMapping) ? (array_key_exists($importMapping['customSalutation'], $recipientItem) ? $recipientItem[$importMapping['customSalutation']] : '') : '';
                 $recipientList = [$this->recipientListRepository->findByIdentifier($importMapping['recipientList'])];
                 $dimensions = array_key_exists('dimensions', $importMapping) ? ($importMapping['dimensions'] !== '' ? $recipientItem[$importMapping['dimensions']] : false) : false;
                 $hasCustomFields = array_key_exists('customFields', $importMapping);
@@ -152,33 +163,43 @@ class ImportController extends ActionController
                     }
                 }
 
-
                 if($email) {
                     $email = str_replace(' ', '', $email);
                     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
-                        $newRecipient->setFirstname($firstname);
-                        $newRecipient->setLastname($lastname);
-                        $newRecipient->setEmail($email);
-                        $newRecipient->setGender((int) $gender);
-                        $newRecipient->setCustomsalutation($customsalutation);
-                        $newRecipient->setActive(true);
-                        if($dimensions) {
-                            $newRecipient->setDimensions($this->mapDimensions($dimensions));
+
+                        $existingRecipients = $this->recipientRepository->findByEmail($email);
+
+                        if($existingRecipients->count() === 0) {
+                            $newRecipient = new \NeosRulez\DirectMail\Domain\Model\Recipient();
+                            $newRecipient->setFirstname($firstname);
+                            $newRecipient->setLastname($lastname);
+                            $newRecipient->setEmail($email);
+                            $newRecipient->setGender((int) $gender);
+                            $newRecipient->setCustomsalutation($customsalutation);
+                            $newRecipient->setActive(true);
+                            if($dimensions) {
+                                $newRecipient->setDimensions($this->mapDimensions($dimensions));
+                            }
+                            if($hasCustomFields) {
+                                $newRecipient->setCustomFields($customFields);
+                            }
+                            $newRecipient->setRecipientlist($recipientList);
+                            $this->recipientRepository->add($newRecipient);
+                            $imported[] = $email;
+                        } else {
+                            $notImported[] = $email;
                         }
-                        if($hasCustomFields) {
-                            $newRecipient->setCustomFields($customFields);
-                        }
-                        $newRecipient->setRecipientlist($recipientList);
-                        $this->recipientRepository->add($newRecipient);
+
                     }
                 }
 
             }
         }
 
-        $this->redirect('edit','recipientList',Null,array('recipientList' => $importMapping['recipientList']));
-
+//        $this->redirect('edit','recipientList',Null,array('recipientList' => $importMapping['recipientList']));
+        $this->view->assign('imported', $imported);
+        $this->view->assign('notImported', $notImported);
+        $this->view->assign('recipientList', $this->recipientListRepository->findByIdentifier($importMapping['recipientList']));
     }
 
     /**
@@ -207,7 +228,8 @@ class ImportController extends ActionController
     public function parseCsv(string $file):array
     {
         $filePathProductNamesT = $file;
-//        $filePathProductNamesT = str_replace('https://', 'http://', $file);
+//        TODO: disable for production
+        $filePathProductNamesT = str_replace('https://', 'http://', $file);
         $rows = array_map(function($data) { return str_getcsv($data,";");}, file($filePathProductNamesT));
         $header = array_shift($rows);
         foreach($rows as $row) {
