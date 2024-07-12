@@ -7,25 +7,27 @@ namespace NeosRulez\DirectMail\Command;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
+use NeosRulez\DirectMail\Domain\Service\DispatchService;
 
 /**
  * @Flow\Scope("singleton")
  */
-class QueueCommandController extends CommandController {
+class QueueCommandController extends CommandController
+{
 
     /**
      * @Flow\Inject
-     * @var \NeosRulez\DirectMail\Domain\Service\DispatchService
+     * @var DispatchService
      */
     protected $dispatchService;
-
 
     /**
      * Process the queue
      *
      * @return void
      */
-    public function processCommand() {
+    public function processCommand(): void
+    {
         $this->outputLine("\n" .'Start processing the queue ...' . "\n");
         $result = $this->dispatchService->execute();
         $this->outputLine($result);

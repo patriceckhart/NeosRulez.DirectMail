@@ -12,6 +12,7 @@ use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Eel\FlowQuery\Operations;
 use NeosRulez\DirectMail\Domain\Model\Queue;
 use NeosRulez\DirectMail\Domain\Model\RecipientList;
+use NeosRulez\DirectMail\Domain\Service\SlotService;
 
 class QueueController extends ActionController
 {
@@ -71,6 +72,12 @@ class QueueController extends ActionController
      * @var \NeosRulez\DirectMail\Domain\Service\EcgService
      */
     protected $ecgService;
+
+    /**
+     * @Flow\Inject
+     * @var SlotService
+     */
+    protected $slotService;
 
 
     /**
@@ -209,12 +216,15 @@ class QueueController extends ActionController
 
         if(!empty($uniqueRecipients)) {
             foreach ($uniqueRecipients as $uniqueRecipient) {
-                $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
-                $queueRecipient->setRecipient($uniqueRecipient);
-                $queueRecipient->setQueue($newQueue);
-                $addToQueue = $this->nodeService->nodeUri($newQueue->getNodeuri(), ['dimensions' => $uniqueRecipient->getDimensions()]);
-                if($addToQueue) {
-                    $this->queueRecipientRepository->add($queueRecipient);
+
+                if($this->slotService->addRecipientToQueue($uniqueRecipient)) {
+                    $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
+                    $queueRecipient->setRecipient($uniqueRecipient);
+                    $queueRecipient->setQueue($newQueue);
+                    $addToQueue = $this->nodeService->nodeUri($newQueue->getNodeuri(), ['dimensions' => $uniqueRecipient->getDimensions()]);
+                    if($addToQueue) {
+                        $this->queueRecipientRepository->add($queueRecipient);
+                    }
                 }
             }
         }
