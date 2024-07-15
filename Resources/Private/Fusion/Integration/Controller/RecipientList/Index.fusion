@@ -38,9 +38,9 @@ prototype(NeosRulez.DirectMail:Integration.RecipientListController.Index) < prot
                                         <Neos.Fusion:DataStructure recipientList={recipientList} offset="0" />
                                     </Neos.Fusion:UriBuilder>
                                 </Neos.Fusion:Tag>
-                                <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="RecipientList" form.data.recipientList={recipientList} attributes.style={'display:inline;' + (recipientList.count != 0 ? ' pointer-events: none; opacity:0.5;' : '')} >
+                                <Neos.Fusion.Form:Form form.target.action="delete" form.target.controller="RecipientList" form.data.recipientList={recipientList} attributes.style={'display:inline;'} >
                                     <Neos.Fusion.Form:Hidden field.name="recipientList" field.value={recipientList} />
-                                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" >
+                                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-danger" attributes.onclick={'return confirm("' + I18n.translate('NeosRulez.DirectMail:Main:deleteConfirmation') + '");'} >
                                         <i class="fas fa-trash"></i>
                                     </Neos.Fusion.Form:Button>
                                 </Neos.Fusion.Form:Form>
