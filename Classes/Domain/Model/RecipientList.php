@@ -24,7 +24,6 @@ class RecipientList
     /**
      * @var string
      * @Flow\Validate(type="NotEmpty")
-     * @ORM\Column(unique=true)
      */
     protected $name;
 
