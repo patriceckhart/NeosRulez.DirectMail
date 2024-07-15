@@ -8,6 +8,9 @@
             <trans-unit id="group.form" xml:space="preserve">
 				<source>DirectMail Formular</source>
 			</trans-unit>
+            <trans-unit id="deleteConfirmation" xml:space="preserve">
+				<source>Wirklich löschen?</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
