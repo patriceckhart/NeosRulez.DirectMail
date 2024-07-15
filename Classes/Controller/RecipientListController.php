@@ -5,9 +5,13 @@ namespace NeosRulez\DirectMail\Controller;
  * This file is part of the NeosRulez.DirectMail package.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
+use NeosRulez\DirectMail\Domain\Repository\QueueRecipientRepository;
+use NeosRulez\DirectMail\Domain\Repository\QueueRepository;
+use NeosRulez\DirectMail\Domain\Repository\TrackingRepository;
 
 class RecipientListController extends ActionController
 {
@@ -31,6 +35,24 @@ class RecipientListController extends ActionController
      * @var \NeosRulez\DirectMail\Domain\Repository\ImportRepository
      */
     protected $importRepository;
+
+    /**
+     * @Flow\Inject
+     * @var QueueRecipientRepository
+     */
+    protected $queueRecipientRepository;
+
+    /**
+     * @Flow\Inject
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    /**
+     * @Flow\Inject
+     * @var TrackingRepository
+     */
+    protected $trackingRepository;
 
 
     /**
@@ -137,6 +159,48 @@ class RecipientListController extends ActionController
                 $this->importRepository->remove($import);
             }
         }
+
+        $recipients = $this->recipientRepository->findByRecipientlist($recipientList);
+        foreach ($recipients as $recipient) {
+            $newRecipientLists = new ArrayCollection();
+            $recipientLists = $recipient->getRecipientlist();
+            foreach ($recipientLists as $list) {
+                if($list !== $recipientList) {
+                    $newRecipientLists->add($list);
+                }
+            }
+
+            $queues = $this->queueRepository->findByRecipientlist($recipientList);
+            foreach ($queues as $queue) {
+
+                $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
+                foreach ($queueRecipients as $queueRecipient) {
+                    $this->queueRecipientRepository->remove($queueRecipient);
+                    $this->persistenceManager->persistAll();
+                }
+
+                $trackings = $this->trackingRepository->findByQueue($queue);
+                foreach ($trackings as $tracking) {
+                    $this->trackingRepository->remove($tracking);
+                    $this->persistenceManager->persistAll();
+                }
+
+                $queue->setRecipientlist((new ArrayCollection()));
+                $this->queueRepository->update($queue);
+                $this->queueRepository->remove($queue);
+                $this->persistenceManager->persistAll();
+            }
+
+            if($newRecipientLists->isEmpty()) {
+                $this->recipientRepository->remove($recipient);
+                $this->persistenceManager->persistAll();
+            } else {
+                $recipient->setRecipientlist($newRecipientLists);
+                $this->recipientRepository->update($recipient);
+                $this->persistenceManager->persistAll();
+            }
+        }
+
         $this->recipientListRepository->remove($recipientList);
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'recipientList');
