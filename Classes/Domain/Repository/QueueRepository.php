@@ -6,7 +6,9 @@ namespace NeosRulez\DirectMail\Domain\Repository;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
+use NeosRulez\DirectMail\Domain\Model\RecipientList;
 
 /**
  * @Flow\Scope("singleton")
@@ -55,5 +57,19 @@ class QueueRepository extends Repository {
         )->execute();
         return $result;
     }
+
+    /**
+     * @param RecipientList $recipientList
+     * @return QueryResultInterface
+     */
+    public function findByRecipientList(RecipientList $recipientList): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->contains('recipientlist', $recipientList),
+        );
+        return $query->execute();
+    }
+
 
 }
