@@ -11,10 +11,16 @@ class SlotService
 {
 
     /**
-     * @Flow\InjectConfiguration(package="NeosRulez.DirectMail", path="slots.addRecipientToQueueSlots")
+     * @Flow\InjectConfiguration(package="NeosRulez.DirectMail", path="slots.addRecipientToQueue")
      * @var array
      */
     protected $addRecipientToQueueSlots;
+
+    /**
+     * @Flow\InjectConfiguration(package="NeosRulez.DirectMail", path="slots.processQueueRecipients")
+     * @var array
+     */
+    protected $processQueueRecipientsSlots;
 
     /**
      * @var ObjectManagerInterface
@@ -33,6 +39,21 @@ class SlotService
     {
         foreach ($this->addRecipientToQueueSlots as $addRecipientToQueueSlot) {
             $slotClass = $this->objectManager->get($addRecipientToQueueSlot['class']);
+            if($slotClass->execute($arguments) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param mixed $arguments
+     * @return bool
+     */
+    public function processQueueRecipients(mixed $arguments): bool
+    {
+        foreach ($this->processQueueRecipientsSlots as $processQueueRecipientsSlot) {
+            $slotClass = $this->objectManager->get($processQueueRecipientsSlot['class']);
             if($slotClass->execute($arguments) === false) {
                 return false;
             }

@@ -95,8 +95,11 @@ Neos:
             additionalResources:
               javaScripts:
                 - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
-#NeosRulez:
-#  DirectMail:
+NeosRulez:
+  DirectMail:
+    slots:
+      addRecipientToQueue: []
+      processQueueRecipients: []
 #    useAjax: false
 #    senderMail: 'postmaster@foo.bar'
 #    senderName: 'Postmaster'
