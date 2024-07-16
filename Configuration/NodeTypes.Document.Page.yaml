@@ -33,7 +33,7 @@
         inspector:
           group: document
           position: after title
-    replyTo:
+    senderName:
       type: string
       ui:
         label: i18n
@@ -41,6 +41,14 @@
         inspector:
           group: document
           position: 1
+    replyTo:
+      type: string
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: document
+          position: 2
     googleAnalyticsCampaign:
       type: string
       ui:

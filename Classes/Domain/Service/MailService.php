@@ -72,16 +72,24 @@ class MailService {
         $email = $recipient['email'];
         $email = str_replace(' ', '', $email);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $mail = new \Neos\SwiftMailer\Message();
-            $mail
-                ->setFrom([$this->settings['senderMail'] => $this->settings['senderName']])
-                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']]);
 
             $uriForEncode = $this->nodeService->nodeUri($nodeUri, $recipient);
 
             if(!$uriForEncode) {
                 return false;
             }
+
+            $senderName = $this->settings['senderName'];
+            if(array_key_exists('senderName', $uriForEncode) && $uriForEncode['senderName']) {
+                if ($uriForEncode['senderName'] !== '') {
+                    $senderName = $uriForEncode['senderName'];
+                }
+            }
+
+            $mail = new \Neos\SwiftMailer\Message();
+            $mail
+                ->setFrom([$this->settings['senderMail'] => $senderName])
+                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']]);
 
             if(array_key_exists('replyTo', $uriForEncode) && $uriForEncode['replyTo']) {
                 if (filter_var($uriForEncode['replyTo'], FILTER_VALIDATE_EMAIL)) {

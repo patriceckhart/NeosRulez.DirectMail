@@ -140,10 +140,16 @@ class NodeService {
             $replyTo = $node->getProperty('replyTo');
         }
 
+        $senderName = false;
+        if($node->hasProperty('senderName')) {
+            $senderName = $node->getProperty('senderName');
+        }
+
         return [
             'nodeUri' => $this->buildUriPathForNode($node),
             'subject' => $node->getProperty('title'),
             'replyTo' => $replyTo,
+            'senderName' => $senderName,
             'attachments' => $attachments
         ];
     }
