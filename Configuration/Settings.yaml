@@ -97,6 +97,8 @@ Neos:
                 - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
 NeosRulez:
   DirectMail:
+    queue:
+      preventMultipleJobExecution: true
     slots:
       addRecipientToQueue: []
       processQueueRecipients: []
