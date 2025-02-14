@@ -69,15 +69,19 @@ class DispatchService {
 
                             if($this->slotService->processQueueRecipients($recipient)) {
                                 $recipientData = ['email' => $recipient->getEmail(), 'dimensions' => $recipient->getDimensions(), 'customFields' => $recipient->getCustomFields(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
-                                $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
-                                if ($sent) {
-                                    $queueRecipient->setSent(true);
-                                    $this->queueRecipientRepository->update($queueRecipient);
-                                    $sentMails = $sentMails + 1;
-                                } else {
-                                    $this->queueRecipientRepository->remove($queueRecipient);
-                                    $removed = $removed + 1;
-                                    $totalQueueRecipients = $totalQueueRecipients - 1;
+                                try {
+                                    $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
+                                    if ($sent) {
+                                        $queueRecipient->setSent(true);
+                                        $this->queueRecipientRepository->update($queueRecipient);
+                                        $sentMails = $sentMails + 1;
+                                    } else {
+                                        $this->queueRecipientRepository->remove($queueRecipient);
+                                        $removed = $removed + 1;
+                                        $totalQueueRecipients = $totalQueueRecipients - 1;
+                                    }
+                                } catch (\Throwable $exception) {
+
                                 }
                             } else {
                                 $this->queueRecipientRepository->remove($queueRecipient);
