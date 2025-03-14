@@ -6,7 +6,11 @@ namespace NeosRulez\DirectMail\Domain\Repository;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\QueryInterface;
+use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
+use NeosRulez\DirectMail\Domain\Model\Queue;
+use NeosRulez\DirectMail\Domain\Model\Recipient;
 
 /**
  * @Flow\Scope("singleton")
@@ -48,14 +52,29 @@ class TrackingRepository extends Repository
     {
         $class = '\NeosRulez\DirectMail\Domain\Model\Tracking';
         $query = $this->persistenceManager->createQueryForType($class);
-        $result = $query->matching(
+        return $query->matching(
             $query->logicalAnd(
                 $query->equals('queue', $queue),
-                $query->equals('recipient', $recipient)
+                $query->equals('recipient', $recipient),
+                $query->equals('action', 'opened')
             )
-        )->execute();
-        $count = $result ? count($result) : 0;
-        return $count;
+        )->count();
+    }
+
+    /**
+     * @param Queue $queue
+     * @return QueryResultInterface
+     */
+    public function findOpenedByQueue(Queue $queue): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('queue', $queue),
+                $query->equals('action', 'opened')
+            )
+        );
+        return $query->setOrderings(array('created' => QueryInterface::ORDER_ASCENDING))->execute();
     }
 
     /**

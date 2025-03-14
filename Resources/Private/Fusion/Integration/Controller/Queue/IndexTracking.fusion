@@ -21,7 +21,7 @@ prototype(NeosRulez.DirectMail:Integration.QueueController.IndexTracking) < prot
                             {tracking.tracking.recipient.email}
                         </td>
                         <td>
-                            {tracking.tracking.opened}
+                            {tracking.opened}
                         </td>
                         <td>
                             {Date.format(tracking.tracking.created, 'Y-m-d, H:i')}

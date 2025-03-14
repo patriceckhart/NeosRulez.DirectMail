@@ -148,20 +148,21 @@ class QueueController extends ActionController
      */
     public function indexTrackingAction(\NeosRulez\DirectMail\Domain\Model\Queue $queue)
     {
-        $trackings = $this->trackingRepository->findByQueue($queue);
-        $trackingsMerged = [];
         $result = [];
+        $trackings = $this->trackingRepository->findOpenedByQueue($queue);
         foreach ($trackings as $tracking) {
-            if($tracking->getQueue() && $tracking->getRecipient()) {
-                $tracking->opened = $this->trackingRepository->countByQueueAndRecipient($tracking->getQueue(), $tracking->getRecipient());
-                $trackingsMerged[$tracking->getRecipient()->getEmail()] = $tracking;
+            if(array_key_exists($tracking->getRecipient()->getEmail(), $result)) {
+                $result[$tracking->getRecipient()->getEmail()]['opened'] = ($result[$tracking->getRecipient()->getEmail()]['opened'] + 1);
+            } else {
+                $result[$tracking->getRecipient()->getEmail()] = [
+                    'tracking' => $tracking,
+                    'opened' => 1
+                ];
             }
-        }
-        foreach ($trackingsMerged as $trackingMerged) {
-            $result[] = ['opened' => $trackingMerged->opened, 'tracking' => $trackingMerged];
         }
         $sortField = array_column($result, 'opened');
         array_multisort($sortField, SORT_ASC, $result);
+        $result = array_values($result);
         $this->view->assign('trackings', $result);
     }
 
