@@ -5,11 +5,13 @@ namespace NeosRulez\DirectMail\Controller;
  * This file is part of the NeosRulez.DirectMail package.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
 
 use Neos\Flow\ResourceManagement\ResourceManager;
+use NeosRulez\DirectMail\Domain\Model\RecipientList;
 
 class ImportController extends ActionController
 {
@@ -134,6 +136,7 @@ class ImportController extends ActionController
 
         $imported = [];
         $notImported = [];
+        $updated = [];
 
         $csv = $this->parseCsv($importMapping['fileUri']);
 
@@ -185,9 +188,26 @@ class ImportController extends ActionController
                             }
                             $newRecipient->setRecipientlist($recipientList);
                             $this->recipientRepository->add($newRecipient);
+                            $this->persistenceManager->persistAll();
                             $imported[] = $email;
                         } else {
-                            $notImported[] = $email;
+                            foreach ($existingRecipients as $existingRecipient) {
+                                $existingRecipientLists = $existingRecipient->getRecipientlist();
+                                if ($existingRecipientLists->contains($recipientList[0])) {
+                                    $notImported[] = $email;
+                                } else {
+                                    $updated[] = $email;
+                                }
+                                $newRecipientLists = new ArrayCollection();
+                                /** @var RecipientList $existingRecipientList */
+                                foreach ($existingRecipientLists as $existingRecipientList) {
+                                    $newRecipientLists->add($existingRecipientList);
+                                }
+                                $newRecipientLists->add($recipientList[0]);
+                                $existingRecipient->setRecipientlist($newRecipientLists);
+                                $this->recipientRepository->update($existingRecipient);
+                                $this->persistenceManager->persistAll();
+                            }
                         }
 
                     }
@@ -199,6 +219,7 @@ class ImportController extends ActionController
 //        $this->redirect('edit','recipientList',Null,array('recipientList' => $importMapping['recipientList']));
         $this->view->assign('imported', $imported);
         $this->view->assign('notImported', $notImported);
+        $this->view->assign('updated', $updated);
         $this->view->assign('recipientList', $this->recipientListRepository->findByIdentifier($importMapping['recipientList']));
     }
 

@@ -196,7 +196,7 @@ class Recipient
     protected $recipientlist;
 
     /**
-     * @return \NeosRulez\DirectMail\Domain\Model\RecipientList
+     * @return Collection<\NeosRulez\DirectMail\Domain\Model\RecipientList>
      */
     public function getRecipientlist()
     {

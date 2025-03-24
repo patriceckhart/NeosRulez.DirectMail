@@ -41,6 +41,9 @@
             <trans-unit id="content.notImportedRecipients" xml:space="preserve">
 				<source>Not imported recipients</source>
 			</trans-unit>
+            <trans-unit id="content.updatedRecipients" xml:space="preserve">
+				<source>Updated recipients</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
