@@ -119,6 +119,14 @@ class MailService {
                 }
             }
 
+            if (array_key_exists('renderingErrorPreventer', $this->settings) && array_key_exists('contains', $this->settings['renderingErrorPreventer']) && is_array($this->settings['renderingErrorPreventer']['contains'])) {
+                foreach ($this->settings['renderingErrorPreventer']['contains'] as $containString) {
+                    if (str_contains($body, $containString)) {
+                        return false;
+                    }
+                }
+            }
+
             $mail->send();
         }
         return true;

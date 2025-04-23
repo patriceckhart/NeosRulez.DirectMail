@@ -102,6 +102,8 @@ NeosRulez:
     slots:
       addRecipientToQueue: []
       processQueueRecipients: []
+#    renderingErrorPreventer:
+#      contains: []
 #    useAjax: false
 #    senderMail: 'postmaster@foo.bar'
 #    senderName: 'Postmaster'
