@@ -7,6 +7,9 @@ namespace NeosRulez\DirectMail\Command;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
+use NeosRulez\DirectMail\Domain\Model\Job;
+use NeosRulez\DirectMail\Domain\Repository\JobRepository;
 use NeosRulez\DirectMail\Domain\Service\DispatchService;
 
 /**
@@ -30,18 +33,30 @@ class QueueCommandController extends CommandController
     protected $dispatchService;
 
     /**
+     * @Flow\Inject
+     * @var JobRepository
+     */
+    protected $jobRepository;
+
+    /**
+     * @Flow\Inject
+     * @var PersistenceManagerInterface
+     */
+    protected $persistenceManager;
+
+    /**
      * Process the queue
      *
      * @return void
      */
     public function processCommand(): void
     {
-        if($this->preventMultipleJobExecution) {
-            if(!$this->temporaryJobFileExist()) {
-                $this->handleTemporaryJobFile();
+        if ($this->preventMultipleJobExecution) {
+            if (!$this->temporaryJobExist()) {
+                $this->handleTemporaryJob();
                 $this->outputLine("\n" .'Start processing the queue ...' . "\n");
                 $result = $this->dispatchService->execute();
-                $this->handleTemporaryJobFile(true);
+                $this->handleTemporaryJob(true);
                 $this->outputLine($result);
                 $this->outputLine("\n" . 'The queue has been processed.'. "\n");
             } else {
@@ -59,13 +74,15 @@ class QueueCommandController extends CommandController
      * @param bool $remove
      * @return void
      */
-    private function handleTemporaryJobFile(bool $remove = false): void
+    private function handleTemporaryJob(bool $remove = false): void
     {
-        if(!$remove) {
-            file_put_contents(self::temporaryPathAndFileName, self::temporaryPathAndFileName);
+        if (!$remove) {
+            $this->jobRepository->add((new Job()));
+            $this->persistenceManager->persistAll();
         } else {
-            if($this->temporaryJobFileExist()) {
-                unlink(self::temporaryPathAndFileName);
+            if ($this->temporaryJobExist()) {
+                $this->jobRepository->removeAll();
+                $this->persistenceManager->persistAll();
             }
         }
     }
@@ -73,9 +90,9 @@ class QueueCommandController extends CommandController
     /**
      * @return bool
      */
-    private function temporaryJobFileExist(): bool
+    private function temporaryJobExist(): bool
     {
-        if(file_exists(self::temporaryPathAndFileName)) {
+        if ($this->jobRepository->findAll()->count() > 0) {
             return true;
         }
         return false;
