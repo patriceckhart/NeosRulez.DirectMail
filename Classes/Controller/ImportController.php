@@ -190,15 +190,12 @@ class ImportController extends ActionController
                             $this->persistenceManager->persistAll();
                             $imported[] = $email;
                         } else {
-                            foreach ($existingRecipients as $existingRecipient) {
-                                $existingRecipientLists = $existingRecipient->getRecipientlist();
-                                if ($existingRecipientLists->contains($recipientList[0])) {
-                                    $notImported[] = $email;
-                                    continue;
-                                }
-
+                            $existingRecipient = $existingRecipients->getFirst();
+                            $existingRecipientLists = $existingRecipient->getRecipientlist();
+                            if ($existingRecipientLists->contains($recipientList[0])) {
+                                $notImported[] = $email;
+                            } else {
                                 $updated[] = $email;
-
                                 $newRecipientLists = new ArrayCollection();
                                 /** @var RecipientList $existingRecipientList */
                                 foreach ($existingRecipientLists as $existingRecipientList) {
