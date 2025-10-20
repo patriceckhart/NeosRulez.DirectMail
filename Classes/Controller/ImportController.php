@@ -140,9 +140,8 @@ class ImportController extends ActionController
 
         $csv = $this->parseCsv($importMapping['fileUri']);
 
-//        \Neos\Flow\var_dump($importMapping);
-
         if(!empty($csv)) {
+
             foreach ($csv as $recipientItem) {
 
                 $firstname = array_key_exists('firstname', $importMapping) ? $recipientItem[$importMapping['firstname']] : '';
@@ -195,9 +194,11 @@ class ImportController extends ActionController
                                 $existingRecipientLists = $existingRecipient->getRecipientlist();
                                 if ($existingRecipientLists->contains($recipientList[0])) {
                                     $notImported[] = $email;
-                                } else {
-                                    $updated[] = $email;
+                                    continue;
                                 }
+
+                                $updated[] = $email;
+
                                 $newRecipientLists = new ArrayCollection();
                                 /** @var RecipientList $existingRecipientList */
                                 foreach ($existingRecipientLists as $existingRecipientList) {
@@ -249,8 +250,6 @@ class ImportController extends ActionController
     public function parseCsv(string $file):array
     {
         $filePathProductNamesT = $file;
-//        TODO: disable for production
-        $filePathProductNamesT = str_replace('https://', 'http://', $file);
         $rows = array_map(function($data) { return str_getcsv($data,";");}, file($filePathProductNamesT));
         $header = array_shift($rows);
         foreach($rows as $row) {
