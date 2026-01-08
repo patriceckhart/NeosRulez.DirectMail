@@ -89,7 +89,6 @@ class ApiController extends ActionController
                     $existingRecipient->setEmail($email);
                     $existingRecipient->setGender((int) $gender);
                     $existingRecipient->setCustomsalutation($customsalutation);
-                    $existingRecipient->setActive(true);
                     $existingRecipient->setImportedViaApi(true);
                     $recipientLists = $existingRecipient->getRecipientlist();
                     $rawRecipientLists = [];
