@@ -5,9 +5,13 @@ namespace NeosRulez\DirectMail\Controller;
  * This file is part of the NeosRulez.DirectMail package.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Property\TypeConverter\PersistentObjectConverter;
 use Neos\Fusion\View\FusionView;
+use NeosRulez\DirectMail\Domain\Model\Recipient;
+use NeosRulez\DirectMail\Domain\Model\RecipientList;
 
 class SubscriptionController extends ActionController
 {
@@ -32,20 +36,29 @@ class SubscriptionController extends ActionController
      */
     protected $mailService;
 
-
     /**
-     * @param \NeosRulez\DirectMail\Domain\Model\Recipient $newRecipient
+     * @param array $newRecipient
      * @return void
      */
-    public function createAction($newRecipient)
+    public function createAction(array $newRecipient): void
     {
-        $this->recipientRepository->add($newRecipient);
+        $recipient = new Recipient();
+        $recipient->setGender($newRecipient['gender']);
+        $recipient->setFirstname($newRecipient['firstname']);
+        $recipient->setLastname($newRecipient['lastname']);
+        $recipient->setEmail($newRecipient['email']);
+        $recipientLists = new ArrayCollection();
+        foreach ($newRecipient['recipientlist'] as $item) {
+            $recipientLists->add($this->recipientListRepository->findByIdentifier($item));
+        }
+        $recipient->setRecipientlist($recipientLists);
+        $this->recipientRepository->add($recipient);
         $recipientData = [
-            'gender' => $newRecipient->getGender(),
-            'firstname' => $newRecipient->getFirstname(),
-            'lastname' => $newRecipient->getLastname(),
-            'email' => $newRecipient->getEmail(),
-            'identifier' => $this->persistenceManager->getIdentifierByObject($newRecipient)
+            'gender' => $recipient->getGender(),
+            'firstname' => $recipient->getFirstname(),
+            'lastname' => $recipient->getLastname(),
+            'email' => $recipient->getEmail(),
+            'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)
         ];
         $this->mailService->sendDoubleOptIn($recipientData);
     }
