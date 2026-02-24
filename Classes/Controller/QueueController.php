@@ -151,13 +151,15 @@ class QueueController extends ActionController
         $result = [];
         $trackings = $this->trackingRepository->findOpenedByQueue($queue);
         foreach ($trackings as $tracking) {
-            if(array_key_exists($tracking->getRecipient()->getEmail(), $result)) {
+            if($tracking->getRecipient() !== null && array_key_exists($tracking->getRecipient()->getEmail(), $result)) {
                 $result[$tracking->getRecipient()->getEmail()]['opened'] = ($result[$tracking->getRecipient()->getEmail()]['opened'] + 1);
             } else {
-                $result[$tracking->getRecipient()->getEmail()] = [
-                    'tracking' => $tracking,
-                    'opened' => 1
-                ];
+                if ($tracking->getRecipient() !== null) {
+                    $result[$tracking->getRecipient()->getEmail()] = [
+                        'tracking' => $tracking,
+                        'opened' => 1
+                    ];
+                }
             }
         }
         $sortField = array_column($result, 'opened');
