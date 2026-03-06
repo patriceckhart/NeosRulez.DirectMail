@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Repository;
 
 /*
@@ -11,6 +12,7 @@ use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
 use NeosRulez\DirectMail\Domain\Model\Queue;
 use NeosRulez\DirectMail\Domain\Model\Recipient;
+use NeosRulez\DirectMail\Domain\Model\Tracking;
 
 /**
  * @Flow\Scope("singleton")
@@ -19,39 +21,37 @@ class TrackingRepository extends Repository
 {
 
     /**
-     * @param \NeosRulez\DirectMail\Domain\Model\Queue $queue
+     * @param Queue $queue
      * @return integer
      */
-    public function countByQueue(\NeosRulez\DirectMail\Domain\Model\Queue $queue): int
+    public function countByQueue(Queue $queue): int
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Tracking';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Tracking::class);
         $result = $query->matching(
             $query->logicalAnd(
                 $query->equals('queue', $queue)
             )
         )->execute();
-        if($result) {
-            $uniqueResult = [];
-            foreach ($result as $tracking) {
-                if($tracking->getRecipient() !== null) {
-                    $uniqueResult[$tracking->getRecipient()->getEmail()] = $tracking;
-                }
+
+        $uniqueResult = [];
+        foreach ($result as $tracking) {
+            if ($tracking->getRecipient() !== null) {
+                $uniqueResult[$tracking->getRecipient()->getEmail()] = $tracking;
             }
         }
+
         $count = $uniqueResult ? count($uniqueResult) : 0;
         return $count;
     }
 
     /**
-     * @param \NeosRulez\DirectMail\Domain\Model\Queue $queue
-     * @param \NeosRulez\DirectMail\Domain\Model\Recipient $recipient
+     * @param Queue $queue
+     * @param Recipient $recipient
      * @return integer
      */
-    public function countByQueueAndRecipient(\NeosRulez\DirectMail\Domain\Model\Queue $queue, \NeosRulez\DirectMail\Domain\Model\Recipient $recipient): int
+    public function countByQueueAndRecipient(Queue $queue, Recipient $recipient): int
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Tracking';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Tracking::class);
         return $query->matching(
             $query->logicalAnd(
                 $query->equals('queue', $queue),
@@ -74,17 +74,18 @@ class TrackingRepository extends Repository
                 $query->equals('action', 'opened')
             )
         );
-        return $query->setOrderings(array('created' => QueryInterface::ORDER_ASCENDING))->execute();
+        return $query->setOrderings([
+            'created' => QueryInterface::ORDER_ASCENDING,
+        ])->execute();
     }
 
     /**
-     * @param \NeosRulez\DirectMail\Domain\Model\Queue $queue
-     * @return object
+     * @param Queue $queue
+     * @return QueryResultInterface
      */
-    public function findByQueue(\NeosRulez\DirectMail\Domain\Model\Queue $queue): object
+    public function findByQueue(Queue $queue): QueryResultInterface
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Tracking';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Tracking::class);
         $result = $query->matching(
             $query->logicalAnd(
                 $query->equals('queue', $queue)
@@ -92,5 +93,4 @@ class TrackingRepository extends Repository
         )->execute();
         return $result;
     }
-
 }

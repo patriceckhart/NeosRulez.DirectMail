@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Service;
 
 use Neos\Flow\Annotations as Flow;
@@ -27,7 +28,8 @@ class SlotService
      */
     protected $objectManager;
 
-    public function __construct(ObjectManagerInterface $objectManager) {
+    public function __construct(ObjectManagerInterface $objectManager)
+    {
         $this->objectManager = $objectManager;
     }
 
@@ -39,7 +41,7 @@ class SlotService
     {
         foreach ($this->addRecipientToQueueSlots as $addRecipientToQueueSlot) {
             $slotClass = $this->objectManager->get($addRecipientToQueueSlot['class']);
-            if($slotClass->execute($arguments) === false) {
+            if ($slotClass->execute($arguments) === false) {
                 return false;
             }
         }
@@ -54,11 +56,10 @@ class SlotService
     {
         foreach ($this->processQueueRecipientsSlots as $processQueueRecipientsSlot) {
             $slotClass = $this->objectManager->get($processQueueRecipientsSlot['class']);
-            if($slotClass->execute($arguments) === false) {
+            if ($slotClass->execute($arguments) === false) {
                 return false;
             }
         }
         return true;
     }
-
 }

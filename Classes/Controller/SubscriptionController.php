@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Controller;
 
 /*
@@ -93,7 +94,7 @@ class SubscriptionController extends ActionController
     {
         $recipient = $this->recipientRepository->findByIdentifier($this->request->getArgument('recipient'));
         $lists = [];
-        if(!empty($this->request->getArgument('recipientLists'))) {
+        if (!empty($this->request->getArgument('recipientLists'))) {
             foreach ($this->request->getArgument('recipientLists') as $recipientList) {
                 $lists[] = $this->recipientListRepository->findByIdentifier($recipientList);
             }
@@ -115,5 +116,4 @@ class SubscriptionController extends ActionController
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'recipient');
     }
-
 }

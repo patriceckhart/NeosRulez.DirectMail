@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Repository;
 
 /*
@@ -9,19 +10,20 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
 use NeosRulez\DirectMail\Domain\Model\Queue;
+use NeosRulez\DirectMail\Domain\Model\QueueRecipient;
 
 /**
  * @Flow\Scope("singleton")
  */
-class QueueRecipientRepository extends Repository {
+class QueueRecipientRepository extends Repository
+{
 
     /**
-     * @return void
+     * @return QueryResultInterface
      */
-    public function findOpenQueueRecipients($queue)
+    public function findOpenQueueRecipients($queue): QueryResultInterface
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\QueueRecipient';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(QueueRecipient::class);
         $result = $query->matching(
             $query->logicalAnd(
                 $query->equals('queue', $queue),
@@ -58,5 +60,4 @@ class QueueRecipientRepository extends Repository {
             )
         )->execute();
     }
-
 }
