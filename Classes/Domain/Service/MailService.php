@@ -3,11 +3,10 @@
 namespace NeosRulez\DirectMail\Domain\Service;
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\I18n;
 use Neos\Flow\I18n\Locale;
+use NeosRulez\DirectMail\Domain\Model\Mailer\MailerFactory;
 
 /**
- *
  * @Flow\Scope("singleton")
  */
 class MailService
@@ -29,19 +28,13 @@ class MailService
      * @Flow\Inject
      * @var \Neos\Flow\I18n\Service
      */
-    protected $i18nService;
+    protected $localizationService;
 
     /**
      * @Flow\Inject
      * @var \Neos\Flow\I18n\Translator
      */
     protected $translator;
-
-    /**
-     * @Flow\Inject
-     * @var I18n\Service
-     */
-    protected $localizationService;
 
     /**
      * @Flow\InjectConfiguration(package="Neos.ContentRepository", path="contentDimensions")
@@ -88,16 +81,18 @@ class MailService
                 }
             }
 
-            $mail = new \Neos\SwiftMailer\Message();
+            $mail = MailerFactory::createMailer();
             $mail
-                ->setFrom([$this->settings['senderMail'] => $senderName])
-                ->setTo([$email => $recipient['firstname'] . ' ' . $recipient['lastname']]);
+                ->setFrom($this->settings['senderMail'], $senderName)
+                ->setTo($email, $recipient['firstname'] . ' ' . $recipient['lastname']);
 
-            if (array_key_exists('replyTo', $uriForEncode) && $uriForEncode['replyTo']) {
-                if (filter_var($uriForEncode['replyTo'], FILTER_VALIDATE_EMAIL)) {
-                    $replyTo = str_replace(' ', '', $uriForEncode['replyTo']);
-                    $mail->setReplyTo([$replyTo => $replyTo]);
-                }
+            if (
+                array_key_exists('replyTo', $uriForEncode) &&
+                $uriForEncode['replyTo'] &&
+                filter_var($uriForEncode['replyTo'], FILTER_VALIDATE_EMAIL)
+            ) {
+                $replyTo = str_replace(' ', '', $uriForEncode['replyTo']);
+                $mail->setReplyTo($replyTo);
             }
 
             $http = strpos($uriForEncode['nodeUri'], 'https:');
@@ -111,17 +106,23 @@ class MailService
             $body = $this->replacePlaceholders($file, $recipient, $nodeUri);
 
             $mail->setSubject($uriForEncode['subject']);
-            $mail->setBody($body, 'text/html');
+            $mail->setHtmlBody($body);
 
-            if (array_key_exists('attachments', $uriForEncode)) {
-                if (!empty($uriForEncode['attachments'])) {
-                    foreach ($uriForEncode['attachments'] as $attachment) {
-                        $mail->attach(new \Swift_Attachment(file_get_contents($attachment['temporaryLocalCopyFilename']), $attachment['mailFilename'], $attachment['mediaType']));
-                    }
+            if (array_key_exists('attachments', $uriForEncode) && !empty($uriForEncode['attachments'])) {
+                foreach ($uriForEncode['attachments'] as $attachment) {
+                    $mail->addAttachment(
+                        file_get_contents($attachment['temporaryLocalCopyFilename']),
+                        $attachment['mailFilename'],
+                        $attachment['mediaType'],
+                    );
                 }
             }
 
-            if (array_key_exists('renderingErrorPreventer', $this->settings) && array_key_exists('contains', $this->settings['renderingErrorPreventer']) && is_array($this->settings['renderingErrorPreventer']['contains'])) {
+            if (
+                array_key_exists('renderingErrorPreventer', $this->settings) &&
+                array_key_exists('contains', $this->settings['renderingErrorPreventer']) &&
+                is_array($this->settings['renderingErrorPreventer']['contains'])
+            ) {
                 foreach ($this->settings['renderingErrorPreventer']['contains'] as $containString) {
                     if (str_contains($body, $containString)) {
                         return false;
@@ -129,8 +130,9 @@ class MailService
                 }
             }
 
-            $mail->send();
+            return $mail->send();
         }
+
         return true;
     }
 
@@ -162,33 +164,42 @@ class MailService
 
     /**
      * @param array $recipient
-     * @return string
+     * @return bool
      */
-    public function sendDoubleOptIn(array $recipient): string
+    public function sendDoubleOptIn(array $recipient): bool
     {
-        $mail = new \Neos\SwiftMailer\Message();
+        $mail = MailerFactory::createMailer();
         $mail
-            ->setFrom([$this->settings['senderMail'] => $this->settings['senderName']])
-            ->setTo([$recipient['email'] => $recipient['firstname'] . ' ' . $recipient['lastname']])
-            ->setSubject($this->translator->translateById('subject', [], null, null, $sourceName = 'Mail/DoubleOptIn', $packageKey = 'NeosRulez.DirectMail'));
+            ->setFrom($this->settings['senderMail'], $this->settings['senderName'])
+            ->setTo($recipient['email'], $recipient['firstname'] . ' ' . $recipient['lastname'])
+            ->setSubject($this->translator->translateById(
+                labelId: 'subject',
+                sourceName: 'Mail/DoubleOptIn',
+                packageKey: 'NeosRulez.DirectMail'
+            ));
 
         $setActiveUri = $this->settings['baseUri'] . '/setactive/' . $recipient['identifier'];
         $body = '
-            <p>
-                {salutation} {firstname} {lastname}!
-            </p>
-            <p>
-            ' . $this->translator->translateById('body', [], null, null, $sourceName = 'Mail/DoubleOptIn', $packageKey = 'NeosRulez.DirectMail') . '
-            </p>
-            <p>
-            <a href="' . $setActiveUri . '">' . $this->translator->translateById('btn', [], null, null, $sourceName = 'Mail/DoubleOptIn', $packageKey = 'NeosRulez.DirectMail') . '</a>
-            </p>
+            <p>{salutation} {firstname} {lastname},</p>
+            <p>'
+            . $this->translator->translateById(
+                labelId: 'body',
+                sourceName: 'Mail/DoubleOptIn',
+                packageKey: 'NeosRulez.DirectMail'
+            ) . '</p>
+            <p><a href="' . $setActiveUri . '">'
+            . $this->translator->translateById(
+                labelId: 'btn',
+                sourceName: 'Mail/DoubleOptIn',
+                packageKey: 'NeosRulez.DirectMail'
+            ) .
+            '</a></p>
         ';
         $body = $this->replacePlaceholders($body, $recipient, '');
 
-        $mail->setBody($body, 'text/html');
-        $mail->send();
-        return true;
+        $mail->setHtmlBody($body);
+
+        return $mail->send();
     }
 
     /**
@@ -200,25 +211,19 @@ class MailService
     public function replacePlaceholders(string $body, array $recipient, string $nodeUri): string
     {
 
-        if (array_key_exists('dimensions', $recipient) && $recipient['dimensions'] !== null) {
-            if (array_key_exists('language', $this->contentDimensions)) {
-                if (array_key_exists('presets', $this->contentDimensions['language'])) {
-                    $presets = $this->contentDimensions['language']['presets'];
-                    if (array_key_exists('language', $recipient['dimensions'])) {
-                        if (array_key_exists($recipient['dimensions']['language'], $presets)) {
-                            $locale = new Locale($recipient['dimensions']['language']);
-                            $this->localizationService->getConfiguration()->setCurrentLocale($locale);
-                        }
-                    }
+        if (isset($recipient['dimensions']['language'])) {
+            if (isset($this->contentDimensions['language']['presets'])) {
+                $presets = $this->contentDimensions['language']['presets'];
+                if (array_key_exists($recipient['dimensions']['language'], $presets)) {
+                    $locale = new Locale($recipient['dimensions']['language']);
+                    $this->localizationService->getConfiguration()->setCurrentLocale($locale);
                 }
             }
         }
 
         if (array_key_exists('customFields', $recipient) && !empty($recipient['customFields'])) {
             foreach ($recipient['customFields'] as $customFieldIterator => $customField) {
-                if ($customField !== '') {
-                    $body = str_replace('{' . $customFieldIterator . '}', $customField, $body);
-                }
+                $body = str_replace('{' . $customFieldIterator . '}', $customField, $body);
             }
         }
 
@@ -241,7 +246,15 @@ class MailService
 
         $unsubscribeUri = $this->settings['baseUri'] . '/unsubscribe/' . $recipient['identifier'];
 
-        $body = str_replace('{unsubscribe}', '<a href="' . $unsubscribeUri . '" target="_blank">' . $this->translator->translateById('unsubscribe', [], null, null, $sourceName = 'Mail/Unsubscribe', $packageKey = 'NeosRulez.DirectMail') . '</a>', $body);
+        $body = str_replace(
+            '{unsubscribe}',
+            '<a href="' . $unsubscribeUri . '" target="_blank">' . $this->translator->translateById(
+                labelId: 'unsubscribe',
+                sourceName: 'Mail/Unsubscribe',
+                packageKey: 'NeosRulez.DirectMail'
+            ) . '</a>',
+            $body
+        );
         $body = str_replace('{pageurl}', $nodeUri, $body);
         $body = str_replace('{salutation}', $salutation, $body);
         if (array_key_exists('queueIdentifier', $recipient)) {
