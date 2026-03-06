@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Command;
 
 /*
@@ -54,19 +55,19 @@ class QueueCommandController extends CommandController
         if ($this->preventMultipleJobExecution) {
             if (!$this->temporaryJobExist()) {
                 $this->handleTemporaryJob();
-                $this->outputLine("\n" .'Start processing the queue ...' . "\n");
+                $this->outputLine("\n" . 'Start processing the queue ...' . "\n");
                 $result = $this->dispatchService->execute();
                 $this->handleTemporaryJob(true);
                 $this->outputLine($result);
-                $this->outputLine("\n" . 'The queue has been processed.'. "\n");
+                $this->outputLine("\n" . 'The queue has been processed.' . "\n");
             } else {
-                $this->outputLine("\n" .'Queue is being processed ...' . "\n");
+                $this->outputLine("\n" . 'Queue is being processed ...' . "\n");
             }
         } else {
-            $this->outputLine("\n" .'Start processing the queue ...' . "\n");
+            $this->outputLine("\n" . 'Start processing the queue ...' . "\n");
             $result = $this->dispatchService->execute();
             $this->outputLine($result);
-            $this->outputLine("\n" . 'The queue has been processed.'. "\n");
+            $this->outputLine("\n" . 'The queue has been processed.' . "\n");
         }
     }
 
@@ -79,11 +80,9 @@ class QueueCommandController extends CommandController
         if (!$remove) {
             $this->jobRepository->add((new Job()));
             $this->persistenceManager->persistAll();
-        } else {
-            if ($this->temporaryJobExist()) {
-                $this->jobRepository->removeAll();
-                $this->persistenceManager->persistAll();
-            }
+        } else if ($this->temporaryJobExist()) {
+            $this->jobRepository->removeAll();
+            $this->persistenceManager->persistAll();
         }
     }
 
@@ -97,5 +96,4 @@ class QueueCommandController extends CommandController
         }
         return false;
     }
-
 }

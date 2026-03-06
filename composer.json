@@ -3,10 +3,13 @@
   "type": "neos-package",
   "name": "neosrulez/directmail",
   "require": {
-      "neos/neos": "^7.0 || ^8.0 || ^8.1 || ^8.2 || ^8.3",
-    "neos/swiftmailer": "*",
+    "neos/neos": "^7.0 || ^8.0",
     "shel/neos-colorpicker": "^1.3",
     "pelago/emogrifier": "^7.2"
+  },
+  "suggest": {
+    "neos/symfonymailer": "Required for sending mails via Symfony Mailer",
+    "neos/swiftmailer": "Old mailer, required for sending mails via SwiftMailer as alternative to Symfony Mailer"
   },
   "autoload": {
     "psr-4": {
