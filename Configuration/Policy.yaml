@@ -65,6 +65,8 @@ roles:
     privileges:
       - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail.RecipientList'
         permission: GRANT
+      - privilegeTarget: 'NeosRulez.DirectMail:RecipientControllerActions'
+        permission: GRANT
       - privilegeTarget: 'NeosRulez.DirectMail:RecipientListControllerActions'
         permission: GRANT
 
