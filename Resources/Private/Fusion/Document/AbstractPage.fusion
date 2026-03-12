@@ -18,7 +18,7 @@ prototype(NeosRulez.DirectMail:Document.AbstractPage) < prototype(Neos.Neos:Page
         }
         NeosRulezDirectMailBackendCss = Neos.Fusion:Tag {
             @position = 'after NeosRulezDirectMailCss'
-            @process.1 = ${node.context.workspaceName != 'live' ? value : ''}
+            @if.notInLiveWorkspace = ${node.context.workspaceName != 'live'}
             tagName = 'link'
             attributes {
                 media = 'all'
