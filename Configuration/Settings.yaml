@@ -97,6 +97,12 @@ Neos:
                 - 'resource://NeosRulez.DirectMail/Public/JavaScript/jquery-3.6.0.min.js'
 NeosRulez:
   DirectMail:
+    curlOptions:
+      verifySsl: true
+      # Add additional headers to curl requests. Format:
+      # headers:
+      #   Header-Name: Header Value
+      headers: []
     css:
       additionalFiles: []
     queue:

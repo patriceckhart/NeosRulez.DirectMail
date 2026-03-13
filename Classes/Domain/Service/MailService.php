@@ -142,23 +142,38 @@ class MailService
      */
     public function getPageContent(string $uri): string
     {
+        $verifySsl = $this->settings['curlOptions']['verifySsl'] ?? true;
+
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $uri,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_SSL_VERIFYHOST => false
-        ));
+            CURLOPT_SSL_VERIFYHOST => $verifySsl ? 2 : 0,
+            CURLOPT_SSL_VERIFYPEER => $verifySsl,
+        ]);
+
+        if (isset($this->settings['curlOptions']['headers']) && is_array($this->settings['curlOptions']['headers'])) {
+            $formattedHeaders = [];
+            foreach ($this->settings['curlOptions']['headers'] as $headerKey => $headerValue) {
+                if (is_int($headerKey) && strpos($headerValue, ':') !== false) {
+                    $formattedHeaders[] = $headerValue;
+                } else {
+                    $formattedHeaders[] = $headerKey . ': ' . $headerValue;
+                }
+            }
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $formattedHeaders);
+        }
 
         $response = curl_exec($curl);
 
         curl_close($curl);
+
         return $response;
     }
 
