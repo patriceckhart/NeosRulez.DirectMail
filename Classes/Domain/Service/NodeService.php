@@ -1,39 +1,18 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Service;
 
 use Neos\Flow\Annotations as Flow;
-use Doctrine\ORM\Mapping as ORM;
-use Neos\Flow\I18n;
-use Neos\Flow\I18n\Locale;
-
-use Neos\Eel\FlowQuery\FlowQuery;
-use Neos\Eel\FlowQuery\Operations;
-
-use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Mvc\Routing\UriBuilder;
-use Neos\Flow\Http\Response;
 use Neos\Flow\Mvc\ActionRequest;
-use Neos\Flow\Mvc\Controller\Arguments;
-use Neos\Flow\Mvc\ActionResponse;
-use Neos\Neos\TYPO3CR\NeosNodeServiceInterface;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Mvc\Routing\Exception\MissingActionNameException;
 use Neos\Flow\Http\Exception as HttpException;
 use GuzzleHttp\Psr7\ServerRequest;
-use Neos\ContentRepository\Domain\Factory\NodeFactory;
-use Neos\ContentRepository\Domain\Model\Workspace;
-use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
-use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
 use Neos\Flow\Cli\CommandRequestHandler;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Http\HttpRequestHandlerInterface;
 use Neos\Flow\Mvc\Routing\Dto\RouteParameters;
-use Neos\Flow\Mvc\Routing\RouterCachingService;
-use Neos\Flow\Persistence\PersistenceManagerInterface;
-use Neos\Neos\Controller\CreateContentContextTrait;
-use Neos\Neos\Domain\Model\Domain;
-use Neos\RedirectHandler\Storage\RedirectStorageInterface;
-use Psr\Log\LoggerInterface;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Utility\MediaTypes;
 
@@ -41,7 +20,8 @@ use Neos\Utility\MediaTypes;
  *
  * @Flow\Scope("singleton")
  */
-class NodeService {
+class NodeService
+{
 
     /**
      * @var array
@@ -52,7 +32,8 @@ class NodeService {
      * @param array $settings
      * @return void
      */
-    public function injectSettings(array $settings) {
+    public function injectSettings(array $settings)
+    {
         $this->settings = $settings;
     }
 
@@ -93,7 +74,7 @@ class NodeService {
     /**
      * @param string $nodeUri
      * @param array $recipient
-     * @return mixed
+     * @return false|array{nodeUri: string, subject: string, replyTo: string|false, senderName: string|false, attachments: array<int, array{mediaType: string, fileExtensions: string, temporaryLocalCopyFilename: string, mailFilename: string}>}
      */
     public function nodeUri(string $nodeUri, array $recipient)
     {
@@ -106,42 +87,23 @@ class NodeService {
 
         $node = $context->getNodeByIdentifier($nodeUri);
 
-        if($node === null) {
+        if ($node === null) {
             return false;
         }
 
-        if(!$this->hasRecipientDimension($node->getDimensions(), $recipientDimensions)) {
+        if (!$this->hasRecipientDimension($node->getDimensions(), $recipientDimensions)) {
             return false;
         }
 
-        $attachments = [];
-        if($node->hasProperty('attachments')) {
-            $attachmentAssets = $node->getProperty('attachments');
-            if(!empty($attachmentAssets)) {
-                foreach ($attachmentAssets as $attachmentAsset) {
+        $attachments = $this->getAttachments($node);
 
-                    $sourceMediaType = MediaTypes::parseMediaType($attachmentAsset->getMediaType());
-                    $assetFileName = $attachmentAsset->getResource()->getFileName();
-                    $fileExtension = $attachmentAsset->getResource()->getFileExtension();
-                    $temporaryLocalCopyFilename = $attachmentAsset->getResource()->createTemporaryLocalCopy();
-                    $mailFileName = str_replace(':', '', str_replace(' ', '_', $assetFileName));
-
-                    $attachments[] = [
-                        'mediaType' => $sourceMediaType['type'] . '/' . $sourceMediaType['subtype'],
-                        'fileExtensions' => $fileExtension,
-                        'temporaryLocalCopyFilename' => $temporaryLocalCopyFilename,
-                        'mailFilename' => $mailFileName
-                    ];
-                }
-            }
-        }
         $replyTo = false;
-        if($node->hasProperty('replyTo')) {
+        if ($node->hasProperty('replyTo')) {
             $replyTo = $node->getProperty('replyTo');
         }
 
         $senderName = false;
-        if($node->hasProperty('senderName')) {
+        if ($node->hasProperty('senderName')) {
             $senderName = $node->getProperty('senderName');
         }
 
@@ -150,8 +112,43 @@ class NodeService {
             'subject' => $node->getProperty('title'),
             'replyTo' => $replyTo,
             'senderName' => $senderName,
-            'attachments' => $attachments
+            'attachments' => $attachments,
         ];
+    }
+
+    /**
+     * Get attachments of a node
+     * @param NodeInterface $node
+     * @return Array<int, array{mediaType: string, fileExtensions: string, temporaryLocalCopyFilename: string, mailFilename: string}>
+     */
+    private function getAttachments(NodeInterface $node): array
+    {
+        if (!$node->hasProperty('attachments')) {
+            return [];
+        }
+
+        $attachmentAssets = $node->getProperty('attachments');
+        if (empty($attachmentAssets)) {
+            return [];
+        }
+
+        $attachments = [];
+        foreach ($attachmentAssets as $attachmentAsset) {
+            $sourceMediaType = MediaTypes::parseMediaType($attachmentAsset->getMediaType());
+            $assetFileName = $attachmentAsset->getResource()->getFileName();
+            $fileExtension = $attachmentAsset->getResource()->getFileExtension();
+            $temporaryLocalCopyFilename = $attachmentAsset->getResource()->createTemporaryLocalCopy();
+            $mailFileName = str_replace(':', '', str_replace(' ', '_', $assetFileName));
+
+            $attachments[] = [
+                'mediaType' => $sourceMediaType['type'] . '/' . $sourceMediaType['subtype'],
+                'fileExtensions' => $fileExtension,
+                'temporaryLocalCopyFilename' => $temporaryLocalCopyFilename,
+                'mailFilename' => $mailFileName
+            ];
+        }
+
+        return $attachments;
     }
 
     /**
@@ -159,19 +156,20 @@ class NodeService {
      * @param array $recipientDimensions
      * @return bool
      */
-    private function hasRecipientDimension(array $nodeDimensions, array $recipientDimensions):bool
+    private function hasRecipientDimension(array $nodeDimensions, array $recipientDimensions): bool
     {
-        if(!empty($recipientDimensions)) {
-            foreach ($nodeDimensions as $nodeDimensionIterator => $nodeDimension) {
-                foreach ($nodeDimension as $nodeDimensionValue) {
-                    if($recipientDimensions[$nodeDimensionIterator] == $nodeDimensionValue) {
-                        return true;
-                    }
-                }
-            }
-        } else {
+        if (empty($recipientDimensions)) {
             return true;
         }
+
+        foreach ($nodeDimensions as $nodeDimensionIterator => $nodeDimension) {
+            foreach ($nodeDimension as $nodeDimensionValue) {
+                if ($recipientDimensions[$nodeDimensionIterator] === $nodeDimensionValue) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -179,15 +177,15 @@ class NodeService {
      * @param array $recipientDimensions
      * @return array
      */
-    private function getDimensions(array $recipientDimensions):array
+    private function getDimensions(array $recipientDimensions): array
     {
         $result = [];
-        if(!empty($this->contentDimensions)) {
+        if (!empty($this->contentDimensions)) {
             foreach ($this->contentDimensions as $contentDimensionIterator => $contentDimension) {
-                if(array_key_exists($contentDimensionIterator, $recipientDimensions)) {
+                if (array_key_exists($contentDimensionIterator, $recipientDimensions)) {
                     foreach ($contentDimension['presets'] as $contentDimensionPresetIterator => $contentDimensionPreset) {
-                        if($recipientDimensions[$contentDimensionIterator] == $contentDimensionPresetIterator) {
-                            if(array_key_exists('values', $contentDimensionPreset)) {
+                        if ($recipientDimensions[$contentDimensionIterator] == $contentDimensionPresetIterator) {
+                            if (array_key_exists('values', $contentDimensionPreset)) {
                                 $result[$contentDimensionIterator] = $contentDimensionPreset['values'];
                             }
                         }
@@ -250,7 +248,7 @@ class NodeService {
 
         if ($requestHandler instanceof CommandRequestHandler) {
             // Generate a custom request when the current request was triggered from CLI
-            $baseUri = $this->baseUri ?? 'http://localhost';
+            $baseUri = $this->settings['baseUri'] ?? 'http://localhost';
 
             // Prevent `index.php` appearing in generated redirects
             putenv('FLOW_REWRITEURLS=1');
@@ -260,24 +258,11 @@ class NodeService {
             $httpRequest = $requestHandler->getHttpRequest();
         }
 
-        if (method_exists(ActionRequest::class, 'fromHttpRequest')) {
-            $routeParameters = $httpRequest->getAttribute('routingParameters') ?? RouteParameters::createEmpty();
-            $httpRequest = $httpRequest->withAttribute('routingParameters', $routeParameters->withParameter('requestUriHost', $httpRequest->getUri()->getHost()));
-            // From Flow 6+ we have to use a static method to create an ActionRequest. Earlier versions use the constructor.
-            $this->actionRequestForUriBuilder = ActionRequest::fromHttpRequest($httpRequest);
-        } else {
-            /* @deprecated This case can be removed up when this package only supports Flow 6+. */
-            if ($httpRequest instanceof ServerRequest) {
-                $httpRequest = new \Neos\Flow\Http\Request([], [], [], [
-                    'HTTP_HOST' => $httpRequest->getHeaderLine('host'),
-                    'HTTPS' => $httpRequest->getHeaderLine('scheme') === 'https',
-                    'REQUEST_URI' => $httpRequest->getHeaderLine('path'),
-                ]);
-            }
-            $this->actionRequestForUriBuilder = new ActionRequest($httpRequest);
-        }
+        $routeParameters = $httpRequest->getAttribute('routingParameters') ?? RouteParameters::createEmpty();
+        $httpRequest = $httpRequest->withAttribute('routingParameters', $routeParameters->withParameter('requestUriHost', $httpRequest->getUri()->getHost()));
+        // From Flow 6+ we have to use a static method to create an ActionRequest. Earlier versions use the constructor.
+        $this->actionRequestForUriBuilder = ActionRequest::fromHttpRequest($httpRequest);
 
         return $this->actionRequestForUriBuilder;
     }
-
 }

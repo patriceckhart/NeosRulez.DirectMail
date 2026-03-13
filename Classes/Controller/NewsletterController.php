@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Controller;
 
 /*
@@ -32,7 +33,8 @@ class NewsletterController extends ActionController
      * @param array $settings
      * @return void
      */
-    public function injectSettings(array $settings) {
+    public function injectSettings(array $settings)
+    {
         $this->settings = $settings;
     }
 
@@ -75,5 +77,4 @@ class NewsletterController extends ActionController
 </body>';
         return $view;
     }
-
 }

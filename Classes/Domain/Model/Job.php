@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Model;
 
 /*
@@ -31,5 +32,4 @@ class Job
     {
         return $this->created;
     }
-
 }

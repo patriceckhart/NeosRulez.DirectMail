@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Repository;
 
 /*
@@ -11,6 +12,4 @@ use Neos\Flow\Persistence\Repository;
 /**
  * @Flow\Scope("singleton")
  */
-class ImportRepository extends Repository {
-
-}
+class ImportRepository extends Repository {}

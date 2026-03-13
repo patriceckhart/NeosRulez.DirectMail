@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Model;
 
 /*
@@ -6,6 +7,7 @@ namespace NeosRulez\DirectMail\Domain\Model;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\PersistentResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,22 +19,24 @@ class Import
     /**
      * @ORM\Column(nullable=true)
      * @ORM\OneToOne(cascade={"persist"})
-     * @var \Neos\Flow\ResourceManagement\PersistentResource
+     * @var PersistentResource
      */
     protected $file;
 
     /**
-     * @return string
+     * @return PersistentResource
      */
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
     }
 
     /**
-     * @param string $file
+     * @param PersistentResource $file
      * @return void
      */
-    public function setFile($file) {
+    public function setFile($file)
+    {
         $this->file = $file;
     }
 
@@ -64,15 +68,16 @@ class Import
      */
     protected $created;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->created = new \DateTime();
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->created;
     }
-
 }

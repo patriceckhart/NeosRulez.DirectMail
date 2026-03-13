@@ -16,7 +16,23 @@ privilegeTargets:
       matcher: 'method(NeosRulez\DirectMail\Controller\TrackingController->.*Action())'
     'NeosRulez.DirectMail:ApiControllerActions':
       matcher: 'method(NeosRulez\DirectMail\Controller\ApiController->.*Action())'
+
+  Neos\Neos\Security\Authorization\Privilege\ModulePrivilege:
+    'Neos.Neos:Backend.Module.DirectMail':
+      matcher: 'directMail'
+    'Neos.Neos:Backend.Module.DirectMail.RecipientList':
+      matcher: 'directMail/recipientlist'
+    'Neos.Neos:Backend.Module.DirectMail.Queue':
+      matcher: 'directMail/queue'
+    'Neos.Neos:Backend.Module.DirectMail.Tracking':
+      matcher: 'directMail/tracking'
+    'Neos.Neos:Backend.Module.DirectMail.Import':
+      matcher: 'directMail/import'
+
 roles:
+  ##
+  # Public controller actions required for subscription, tracking, etc.
+  ##
   'Neos.Flow:Everybody':
     privileges:
       -
@@ -31,17 +47,74 @@ roles:
       -
         privilegeTarget: 'NeosRulez.DirectMail:ApiControllerActions'
         permission: GRANT
-  'Neos.Neos:AbstractEditor':
+
+  ##
+  # Roles for backend users
+  ##
+  'NeosRulez.DirectMail:AbstractManager':
+    abstract: true
     privileges:
-      -
-        privilegeTarget: 'NeosRulez.DirectMail:RecipientControllerActions'
+      - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail'
         permission: GRANT
-      -
-        privilegeTarget: 'NeosRulez.DirectMail:RecipientListControllerActions'
+
+  'NeosRulez.DirectMail:RecipientListManager':
+    label: 'DirectMail Recipient List Manager'
+    description: 'Allows managing recipient lists and their recipients.'
+    parentRoles:
+      - 'NeosRulez.DirectMail:AbstractManager'
+    privileges:
+      - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail.RecipientList'
         permission: GRANT
-      -
-        privilegeTarget: 'NeosRulez.DirectMail:QueueControllerActions'
+      - privilegeTarget: 'NeosRulez.DirectMail:RecipientControllerActions'
         permission: GRANT
-      -
-        privilegeTarget: 'NeosRulez.DirectMail:ImportControllerActions'
+      - privilegeTarget: 'NeosRulez.DirectMail:RecipientListControllerActions'
         permission: GRANT
+
+  'NeosRulez.DirectMail:QueueManager':
+    label: 'DirectMail Queue Manager'
+    description: 'Allows managing the DirectMail queue and dispatching mails.'
+    parentRoles:
+      - 'NeosRulez.DirectMail:AbstractManager'
+    privileges:
+      - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail.Queue'
+        permission: GRANT
+      - privilegeTarget: 'NeosRulez.DirectMail:QueueControllerActions'
+        permission: GRANT
+
+  'NeosRulez.DirectMail:TrackingManager':
+    label: 'DirectMail Tracking Manager'
+    description: 'Allows viewing the tracking data of mailings.'
+    parentRoles:
+      - 'NeosRulez.DirectMail:AbstractManager'
+    privileges:
+      - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail.Tracking'
+        permission: GRANT
+      - privilegeTarget: 'NeosRulez.DirectMail:TrackingControllerActions'
+        permission: GRANT
+
+  'NeosRulez.DirectMail:ImportManager':
+    label: 'DirectMail Import Manager'
+    description: 'Allows importing recipients via CSV files.'
+    parentRoles:
+      - 'NeosRulez.DirectMail:AbstractManager'
+    privileges:
+      - privilegeTarget: 'Neos.Neos:Backend.Module.DirectMail.Import'
+        permission: GRANT
+      - privilegeTarget: 'NeosRulez.DirectMail:ImportControllerActions'
+        permission: GRANT
+
+  'NeosRulez.DirectMail:Administrator':
+    label: 'DirectMail Administrator'
+    description: 'Full access to all DirectMail features and backend modules.'
+    parentRoles:
+      - 'NeosRulez.DirectMail:RecipientListManager'
+      - 'NeosRulez.DirectMail:QueueManager'
+      - 'NeosRulez.DirectMail:TrackingManager'
+      - 'NeosRulez.DirectMail:ImportManager'
+
+  ##
+  # Update Neos administrators
+  ##
+  'Neos.Neos:Administrator':
+    parentRoles:
+      - 'NeosRulez.DirectMail:Administrator'

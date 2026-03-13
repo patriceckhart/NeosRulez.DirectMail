@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Model;
 
 /*
@@ -111,15 +112,16 @@ class Tracking
      */
     protected $created;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->created = new \DateTime();
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->created;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Repository;
 
 /*
@@ -8,20 +9,21 @@ namespace NeosRulez\DirectMail\Domain\Repository;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
+use NeosRulez\DirectMail\Domain\Model\Queue;
 use NeosRulez\DirectMail\Domain\Model\RecipientList;
 
 /**
  * @Flow\Scope("singleton")
  */
-class QueueRepository extends Repository {
+class QueueRepository extends Repository
+{
 
     /**
-     * @return void
+     * @return QueryResultInterface
      */
-    public function findOpenQueues()
+    public function findOpenQueues(): QueryResultInterface
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Queue';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Queue::class);
         $result = $query->matching(
             $query->logicalAnd(
                 $query->lessThanOrEqual('send', new \DateTime()),
@@ -33,23 +35,21 @@ class QueueRepository extends Repository {
 
     /**
      * @param string $identifier
-     * @return void
+     * @return Queue|null
      */
-    public function findQueueByIdentifier(string $identifier)
+    public function findQueueByIdentifier(string $identifier): ?Queue
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Queue';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Queue::class);
         $result = $query->matching($query->equals('Persistence_Object_Identifier', $identifier))->execute()->getFirst();
         return $result;
     }
 
     /**
-     * @return void
+     * @return QueryResultInterface
      */
-    public function findQueuesInProgress()
+    public function findQueuesInProgress(): QueryResultInterface
     {
-        $class = '\NeosRulez\DirectMail\Domain\Model\Queue';
-        $query = $this->persistenceManager->createQueryForType($class);
+        $query = $this->persistenceManager->createQueryForType(Queue::class);
         $result = $query->matching(
             $query->logicalAnd(
                 $query->greaterThan('sent', 0)
@@ -70,6 +70,4 @@ class QueueRepository extends Repository {
         );
         return $query->execute();
     }
-
-
 }

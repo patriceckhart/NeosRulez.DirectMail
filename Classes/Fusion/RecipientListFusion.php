@@ -1,10 +1,12 @@
 <?php
+
 namespace NeosRulez\DirectMail\Fusion;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 
-class RecipientListFusion extends AbstractFusionObject {
+class RecipientListFusion extends AbstractFusionObject
+{
 
     /**
      * @Flow\Inject
@@ -15,13 +17,13 @@ class RecipientListFusion extends AbstractFusionObject {
     /**
      * @return void
      */
-    public function evaluate() {
+    public function evaluate()
+    {
         $result = false;
         $recipientLists = $this->recipientListRepository->findAll();
-        if($recipientLists) {
+        if ($recipientLists) {
             $result = $recipientLists;
         }
         return $result;
     }
-
 }
