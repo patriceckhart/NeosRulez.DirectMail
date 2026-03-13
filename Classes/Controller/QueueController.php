@@ -10,6 +10,7 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
 use Neos\Eel\FlowQuery\FlowQuery;
+use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Persistence\QueryInterface;
 use Neos\Flow\Property\TypeConverter\DateTimeConverter;
 use Neos\Neos\Domain\Service\ContentContext;
@@ -319,7 +320,8 @@ class QueueController extends ActionController
      */
     public function startAction()
     {
-        shell_exec(constant('FLOW_PATH_ROOT') . 'flow queue:process > /dev/null 2>/dev/null &');
+        $context = Bootstrap::getEnvironmentConfigurationSetting('FLOW_CONTEXT') ?: 'Development';
+        shell_exec('FLOW_CONTEXT=' . $context . ' ' . constant('FLOW_PATH_ROOT') . 'flow queue:process > /dev/null 2>/dev/null &');
         $this->redirect('index', 'queue');
     }
 
