@@ -74,7 +74,7 @@ class NodeService
     /**
      * @param string $nodeUri
      * @param array $recipient
-     * @return mixed
+     * @return false|array{nodeUri: string, subject: string, replyTo: string|false, senderName: string|false, attachments: array<int, array{mediaType: string, fileExtensions: string, temporaryLocalCopyFilename: string, mailFilename: string}>}
      */
     public function nodeUri(string $nodeUri, array $recipient)
     {
@@ -95,27 +95,8 @@ class NodeService
             return false;
         }
 
-        $attachments = [];
-        if ($node->hasProperty('attachments')) {
-            $attachmentAssets = $node->getProperty('attachments');
-            if (!empty($attachmentAssets)) {
-                foreach ($attachmentAssets as $attachmentAsset) {
+        $attachments = $this->getAttachments($node);
 
-                    $sourceMediaType = MediaTypes::parseMediaType($attachmentAsset->getMediaType());
-                    $assetFileName = $attachmentAsset->getResource()->getFileName();
-                    $fileExtension = $attachmentAsset->getResource()->getFileExtension();
-                    $temporaryLocalCopyFilename = $attachmentAsset->getResource()->createTemporaryLocalCopy();
-                    $mailFileName = str_replace(':', '', str_replace(' ', '_', $assetFileName));
-
-                    $attachments[] = [
-                        'mediaType' => $sourceMediaType['type'] . '/' . $sourceMediaType['subtype'],
-                        'fileExtensions' => $fileExtension,
-                        'temporaryLocalCopyFilename' => $temporaryLocalCopyFilename,
-                        'mailFilename' => $mailFileName
-                    ];
-                }
-            }
-        }
         $replyTo = false;
         if ($node->hasProperty('replyTo')) {
             $replyTo = $node->getProperty('replyTo');
@@ -131,8 +112,43 @@ class NodeService
             'subject' => $node->getProperty('title'),
             'replyTo' => $replyTo,
             'senderName' => $senderName,
-            'attachments' => $attachments
+            'attachments' => $attachments,
         ];
+    }
+
+    /**
+     * Get attachments of a node
+     * @param NodeInterface $node
+     * @return Array<int, array{mediaType: string, fileExtensions: string, temporaryLocalCopyFilename: string, mailFilename: string}>
+     */
+    private function getAttachments(NodeInterface $node): array
+    {
+        if (!$node->hasProperty('attachments')) {
+            return [];
+        }
+
+        $attachmentAssets = $node->getProperty('attachments');
+        if (empty($attachmentAssets)) {
+            return [];
+        }
+
+        $attachments = [];
+        foreach ($attachmentAssets as $attachmentAsset) {
+            $sourceMediaType = MediaTypes::parseMediaType($attachmentAsset->getMediaType());
+            $assetFileName = $attachmentAsset->getResource()->getFileName();
+            $fileExtension = $attachmentAsset->getResource()->getFileExtension();
+            $temporaryLocalCopyFilename = $attachmentAsset->getResource()->createTemporaryLocalCopy();
+            $mailFileName = str_replace(':', '', str_replace(' ', '_', $assetFileName));
+
+            $attachments[] = [
+                'mediaType' => $sourceMediaType['type'] . '/' . $sourceMediaType['subtype'],
+                'fileExtensions' => $fileExtension,
+                'temporaryLocalCopyFilename' => $temporaryLocalCopyFilename,
+                'mailFilename' => $mailFileName
+            ];
+        }
+
+        return $attachments;
     }
 
     /**
