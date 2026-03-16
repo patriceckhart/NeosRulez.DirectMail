@@ -1,14 +1,16 @@
 <?php
+
 namespace NeosRulez\DirectMail\Domain\Service;
 
 use Neos\Flow\Annotations as Flow;
-use Doctrine\ORM\Mapping as ORM;
+use NeosRulez\DirectMail\Domain\Model\QueueRecipient;
 
 /**
  *
  * @Flow\Scope("singleton")
  */
-class DispatchService {
+class DispatchService
+{
 
     /**
      * @Flow\Inject
@@ -49,59 +51,86 @@ class DispatchService {
     /**
      * @return string
      */
-    public function execute():string
+    public function execute(): string
     {
         $queues = $this->queueRepository->findOpenQueues();
+
+        if (!$queues) {
+            return 'Total recipient lists: 0' . "\n"
+                . 'Total recipients: 0' . "\n"
+                . 'Removed recipients: 0' . "\n"
+                . 'Sent mails: 0';
+        }
+
         $totalRecipients = 0;
         $totalRecipientLists = 0;
         $sentMails = 0;
         $removed = 0;
-        if($queues) {
-            foreach ($queues as $queue) {
-                $totalRecipientLists = $totalRecipientLists + count($queue->getRecipientList());
-                $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
-                if (!empty($queueRecipients)) {
-                    $totalQueueRecipients = count($queueRecipients);
-                    foreach ($queueRecipients as $queueRecipient) {
-                        $totalRecipients = $totalRecipients + 1;
-                        if(!$queueRecipient->getSent()) {
-                            $recipient = $queueRecipient->getRecipient();
 
-                            if($this->slotService->processQueueRecipients($recipient)) {
-                                $recipientData = ['email' => $recipient->getEmail(), 'dimensions' => $recipient->getDimensions(), 'customFields' => $recipient->getCustomFields(), 'firstname' => $recipient->getFirstname(), 'lastname' => $recipient->getLastname(), 'gender' => $recipient->getGender(), 'customsalutation' => $recipient->getCustomsalutation(), 'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient), 'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue), 'identifier' => $this->persistenceManager->getIdentifierByObject($recipient)];
-                                try {
-                                    $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
-                                    if ($sent) {
-                                        $queueRecipient->setSent(true);
-                                        $this->queueRecipientRepository->update($queueRecipient);
-                                        $sentMails = $sentMails + 1;
-                                    } else {
-                                        $this->queueRecipientRepository->remove($queueRecipient);
-                                        $removed = $removed + 1;
-                                        $totalQueueRecipients = $totalQueueRecipients - 1;
-                                    }
-                                } catch (\Throwable $exception) {
+        foreach ($queues as $queue) {
+            $totalRecipientLists += count($queue->getRecipientList());
+            /** @var QueueRecipient[] $queueRecipients */
+            $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
 
-                                }
-                            } else {
-                                $this->queueRecipientRepository->remove($queueRecipient);
-                            }
+            if (empty($queueRecipients)) {
+                continue;
+            }
 
-                            $this->persistenceManager->persistAll();
-                        }
-                    }
+            $totalQueueRecipients = count($queueRecipients);
+            foreach ($queueRecipients as $queueRecipient) {
+                $totalRecipients += 1;
 
-                    $totalSentQueueRecipients = count($this->queueRecipientRepository->findOpenQueueRecipients($queue));
-                    if($totalSentQueueRecipients == $totalQueueRecipients) {
-                        $queue->setDone(true);
-                        $this->queueRepository->update($queue);
-                        $this->persistenceManager->persistAll();
-                    }
-
+                // Skip already sent recipients
+                if ($queueRecipient->getSent()) {
+                    continue;
                 }
+
+                $recipient = $queueRecipient->getRecipient();
+
+                if ($this->slotService->processQueueRecipients($recipient)) {
+                    $recipientData = [
+                        'email' => $recipient->getEmail(),
+                        'dimensions' => $recipient->getDimensions(),
+                        'customFields' => $recipient->getCustomFields(),
+                        'firstname' => $recipient->getFirstname(),
+                        'lastname' => $recipient->getLastname(),
+                        'gender' => $recipient->getGender(),
+                        'customsalutation' => $recipient->getCustomsalutation(),
+                        'recipientIdentifier' => $this->persistenceManager->getIdentifierByObject($recipient),
+                        'queueIdentifier' => $this->persistenceManager->getIdentifierByObject($queue),
+                        'identifier' => $this->persistenceManager->getIdentifierByObject($recipient),
+                    ];
+                    try {
+                        $sent = $this->mailService->execute($queue->getNodeuri(), $recipientData, $queue->getName());
+                        if ($sent) {
+                            $queueRecipient->setSent(true);
+                            $this->queueRecipientRepository->update($queueRecipient);
+                            $sentMails += 1;
+                        } else {
+                            $this->queueRecipientRepository->remove($queueRecipient);
+                            $removed += 1;
+                            $totalQueueRecipients -= 1;
+                        }
+                    } catch (\Throwable $exception) {
+                    }
+                } else {
+                    $this->queueRecipientRepository->remove($queueRecipient);
+                }
+
+                $this->persistenceManager->persistAll();
+            }
+
+            $totalSentQueueRecipients = count($this->queueRecipientRepository->findOpenQueueRecipients($queue));
+            if ($totalSentQueueRecipients == $totalQueueRecipients) {
+                $queue->setDone(true);
+                $this->queueRepository->update($queue);
+                $this->persistenceManager->persistAll();
             }
         }
-        return 'Total recipient lists: ' . $totalRecipientLists . "\n" . 'Total recipients: ' . $totalRecipients . "\n" . 'Removed recipients: ' . $removed . "\n" . 'Sent mails: ' . $sentMails;;
-    }
 
+        return 'Total recipient lists: ' . $totalRecipientLists . "\n"
+            . 'Total recipients: ' . $totalRecipients . "\n"
+            . 'Removed recipients: ' . $removed . "\n"
+            . 'Sent mails: ' . $sentMails;
+    }
 }

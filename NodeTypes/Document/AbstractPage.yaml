@@ -2,6 +2,7 @@
   abstract: true
   superTypes:
     'Neos.Neos:Document': true
+    'Neos.Seo:NoindexMixin': true
     'Neos.Seo:TitleTagMixin': false
     'Neos.Seo:SeoMetaTagsMixin': false
     'Neos.Seo:TwitterCardMixin': false

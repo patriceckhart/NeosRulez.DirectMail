@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Controller;
 
 /*
@@ -48,7 +49,7 @@ class TrackingController extends ActionController
      * @param string $description
      * @return boolean
      */
-    public function createAction(string $queue, string $recipient, string $action = 'opened', string $description = ''):bool
+    public function createAction(string $queue, string $recipient, string $action = 'opened', string $description = ''): bool
     {
         $newTracking = new \NeosRulez\DirectMail\Domain\Model\Tracking();
         $newTracking->setQueue($this->queueRepository->findQueueByIdentifier($queue));
@@ -60,5 +61,4 @@ class TrackingController extends ActionController
         $this->response->setStatusCode(200);
         return false;
     }
-
 }

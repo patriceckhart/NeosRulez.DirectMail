@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Controller;
 
 /*
@@ -8,7 +9,9 @@ namespace NeosRulez\DirectMail\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Persistence\QueryInterface;
 use Neos\Fusion\View\FusionView;
+use NeosRulez\DirectMail\Domain\Model\RecipientList;
 use NeosRulez\DirectMail\Domain\Repository\QueueRecipientRepository;
 use NeosRulez\DirectMail\Domain\Repository\QueueRepository;
 use NeosRulez\DirectMail\Domain\Repository\TrackingRepository;
@@ -60,7 +63,11 @@ class RecipientListController extends ActionController
      */
     public function indexAction()
     {
-        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
+        $this->recipientListRepository->setDefaultOrderings([
+            'name' => QueryInterface::ORDER_ASCENDING,
+        ]);
+        $recipientLists = $this->recipientListRepository->findAll();
+
         $result = [];
         foreach ($recipientLists as $i => $recipientList) {
             $recipientList->count = $this->recipientRepository->countByRecipientList($recipientList);
@@ -72,10 +79,7 @@ class RecipientListController extends ActionController
     /**
      * @return void
      */
-    public function newAction()
-    {
-
-    }
+    public function newAction() {}
 
     /**
      * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $newRecipientList
@@ -88,7 +92,7 @@ class RecipientListController extends ActionController
     }
 
     /**
-     * @param \NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList
+     * @param RecipientList $recipientList
      * @param integer $offset
      * @param integer $length
      * @param integer $itemsPerLoad
@@ -97,18 +101,29 @@ class RecipientListController extends ActionController
      * @param boolean $filterInactive
      * @return void
      */
-    public function editAction(\NeosRulez\DirectMail\Domain\Model\RecipientList $recipientList, int $offset = 0, int $length = 50, int $itemsPerLoad = 50, int $page = 1, string $searchstring = '', bool $filterInactive = false)
-    {
-        $recipients = $this->recipientRepository->findByRecipientList($recipientList)->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING, 'email' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
-        if($searchstring != '') {
-            $recipients = $this->recipientRepository->findByRecipientListAndSearchstring($recipientList, $searchstring);
-        }
-        if($filterInactive) {
+    public function editAction(
+        RecipientList $recipientList,
+        int $offset = 0,
+        int $length = 50,
+        int $itemsPerLoad = 50,
+        int $page = 1,
+        string $searchstring = '',
+        bool $filterInactive = false,
+    ) {
+        $this->recipientRepository->setDefaultOrderings([
+            'created' => QueryInterface::ORDER_DESCENDING,
+            'email' => QueryInterface::ORDER_ASCENDING,
+        ]);
+        if ($filterInactive) {
             $recipients = $this->recipientRepository->findInactiveRecipients();
             $this->view->assign('hideFilter', true);
+        } else if ($searchstring !== '') {
+            $recipients = $this->recipientRepository->findByRecipientListAndSearchstring($recipientList, $searchstring);
+        } else {
+            $recipients = $this->recipientRepository->findByRecipientList($recipientList);
         }
         $combinedRecipients = [];
-        if($recipients) {
+        if ($recipients) {
             foreach ($recipients as $recipient) {
                 $recipient->identifier = $this->persistenceManager->getIdentifierByObject($recipient);
                 $combinedRecipients[] = $recipient;
@@ -123,7 +138,7 @@ class RecipientListController extends ActionController
 
             $pages = ceil($count / $itemsPerLoad);
             $pagination = [];
-            if($pages > 1) {
+            if ($pages > 1) {
                 for ($i = 1; $i <= $pages; $i++) {
                     $pagination[] = $i;
                 }
@@ -154,7 +169,7 @@ class RecipientListController extends ActionController
     public function deleteAction($recipientList)
     {
         $imports = $this->importRepository->findByRecipientlist($recipientList);
-        if($imports->count() > 0) {
+        if ($imports->count() > 0) {
             foreach ($imports as $import) {
                 $this->importRepository->remove($import);
             }
@@ -165,7 +180,7 @@ class RecipientListController extends ActionController
             $newRecipientLists = new ArrayCollection();
             $recipientLists = $recipient->getRecipientlist();
             foreach ($recipientLists as $list) {
-                if($list !== $recipientList) {
+                if ($list !== $recipientList) {
                     $newRecipientLists->add($list);
                 }
             }
@@ -191,7 +206,7 @@ class RecipientListController extends ActionController
                 $this->persistenceManager->persistAll();
             }
 
-            if($newRecipientLists->isEmpty()) {
+            if ($newRecipientLists->isEmpty()) {
                 $this->recipientRepository->remove($recipient);
                 $this->persistenceManager->persistAll();
             } else {
@@ -205,5 +220,4 @@ class RecipientListController extends ActionController
         $this->persistenceManager->persistAll();
         $this->redirect('index', 'recipientList');
     }
-
 }

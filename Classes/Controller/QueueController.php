@@ -1,4 +1,5 @@
 <?php
+
 namespace NeosRulez\DirectMail\Controller;
 
 /*
@@ -9,7 +10,10 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
 use Neos\Eel\FlowQuery\FlowQuery;
-use Neos\Eel\FlowQuery\Operations;
+use Neos\Flow\Core\Bootstrap;
+use Neos\Flow\Persistence\QueryInterface;
+use Neos\Flow\Property\TypeConverter\DateTimeConverter;
+use Neos\Neos\Domain\Service\ContentContext;
 use NeosRulez\DirectMail\Domain\Model\Queue;
 use NeosRulez\DirectMail\Domain\Model\RecipientList;
 use NeosRulez\DirectMail\Domain\Service\SlotService;
@@ -86,15 +90,21 @@ class QueueController extends ActionController
      */
     protected $linkingService;
 
-    protected function initializeCreateAction() {
+    protected function initializeCreateAction()
+    {
         $this->arguments['newQueue']->getPropertyMappingConfiguration()->forProperty('send')->setTypeConverterOption(
-            \Neos\Flow\Property\TypeConverter\DateTimeConverter::class, \Neos\Flow\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'Y-m-d\TH:i'
+            DateTimeConverter::class,
+            DateTimeConverter::CONFIGURATION_DATE_FORMAT,
+            'Y-m-d\TH:i'
         );
     }
 
-    protected function initializeUpdateAction() {
+    protected function initializeUpdateAction()
+    {
         $this->arguments['queue']->getPropertyMappingConfiguration()->forProperty('price')->setTypeConverterOption(
-            \Neos\Flow\Property\TypeConverter\DateTimeConverter::class, \Neos\Flow\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'Y-m-d\TH:i'
+            DateTimeConverter::class,
+            DateTimeConverter::CONFIGURATION_DATE_FORMAT,
+            'Y-m-d\TH:i'
         );
     }
 
@@ -103,14 +113,17 @@ class QueueController extends ActionController
      */
     public function indexAction()
     {
-        $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
+        $this->queueRepository->setDefaultOrderings([
+            'created' => QueryInterface::ORDER_DESCENDING,
+        ]);
+        $queues = $this->queueRepository->findAll();
         $result = [];
         foreach ($queues as $queue) {
             $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
             $queueRecipientsNotSent = $this->queueRecipientRepository->findByQueueAndNotSent($queue);
             $queueRecipientsSent = $this->queueRecipientRepository->findByQueueAndSent($queue);
             $isSending = false;
-            if($queueRecipientsNotSent->count() > 0) {
+            if ($queueRecipientsNotSent->count() > 0) {
                 $isSending = true;
             }
             $sent = $queueRecipientsSent->count();
@@ -131,14 +144,16 @@ class QueueController extends ActionController
      */
     public function trackingAction()
     {
-        $queues = $this->queueRepository->findAll()->getQuery()->setOrderings(array('created' => \Neos\Flow\Persistence\QueryInterface::ORDER_DESCENDING))->execute();
+        $this->queueRepository->setDefaultOrderings([
+            'created' => QueryInterface::ORDER_DESCENDING,
+        ]);
+        $queues = $this->queueRepository->findAll();
         $result = [];
-        if($queues) {
-            foreach ($queues as $queue) {
-                $queue->opened = $this->trackingRepository->countByQueue($queue);
-                $result[] = $queue;
-            }
+        foreach ($queues as $queue) {
+            $queue->opened = $this->trackingRepository->countByQueue($queue);
+            $result[] = $queue;
         }
+
         $this->view->assign('queues', $result);
     }
 
@@ -151,15 +166,13 @@ class QueueController extends ActionController
         $result = [];
         $trackings = $this->trackingRepository->findOpenedByQueue($queue);
         foreach ($trackings as $tracking) {
-            if($tracking->getRecipient() !== null && array_key_exists($tracking->getRecipient()->getEmail(), $result)) {
+            if ($tracking->getRecipient() !== null && array_key_exists($tracking->getRecipient()->getEmail(), $result)) {
                 $result[$tracking->getRecipient()->getEmail()]['opened'] = ($result[$tracking->getRecipient()->getEmail()]['opened'] + 1);
-            } else {
-                if ($tracking->getRecipient() !== null) {
-                    $result[$tracking->getRecipient()->getEmail()] = [
-                        'tracking' => $tracking,
-                        'opened' => 1
-                    ];
-                }
+            } else  if ($tracking->getRecipient() !== null) {
+                $result[$tracking->getRecipient()->getEmail()] = [
+                    'tracking' => $tracking,
+                    'opened' => 1
+                ];
             }
         }
         $sortField = array_column($result, 'opened');
@@ -173,10 +186,15 @@ class QueueController extends ActionController
      */
     public function newAction()
     {
+        /** @var ContentContext $context */
         $context = $this->contextFactory->create();
-        $mailings = (new FlowQuery(array($context->getCurrentSiteNode())))->find('[instanceof NeosRulez.DirectMail:Document.Page]')->context(array('workspaceName' => 'live'))->sort('_index', 'ASC')->get();
+        $mailings = (new FlowQuery([$context->getCurrentSiteNode()]))
+            ->find('[instanceof NeosRulez.DirectMail:Document.Page]')
+            ->context(['workspaceName' => 'live'])
+            ->sort('_index', 'ASC')
+            ->get();
         $result = [];
-        if($mailings) {
+        if ($mailings) {
             foreach ($mailings as $mailing) {
                 $result[] = [
                     'nodeUri' => $this->getNodeUri($mailing),
@@ -188,8 +206,11 @@ class QueueController extends ActionController
             }
         }
         $this->view->assign('nodes', $result);
-        $recipientLists = $this->recipientListRepository->findAll()->getQuery()->setOrderings(array('name' => \Neos\Flow\Persistence\QueryInterface::ORDER_ASCENDING))->execute();
-        if($recipientLists->count() > 0) {
+        $this->recipientListRepository->setDefaultOrderings([
+            'name' => QueryInterface::ORDER_ASCENDING,
+        ]);
+        $recipientLists = $this->recipientListRepository->findAll();
+        if ($recipientLists->count() > 0) {
             foreach ($recipientLists as $recipientList) {
                 $recipientList->recipientCount = count($this->recipientRepository->findByRecipientList($recipientList));
             }
@@ -207,7 +228,7 @@ class QueueController extends ActionController
         $recipients = [];
         foreach ($recipientLists as $recipientList) {
             $recipientListRecipients = $this->recipientRepository->findActiveByRecipientList($recipientList);
-            if(!empty($recipientListRecipients)) {
+            if (!empty($recipientListRecipients)) {
                 foreach ($recipientListRecipients as $recipientListRecipient) {
                     $recipients[] = $recipientListRecipient;
                 }
@@ -217,15 +238,14 @@ class QueueController extends ActionController
 
         $uniqueRecipients = $this->ecgService->compareWithEcgList($this->mergeService->uniqueRecipients($recipients));
 
-        if(!empty($uniqueRecipients)) {
+        if (!empty($uniqueRecipients)) {
             foreach ($uniqueRecipients as $uniqueRecipient) {
-
-                if($this->slotService->addRecipientToQueue($uniqueRecipient)) {
+                if ($this->slotService->addRecipientToQueue($uniqueRecipient)) {
                     $queueRecipient = new \NeosRulez\DirectMail\Domain\Model\QueueRecipient();
                     $queueRecipient->setRecipient($uniqueRecipient);
                     $queueRecipient->setQueue($newQueue);
                     $addToQueue = $this->nodeService->nodeUri($newQueue->getNodeuri(), ['dimensions' => $uniqueRecipient->getDimensions()]);
-                    if($addToQueue) {
+                    if ($addToQueue) {
                         $this->queueRecipientRepository->add($queueRecipient);
                     }
                 }
@@ -265,19 +285,19 @@ class QueueController extends ActionController
     {
         $queueRecipients = $this->queueRecipientRepository->findByQueue($queue);
         $trackings = $this->trackingRepository->findByQueue($queue);
-        if(!empty($queueRecipients)) {
+        if (!empty($queueRecipients)) {
             foreach ($queueRecipients as $queueRecipient) {
                 $this->queueRecipientRepository->remove($queueRecipient);
             }
         }
-        if(!empty($trackings)) {
+        if (!empty($trackings)) {
             foreach ($trackings as $tracking) {
                 $this->trackingRepository->remove($tracking);
             }
         }
         $this->queueRepository->remove($queue);
         $this->persistenceManager->persistAll();
-        if($redirect) {
+        if ($redirect) {
             $this->redirect('index', 'queue');
         }
     }
@@ -300,7 +320,8 @@ class QueueController extends ActionController
      */
     public function startAction()
     {
-        shell_exec(constant('FLOW_PATH_ROOT') . 'flow queue:process > /dev/null 2>/dev/null &');
+        $context = Bootstrap::getEnvironmentConfigurationSetting('FLOW_CONTEXT') ?: 'Development';
+        shell_exec('FLOW_CONTEXT=' . $context . ' ' . constant('FLOW_PATH_ROOT') . 'flow queue:process > /dev/null 2>/dev/null &');
         $this->redirect('index', 'queue');
     }
 
@@ -327,7 +348,7 @@ class QueueController extends ActionController
         $recipientLists = $queue->getRecipientlist();
         $recipients = [];
 
-        if($option === 3 || $option === 2) {
+        if ($option === 3 || $option === 2) {
             foreach ($recipientLists as $recipientList) {
                 $recipientListRecipients = $this->recipientRepository->findByRecipientList($recipientList);
                 foreach ($recipientListRecipients as $recipientListRecipient) {
@@ -337,16 +358,16 @@ class QueueController extends ActionController
         }
 
         foreach ($trackings as $tracking) {
-            if($option === 1 && $tracking->getAction() === 'opened') {
+            if ($option === 1 && $tracking->getAction() === 'opened') {
                 $recipients[$tracking->getRecipient()->getIdentifier()] = $tracking->getRecipient();
             }
-            if($option === 2) {
-                if(array_key_exists($tracking->getRecipient()->getIdentifier(), $recipients)) {
+            if ($option === 2) {
+                if (array_key_exists($tracking->getRecipient()->getIdentifier(), $recipients)) {
                     unset($recipients[$tracking->getRecipient()->getIdentifier()]);
                 }
             }
-            if($option === 4) {
-                if($this->trackingRepository->countByQueueAndRecipient($queue, $tracking->getRecipient()) >= $count) {
+            if ($option === 4) {
+                if ($this->trackingRepository->countByQueueAndRecipient($queue, $tracking->getRecipient()) >= $count) {
                     $recipients[$tracking->getRecipient()->getIdentifier()] = $tracking->getRecipient();
                 }
             }
@@ -373,16 +394,9 @@ class QueueController extends ActionController
     public function getNodeUri($node): string
     {
         return $this->linkingService->createNodeUri(
-            $this->getControllerContext(),
-            $node,
-            null,
-            'html',
-            false,
-            [],
-            '',
-            false,
-            []
+            controllerContext: $this->getControllerContext(),
+            node: $node,
+            format: 'html',
         );
     }
-
 }
