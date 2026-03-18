@@ -5,7 +5,7 @@
   "require": {
     "neos/neos": "^7.0 || ^8.0",
     "shel/neos-colorpicker": "^1.3",
-    "pelago/emogrifier": "^7.2"
+    "pelago/emogrifier": "^7.2 || ^8.0"
   },
   "suggest": {
     "neos/symfonymailer": "Required for sending mails via Symfony Mailer",
