@@ -156,7 +156,7 @@ class ApiController extends ActionController
             $newRecipient->setEmail($emailAddress);
             $newRecipient->setGender((int) $gender);
             $newRecipient->setActive(true);
-            $newRecipient->setRecipientlist((new ArrayCollection($recipientList)));
+            $newRecipient->setRecipientlist([$recipientList]);
             $this->recipientRepository->add($newRecipient);
             return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . ' added'));
         }
