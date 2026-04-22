@@ -5,6 +5,7 @@ namespace NeosRulez\DirectMail\Controller;
  * This file is part of the NeosRulez.DirectMail package.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Fusion\View\FusionView;
@@ -130,5 +131,37 @@ class ApiController extends ActionController
             }
         }
         return json_encode(array('status' => 'done', 'counts' => array('added' => $addedCount, 'updated' => $updatedCount, 'skipped' => $skippedCount, 'deactivated' => $deactivatedCount)));
+    }
+
+    /**
+     * @param string $apiKey
+     * @param string $emailAddress
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $gender
+     * @param RecipientList $recipientList
+     * @return string
+     */
+    public function subscribeAction(string $apiKey, string $emailAddress, string $firstName, string $lastName, string $gender, RecipientList $recipientList)
+    {
+        if ((string) $this->settings['apiKey'] !== (string) $apiKey) {
+            return json_encode(array('status' => 'error', 'info' => 'Permission denied'));
+        }
+
+        $existingRecipient = $this->recipientRepository->findOneRecipientByMail($emailAddress);
+        if (!$existingRecipient) {
+            $newRecipient = new Recipient();
+            $newRecipient->setFirstname($firstName);
+            $newRecipient->setLastname($lastName);
+            $newRecipient->setEmail($emailAddress);
+            $newRecipient->setGender((int) $gender);
+            $newRecipient->setActive(true);
+            $newRecipient->setRecipientlist((new ArrayCollection($recipientList)));
+            $this->recipientRepository->add($newRecipient);
+            return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . ' added'));
+        }
+        $existingRecipient->setActive(!$existingRecipient->getActive());
+        $this->recipientRepository->update($existingRecipient);
+        return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . (!$existingRecipient->getActive() ? ' removed' : ' added')));
     }
 }
