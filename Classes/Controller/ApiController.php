@@ -140,9 +140,10 @@ class ApiController extends ActionController
      * @param string $lastName
      * @param string $gender
      * @param RecipientList $recipientList
+     * @param bool $active
      * @return string
      */
-    public function subscribeAction(string $apiKey, string $emailAddress, string $firstName, string $lastName, string $gender, RecipientList $recipientList)
+    public function subscribeAction(string $apiKey, string $emailAddress, string $firstName, string $lastName, string $gender, RecipientList $recipientList, bool $active)
     {
         if ((string) $this->settings['apiKey'] !== (string) $apiKey) {
             return json_encode(array('status' => 'error', 'info' => 'Permission denied'));
@@ -155,13 +156,13 @@ class ApiController extends ActionController
             $newRecipient->setLastname($lastName);
             $newRecipient->setEmail($emailAddress);
             $newRecipient->setGender((int) $gender);
-            $newRecipient->setActive(true);
+            $newRecipient->setActive($active);
             $newRecipient->setRecipientlist([$recipientList]);
             $this->recipientRepository->add($newRecipient);
             return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . ' added'));
         }
-        $existingRecipient->setActive(!$existingRecipient->getActive());
+        $existingRecipient->setActive($active);
         $this->recipientRepository->update($existingRecipient);
-        return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . (!$existingRecipient->getActive() ? ' removed' : ' added')));
+        return json_encode(array('status' => 'done', 'info' => 'Recipient ' . $emailAddress . ($active ? ' added' : ' removed')));
     }
 }
