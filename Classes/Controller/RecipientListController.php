@@ -192,6 +192,17 @@ class RecipientListController extends ActionController
             }
 
             if($newRecipientLists->isEmpty()) {
+                $trackings = $this->trackingRepository->findByRecipient($recipient);
+                foreach ($trackings as $tracking) {
+                    $this->trackingRepository->remove($tracking);
+                }
+
+                $queueRecipients = $this->queueRecipientRepository->findByRecipient($recipient);
+                foreach ($queueRecipients as $queueRecipient) {
+                    $this->queueRecipientRepository->remove($queueRecipient);
+                }
+                $this->persistenceManager->persistAll();
+
                 $this->recipientRepository->remove($recipient);
                 $this->persistenceManager->persistAll();
             } else {
